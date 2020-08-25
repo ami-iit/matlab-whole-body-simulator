@@ -47,23 +47,30 @@ end
 
 
 % Initial condition of iCub and for the integrators.
-Config.initialConditions.base_position = [0;0;0.70];
+Config.initialConditions.base_position = [0;0;0.65];
 Config.initialConditions.orientation = diag([-1,-1,1]);
-
-
 % generate decent position
-Config.initialConditions.joints = zeros(Config.N_DOF,1);
-
 Config.initialConditions.joints = [0.1744; 0.0007; 0.0001; -0.1745; ...
     0.4363; 0.6981; 0.2618; -0.1745; ...
     0.4363; 0.6981; 0.2618; 0.0003; ...
     0.0000; -0.0001; 0.0004; -0.0004; ...
-    0.3; 0.0002; 0.0001; -0.0002; ...
+    0.0003; 0.0002; 0.0001; -0.0002; ...
     0.0004; -0.0005; 0.0003];
 
 Config.initialConditions.base_linear_velocity = [0;0;0];
 Config.initialConditions.base_angular_velocity = [0;0;0];
 Config.initialConditions.joints_velocity = zeros(Config.N_DOF,1);
+
+
+% foot print of the feet
+Config.vertex = zeros(3,4);
+Config.vertex(:,1) = [-0.06;   0.04; 0];
+Config.vertex(:,2) = [ 0.11;   0.04; 0];
+Config.vertex(:,3) = [ 0.11; -0.035; 0];
+Config.vertex(:,4) = [-0.06; -0.035; 0];
+
+% friction coefficient for the feet
+Config.friction_coefficient = 0.1;
 
 % Robot frames list
 Frames.BASE_LINK        = 'root_link';

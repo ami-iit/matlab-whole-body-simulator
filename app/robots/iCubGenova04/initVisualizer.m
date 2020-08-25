@@ -24,4 +24,4 @@ confVisualizer.world_H_base(1:3,4) = Config.initialConditions.base_position;
 confVisualizer.aroundRobot = 1; % mt
 
 % refresh rate of the picure
-confVisualizer.tStep = 0.001;
+confVisualizer.tStep = Config.tStep;

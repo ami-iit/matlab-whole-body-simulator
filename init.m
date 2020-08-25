@@ -33,7 +33,6 @@ robotName='iCubGenova04';
 modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
 fileName='model.urdf';
 
-
 %% GENERAL SIMULATION INFO
 
 % Simulation time and delta_t [s]
@@ -42,7 +41,6 @@ Config.tStep                            = 0.001;
 
 % Visualizer
 confVisualizer.visualizeRobot = true;
-confVisualizer.visualizeJets  = false;
 
 %% ADD CONFIGURATION FILES
 % Run robot-specific and controller-specific configuration parameters
