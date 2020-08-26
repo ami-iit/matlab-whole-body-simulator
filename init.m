@@ -1,6 +1,6 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % /**
-%  * Copyright (C) 2020 
+%  * Copyright (C) 2020
 %  * @author: Giuseppe L'Erario
 %  * Permission is granted to copy, distribute, and/or modify this program
 %  * under the terms of the GNU General Public License, version 2 or any
@@ -33,6 +33,8 @@ robotName='iCubGenova04';
 modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
 fileName='model.urdf';
 
+Config.modelPath = modelPath;
+Config.fileName = fileName;
 %% GENERAL SIMULATION INFO
 
 % Simulation time and delta_t [s]
@@ -44,6 +46,5 @@ confVisualizer.visualizeRobot = true;
 
 %% ADD CONFIGURATION FILES
 % Run robot-specific and controller-specific configuration parameters
-run(strcat('app/robots/',robotName,'/configRobot.m')); 
+run(strcat('app/robots/',robotName,'/configRobot.m'));
 run(strcat('app/robots/',robotName,'/initVisualizer.m'));
-

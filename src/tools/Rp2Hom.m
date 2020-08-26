@@ -1,4 +1,4 @@
-function H = Rp2Hom(p, R)
+function H = Rp2Hom(R, p)
 % Takes position p and rotation matrix R.
 % Returns the corresponding homogeneous transformation matrix T
 

@@ -49,6 +49,7 @@ end
 % Initial condition of iCub and for the integrators.
 Config.initialConditions.base_position = [0;0;0.65];
 Config.initialConditions.orientation = diag([-1,-1,1]);
+Config.initialConditions.world_H_base = Rp2Hom(Config.initialConditions.orientation, Config.initialConditions.base_position);
 % generate decent position
 Config.initialConditions.joints = [0.1744; 0.0007; 0.0001; -0.1745; ...
     0.4363; 0.6981; 0.2618; -0.1745; ...
@@ -59,6 +60,7 @@ Config.initialConditions.joints = [0.1744; 0.0007; 0.0001; -0.1745; ...
 
 Config.initialConditions.base_linear_velocity = [0;0;0];
 Config.initialConditions.base_angular_velocity = [0;0;0];
+Config.initialConditions.base_velocity = [Config.initialConditions.base_linear_velocity; Config.initialConditions.base_angular_velocity];
 Config.initialConditions.joints_velocity = zeros(Config.N_DOF,1);
 
 

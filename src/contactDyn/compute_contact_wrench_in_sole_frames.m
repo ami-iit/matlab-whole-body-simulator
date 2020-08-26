@@ -1,4 +1,4 @@
-function [wrench_left_foot, wrench_right_foot] = compute_contact_wrench_in_sole_frames(contact_forces, H_LFOOT, H_RFOOT, vertex)
+ function [wrench_left_foot, wrench_right_foot] = compute_contact_wrench_in_sole_frames(contact_forces, H_LFOOT, H_RFOOT, vertex)
 % trasforms the pure forces on foot vertices in wrench in sole frames
 R_LFOOT = H_LFOOT(1:3,1:3);
 R_RFOOT = H_RFOOT(1:3,1:3);
