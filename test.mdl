@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.60"
+    ComputedModelVersion    "1.61"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -160,9 +160,9 @@ Model {
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "122"
 	  Extents		  [2417.0, 1174.0]
-	  ZoomFactor		  [1.0]
-	  Offset		  [-538.10902943932956, -471.40000000000003]
-	  SceneRectInView	  [-538.10902943932956, -471.40000000000003, 2417.0, 1174.0]
+	  ZoomFactor		  [1.1756257693885925]
+	  Offset		  [-307.31529412997077, -421.90855148342064]
+	  SceneRectInView	  [-307.31529412997077, -421.90855148342064, 2055.926352530541, 998.61710296684123]
 	}
 	Object {
 	  $ObjectID		  7
@@ -293,9 +293,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "giuseppe"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Aug 25 19:26:17 2020"
-  RTWModifiedTimeStamp	  520282772
-  ModelVersionFormat	  "1.%<AutoIncrement:60>"
+  LastModifiedDate	  "Wed Aug 26 19:06:19 2020"
+  RTWModifiedTimeStamp	  520369321
+  ModelVersionFormat	  "1.%<AutoIncrement:61>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1417,7 +1417,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "175"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "184"
+    SIDHighWatermark	    "185"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1702,7 +1702,7 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"100"
+	ZoomFactor		"118"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport
@@ -3488,13 +3488,31 @@ Model {
 	  Name			  "MATLAB System"
 	  SID			  "184"
 	  Ports			  []
-	  Position		  [680, -310, 880, -150]
+	  Position		  [425, -410, 625, -250]
 	  ZOrder		  1245
+	  Commented		  "on"
 	  System		  "Robot_system"
 	  MaskType		  "Robot_system"
 	  MaskDisplay		  "disp('Robot_system');\n"
 	  config		  "Config"
 	  SimulateUsing		  "Interpreted execution"
+	}
+	Block {
+	  BlockType		  MATLABSystem
+	  Name			  "MATLAB System1"
+	  SID			  "185"
+	  Ports			  [2, 6]
+	  Position		  [530, -199, 800, -36]
+	  ZOrder		  1246
+	  System		  "step_block"
+	  MaskType		  "step_block"
+	  MaskDisplay		  "disp('step_block');\nport_label('input',1,'torque');\nport_label('input',2,'generalized_ext_wrench'"
+	  ");\nport_label('output',1,'w_H_b');\nport_label('output',2,'s');\nport_label('output',3,'base_pose_dot');\nport_lab"
+	  "el('output',4,'s_dot');\nport_label('output',5,'wrench_left_foot');\nport_label('output',6,'wrench_right_foot');\n"
+	  robot_config		  "Config"
+	  contact_config	  "Config"
+	  tStep			  "0.001"
+	  SimulateUsing		  "Code generation"
 	}
 	Block {
 	  BlockType		  SubSystem
@@ -4635,8 +4653,18 @@ Model {
 	  ZOrder		  105
 	  SrcBlock		  "generalized external wrench"
 	  SrcPort		  1
-	  DstBlock		  "MATLAB Function1"
-	  DstPort		  4
+	  Points		  [48, 0]
+	  Branch {
+	    ZOrder		    288
+	    Points		    [0, -305]
+	    DstBlock		    "MATLAB System1"
+	    DstPort		    2
+	  }
+	  Branch {
+	    ZOrder		    287
+	    DstBlock		    "MATLAB Function1"
+	    DstPort		    4
+	  }
 	}
 	Line {
 	  ZOrder		  97
@@ -4676,8 +4704,18 @@ Model {
 	  ZOrder		  134
 	  SrcBlock		  "joints torque"
 	  SrcPort		  1
-	  DstBlock		  "MATLAB Function1"
-	  DstPort		  3
+	  Points		  [24, 0]
+	  Branch {
+	    ZOrder		    286
+	    Points		    [0, -355]
+	    DstBlock		    "MATLAB System1"
+	    DstPort		    1
+	  }
+	  Branch {
+	    ZOrder		    285
+	    DstBlock		    "MATLAB Function1"
+	    DstPort		    3
+	  }
 	}
 	Line {
 	  ZOrder		  237
@@ -4826,9 +4864,6 @@ Stateflow {
     screen		    [1 1 3600 1200 1.180555555555556]
     treeNode		    [0 3 0 0]
     viewObj		    2
-    visible		    1
-    subviewS {
-    }
     ssIdHighWaterMark	    27
     decomposition	    CLUSTER_CHART
     type		    EML_CHART
@@ -5463,9 +5498,6 @@ Stateflow {
     screen		    [1 1 3600 1200 1.180555555555556]
     treeNode		    [0 30 0 0]
     viewObj		    29
-    visible		    1
-    subviewS {
-    }
     ssIdHighWaterMark	    17
     decomposition	    CLUSTER_CHART
     type		    EML_CHART

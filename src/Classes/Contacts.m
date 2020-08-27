@@ -75,7 +75,7 @@ classdef Contacts < handle
         function free_acceleration = compute_free_acceleration(obj, M, h, torque, generalized_jet_wrench)
             % returns the system acceleration with NO contact forces
             % dot{v} = inv{M}(S*tau + external_forces - h)
-            free_acceleration = M \ (obj.S * torque + generalized_jet_wrench - h);
+            free_acceleration = (M + 0.05) \ (obj.S * torque + generalized_jet_wrench - h);
         end
 
         function free_contact_acceleration = compute_free_contact_acceleration(obj, J_feet, free_acceleration, JDot_nu_feet)
@@ -92,12 +92,12 @@ classdef Contacts < handle
             f = free_contact_acceleration;
 
             for i = 1:8
-                obj.Aeq(i, i * 3) = contact_point(i) >= 0;
+                obj.Aeq(i, i * 3) = contact_point(i) > 0;
             end
 
-            % options = optimoptions('quadprog', 'Algorithm', 'active-set');
-            % forces = quadprog(H, f, A, b, Aeq, beq, [], [], 100 * ones(24, 1), options);
-            forces = quadprog(H, f, obj.A, obj.b, obj.Aeq, obj.beq);
+            options = optimoptions('quadprog', 'Algorithm', 'active-set');
+            forces = quadprog(H, f, obj.A, obj.b, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+%             forces = quadprog(H, f, obj.A, obj.b, obj.Aeq, obj.beq);
         end
 
         function [wrench_left_foot, wrench_right_foot] = compute_contact_wrench_in_sole_frames(contact_forces, H_LFOOT, H_RFOOT, foot_print)

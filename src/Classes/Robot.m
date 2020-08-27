@@ -81,6 +81,8 @@ classdef Robot < handle
             % dot{x} = [x2;...
             %           dot{v}];
             % dot{v} = inv{M}(S*tau + external_forces - h)
+            torques
+            generalized_total_wrench
             M = obj.get_mass_matrix();
             h = obj.get_bias_forces();
             ddot = M \ (obj.S * torques + generalized_total_wrench - h);

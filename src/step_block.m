@@ -15,50 +15,65 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
     end
     
     properties(DiscreteState)
-        robot; contacts; state; 
+        
     end
     
     % Pre-computed constants
     properties(Access = private)
-        
+        robot; contacts; state;
     end
     
     methods(Access = protected)
         function setupImpl(obj)
             obj.robot = Robot(obj.robot_config);
-            obj.contacts = Contacts(obj.contact_config);
+            obj.contacts = Contacts(obj.contact_config.foot_print, obj.robot, obj.contact_config.friction_coefficient);
             obj.state = State(obj.tStep);
-            obj.state.set(obj.robot_config.w_H_b, obj.robot_config.s, obj.robot_config.base_pose_dot, obj.robot_config.s_dot);
+            obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
+                obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
             initial_torque = zeros(23,1);
             initial_generalized_ext_wrench = zeros(29,1);
             [generalized_total_wrench, wrench_left_foot, wrench_right_foot, contact_detected] = ...
-                obj.contact.compute_contact_forces(obj.robot, initial_torque, initial_generalized_ext_wrench)
+                obj.contacts.compute_contact_forces(obj.robot, initial_torque, initial_generalized_ext_wrench);
         end
         
-        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot] = stepImpl(obj,torque, generalized_ext_wrench)
+        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot] = stepImpl(obj, generalized_ext_wrench, torque)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
-            [generalized_total_wrench, wrench_left_foot, wrench_right_foot, contact_detected] = ...
-                obj.contact.compute_contact_forces(obj.robot, torque, generalized_ext_wrench);
-            M = obj.robot.get_mass_matrix();
-            J_feet = obj.robot.get_feet_jacobians();
-            if contact_detected
-                N = (obj.robot.NDOF - M\(J_feet'*((J_feet*(M\J_feet'))\J_feet)) );
-                x = N*[base_pose_dot; s_dot];
-                base_pose_dot = x(1:6);
-                s_dot = x(7:end);
+            disp(nargin)
+            if nargin == 2
+                disp('OLE')
+                torque = zeros(obj.robot.NDOF, 1);
             end
             
+            [generalized_total_wrench, wrench_left_foot, wrench_right_foot, contact_detected] = ...
+                obj.contacts.compute_contact_forces(obj.robot, torque, generalized_ext_wrench);
+            M = obj.robot.get_mass_matrix();
+            J_feet = obj.robot.get_feet_jacobians();
+            
+            if contact_detected
+                N = (eye(obj.robot.NDOF + 6) - M\(J_feet'*((J_feet*(M\J_feet'))\J_feet)) );
+                x = N*[obj.state.base_pose_dot; obj.state.s_dot];
+                base_pose_dot = x(1:6);
+                s_dot = x(7:end);
+                obj.state.set_velocity(base_pose_dot, s_dot);
+            end
+            disp('eee')
             [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench);
-            obj.state.set_velocity(base_pose_dot, s_dot);
             [w_H_b, s, base_pose_dot, s_dot] = obj.state.euler_step(base_pose_ddot, s_ddot);
-            obj.robot.set_robot_state(obj, w_H_b, s, base_pose_dot, s_dot)
+            obj.robot.set_robot_state(w_H_b, s, base_pose_dot, s_dot)
         end
         
-        function resetImpl(obj)
-            % Initialize / reset discrete-state properties
+        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot] = resetImpl(obj)
+            w_H_b = obj.robot_config.initialConditions.w_H_b;
+            s = obj.robot_config.initialConditions.s;
+            base_pose_dot = obj.robot_config.initialConditions.base_pose_dot;
+            s_dot = obj.robot_config.initialConditions.s_dot;
+            initial_torque = zeros(23,1);
+            initial_generalized_ext_wrench = zeros(29,1);
+            [generalized_total_wrench, wrench_left_foot, wrench_right_foot, contact_detected] = ...
+                obj.contacts.compute_contact_forces(obj.robot, initial_torque, initial_generalized_ext_wrench);
         end
-
+        
         function [out,out2,out3,out4,out5,out6] = getOutputSizeImpl(obj)
             % Return size for each output port
             out = [4 4];
@@ -67,11 +82,11 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out4 = [23 1];
             out5 = [6 1];
             out6 = [6 1];
-
+            
             % Example: inherit size from first input port
             % out = propagatedInputSize(obj,1);
         end
-
+        
         function [out,out2,out3,out4,out5,out6] = getOutputDataTypeImpl(obj)
             % Return data type for each output port
             out = "double";
@@ -80,11 +95,11 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out4 = "double";
             out5 = "double";
             out6 = "double";
-
+            
             % Example: inherit data type from first input port
             % out = propagatedInputDataType(obj,1);
         end
-
+        
         function [out,out2,out3,out4,out5,out6] = isOutputComplexImpl(obj)
             % Return true for each output port with complex data
             out = false;
@@ -93,11 +108,11 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out4 = false;
             out5 = false;
             out6 = false;
-
+            
             % Example: inherit complexity from first input port
             % out = propagatedInputComplexity(obj,1);
         end
-
+        
         function [out,out2,out3,out4,out5,out6] = isOutputFixedSizeImpl(obj)
             % Return true for each output port with fixed size
             out = true;
@@ -106,11 +121,11 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out4 = true;
             out5 = true;
             out6 = true;
-
+            
             % Example: inherit fixed-size status from first input port
             % out = propagatedInputFixedSize(obj,1);
         end
-
+        
         function [sz,dt,cp] = getDiscreteStateSpecificationImpl(obj,name)
             % Return size, data type, and complexity of discrete-state
             % specified in name

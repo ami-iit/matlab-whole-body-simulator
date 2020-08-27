@@ -16,20 +16,20 @@ classdef State < handle
             obj.dt = dt;
         end
         
-        function set(w_H_b, s, base_pose_dot, s_dot)
+        function set(obj, w_H_b, s, base_pose_dot, s_dot)
             obj.w_H_b = w_H_b;
             obj.s = s;
             obj.base_pose_dot = base_pose_dot;
             obj.s_dot = s_dot;
         end
         
-        function set_velocity(base_pose_dot, s_dot)
+        function set_velocity(obj, base_pose_dot, s_dot)
             obj.base_pose_dot = base_pose_dot;
             obj.s_dot = s_dot;
         end
         
         function [w_H_b, s, base_pose_dot, s_dot] = euler_step(obj, base_pose_ddot, s_ddot)
-            [R, p] = H2Rp(H);
+            [R, p] = obj.H2Rp(obj.w_H_b);
             p_dot = obj.base_pose_dot(1:3);
             omega = obj.base_pose_dot(4:6);
             p_ddot = base_pose_ddot(1:3);
@@ -40,12 +40,26 @@ classdef State < handle
             theta = omega * obj.dt + omega_dot * obj.dt^2/2;
             R = obj.exponential_map(R, theta);
             
-            base_pose_dot = obj.base_pose_dot + base_pose_ddot * obj.dt;
-            s_dot = obj.s_dot + s_ddot;
+            
+%             gain = 0.001;
+%             A = gain*((R'*R)' - eye(3));
+%             omega =  omega_dot*obj.dt;
+%             
+%             R_dot = (wbc.skew(omega) + A)*R;
+%             R = R + R_dot*obj.dt;
+            
+            
+            
             
             w_H_b = obj.Rp2H(R, p);
+            s = obj.s + obj.s_dot*obj.dt + s_ddot*obj.dt^2/2;
+            base_pose_dot = obj.base_pose_dot + base_pose_ddot * obj.dt;
+            s_dot = obj.s_dot + s_ddot;
+            obj.set(w_H_b, s, base_pose_dot, s_dot);
         end
-        
+    end
+    
+    methods (Static)
         function R = exponential_map(R, theta)
             n = norm(theta);
             theta_norm = theta / n;
@@ -61,7 +75,5 @@ classdef State < handle
         function H = Rp2H(R, p)
             H = [R, p; 0, 0, 0, 1];
         end
-        
     end
-    
 end

@@ -79,3 +79,12 @@ Frames.BASE_LINK        = 'root_link';
 Frames.COM_FRAME        = 'com';
 Frames.LFOOT_FRAME      = 'l_sole';
 Frames.RFOOT_FRAME      = 'r_sole';
+
+robot_config = Config;
+robot_config.jointOrder =  jointOrder;
+robot_config.initialConditions.w_H_b = Config.initialConditions.world_H_base;
+robot_config.initialConditions.s = Config.initialConditions.joints;
+robot_config.initialConditions.base_pose_dot = Config.initialConditions.base_velocity;
+robot_config.initialConditions.s_dot = Config.initialConditions.joints_velocity;
+contact_config.foot_print = Config.vertex;
+contact_config.friction_coefficient = Config.friction_coefficient;
