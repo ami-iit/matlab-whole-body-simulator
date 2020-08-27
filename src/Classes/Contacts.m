@@ -97,7 +97,7 @@ classdef Contacts < handle
 
             options = optimoptions('quadprog', 'Algorithm', 'active-set');
             forces = quadprog(H, f, obj.A, obj.b, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
-%             forces = quadprog(H, f, obj.A, obj.b, obj.Aeq, obj.beq);
+            %             forces = quadprog(H, f, obj.A, obj.b, obj.Aeq, obj.beq);
         end
 
         function [wrench_left_foot, wrench_right_foot] = compute_contact_wrench_in_sole_frames(contact_forces, H_LFOOT, H_RFOOT, foot_print)
@@ -145,6 +145,49 @@ classdef Contacts < handle
             end
 
         end
+
+        %         function wrench  = compute_unilateral_contact(obj, J_feet, M, h, torque, JDot_nu_feet, contact_point, generalized_ext_wrench)
+        %             free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
+        %             free_contact_acceleration = obj.compute_free_contact_acceleration(J_feet, free_acceleration, JDot_nu_feet);
+        %             G = J_feet*(M\J_feet');
+        %             mu = 0.1;
+        %             options = optimoptions('fmincon','Algorithm','interior-point'); % run interior-point algorithm
+        %             % init_point = [0, 0, 20, 0, 0, 0, 0, 0, 20, 0, 0, 0]';
+        %
+        %             Aeq = zeros(8,24);
+        %             beq = zeros(8,1);
+        %             for i=1:8
+        %                 j = (i-1)*3 + 3;
+        %                 Aeq(i, j) = contact_point(i)>0;
+        %             end
+        %             initial_cond = zeros(24,1);
+        %             initial_cond(3) = 30;
+        %             initial_cond(6) = 30;
+        %             initial_cond(9) = 30;
+        %             initial_cond(12) = 30;
+        %             initial_cond(15) = 30;
+        %             initial_cond(18) = 30;
+        %             initial_cond(21) = 30;
+        %             initial_cond(24) = 30;
+        %
+        %             wrench = fmincon(@(x) obj.cost(x,G, free_contact_acceleration), initial_cond ,[],[],Aeq,beq,[],[],@(x) obj.constr(x, mu, contact_point),options);
+        %         end
+        %
+        %         function c = cost(x, G, free_contact_acceleration)
+        %             c = 0.5*x'*G*x + x'*free_contact_acceleration;
+        %         end
+        %
+        %         function [c, ceq] = constr(x, mu, contact_point)
+        %
+        %             c = [];
+        %             ceq = [];
+        %             for i=1:8
+        %                 j = (i-1)*3 + 1;
+        %                 c = [c; [sqrt(x(j)^2 + x(j+1)^2) - mu*x(j+2)^2;...
+        %                     -x(j+2)]];
+        %                 %     ceq = [ceq; x(j+2)*contact_point(i)>0];
+        %             end
+        %         end
 
     end
 

@@ -29,22 +29,22 @@ icubModelsInstallPrefix = getenv('ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX');
 meshFilePrefix = [icubModelsInstallPrefix '/share'];
 % Select the robot using the folder name
 % Example
-robotName='iCubGenova04';
+robotName = 'iCubGenova04';
 modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
-fileName='model.urdf';
+fileName = 'model.urdf';
 
 Config.modelPath = modelPath;
 Config.fileName = fileName;
 %% GENERAL SIMULATION INFO
 
 % Simulation time and delta_t [s]
-Config.simulationTime                   = inf;
-Config.tStep                            = 0.001;
+Config.simulationTime = inf;
+Config.tStep = 0.001;
 
 % Visualizer
 confVisualizer.visualizeRobot = true;
 
 %% ADD CONFIGURATION FILES
 % Run robot-specific and controller-specific configuration parameters
-run(strcat('app/robots/',robotName,'/configRobot.m'));
-run(strcat('app/robots/',robotName,'/initVisualizer.m'));
+run(strcat('app/robots/', robotName, '/configRobot.m'));
+run(strcat('app/robots/', robotName, '/initVisualizer.m'));

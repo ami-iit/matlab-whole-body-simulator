@@ -17,8 +17,8 @@ confVisualizer.joints_positions = Config.initialConditions.joints;
 
 % % add a world to base
 confVisualizer.world_H_base = ones(4);
-confVisualizer.world_H_base(1:3,1:3) = Config.initialConditions.orientation;
-confVisualizer.world_H_base(1:3,4) = Config.initialConditions.base_position;
+confVisualizer.world_H_base(1:3, 1:3) = Config.initialConditions.orientation;
+confVisualizer.world_H_base(1:3, 4) = Config.initialConditions.base_position;
 
 % size of the square you see around the robot
 confVisualizer.aroundRobot = 1; % mt

@@ -21,11 +21,11 @@ config.initialConditions.orientation = diag([-1, -1, 1]);
 config.initialConditions.w_H_b = Rp2Hom(config.initialConditions.orientation, config.initialConditions.base_position);
 % generate decent position
 config.initialConditions.s = [0.1744; 0.0007; 0.0001; -0.1745; ...
-                                    0.4363; 0.6981; 0.2618; -0.1745; ...
-                                    0.4363; 0.6981; 0.2618; 0.0003; ...
-                                    0.0000; -0.0001; 0.0004; -0.0004; ...
-                                    0.0003; 0.0002; 0.0001; -0.0002; ...
-                                    0.0004; -0.0005; 0.0003];
+                            0.4363; 0.6981; 0.2618; -0.1745; ...
+                            0.4363; 0.6981; 0.2618; 0.0003; ...
+                            0.0000; -0.0001; 0.0004; -0.0004; ...
+                            0.0003; 0.0002; 0.0001; -0.0002; ...
+                            0.0004; -0.0005; 0.0003];
 
 config.initialConditions.base_linear_velocity = [0; 0; 0];
 config.initialConditions.base_angular_velocity = [0; 0; 0];
@@ -34,14 +34,14 @@ config.initialConditions.s_dot = zeros(config.N_DOF, 1);
 
 robot = Robot(config)
 
-[base_dd, s_dd] = robot.forward_dynamics(zeros(23,1), zeros(29,1));
+[base_dd, s_dd] = robot.forward_dynamics(zeros(23, 1), zeros(29, 1));
 
-vertex(:,1) = [-0.06;   0.04; 0];
-vertex(:,2) = [ 0.11;   0.04; 0];
-vertex(:,3) = [ 0.11; -0.035; 0];
-vertex(:,4) = [-0.06; -0.035; 0];
+vertex(:, 1) = [-0.06; 0.04; 0];
+vertex(:, 2) = [0.11; 0.04; 0];
+vertex(:, 3) = [0.11; -0.035; 0];
+vertex(:, 4) = [-0.06; -0.035; 0];
 
 contacts = Contacts(vertex, robot, 0.1)
-[generalized_total_wrench, wrench_left_foot, wrench_right_foot, contact_detected] = contacts.compute_contact_forces(robot, zeros(23,1), zeros(29,1))
+[generalized_total_wrench, wrench_left_foot, wrench_right_foot, contact_detected] = contacts.compute_contact_forces(robot, zeros(23, 1), zeros(29, 1))
 
 state = State(0.01)
