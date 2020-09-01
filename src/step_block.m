@@ -38,7 +38,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             % discrete states.
 
             [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact_forces(obj.robot, torque, generalized_ext_wrench, obj.state.base_pose_dot, obj.state.s_dot);
+                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, obj.state.base_pose_dot, obj.state.s_dot);
             % M = obj.robot.get_mass_matrix();
             % J_feet = obj.robot.get_feet_jacobians();
 

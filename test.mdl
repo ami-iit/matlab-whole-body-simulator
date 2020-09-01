@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.70"
+    ComputedModelVersion    "1.71"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -155,7 +155,7 @@ Model {
 	Dimension		9
 	Object {
 	  $ObjectID		  6
-	  IsActive		  [1]
+	  IsActive		  [0]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "2"
@@ -210,7 +210,7 @@ Model {
 	}
 	Object {
 	  $ObjectID		  11
-	  IsActive		  [0]
+	  IsActive		  [1]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
@@ -293,9 +293,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "giuseppe"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Sep 01 14:56:57 2020"
-  RTWModifiedTimeStamp	  520873016
-  ModelVersionFormat	  "1.%<AutoIncrement:70>"
+  LastModifiedDate	  "Tue Sep 01 15:38:03 2020"
+  RTWModifiedTimeStamp	  520875482
+  ModelVersionFormat	  "1.%<AutoIncrement:71>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -5414,9 +5414,9 @@ Stateflow {
     eml {
       isEML		      1
       script		      "function torques = dummy_torque_control(joint_pos_des, joint_pos, joints_velocity, wrench_LFoot, "
-      "wrench_RFoot)\n\njoints_pos_error = (joint_pos_des - joint_pos); \n% \n% J = [Jl; Jr];\n% \nKP = 1;\nKD = 2*sqrt"
-      "(KP);\n% \n% acceleration_star = KP*(joints_pos_error) - KD*joints_velocity;\n% \n% S = [zeros(6,23); eye(23)];\n"
-      "\ntorques = KP*(joints_pos_error) - KD*joints_velocity;\n "
+      "wrench_RFoot)\n\njoints_pos_error = (joint_pos_des - joint_pos); \n% \n% J = [Jl; Jr];\n% \nKP = 0.1;\nKD = 2*sq"
+      "rt(KP);\n% \n% acceleration_star = KP*(joints_pos_error) - KD*joints_velocity;\n% \n% S = [zeros(6,23); eye(23)]"
+      ";\n\ntorques = KP*(joints_pos_error) - KD*joints_velocity;\n "
       editorLayout	      "100 M4x1[10 5 700 500]"
     }
   }

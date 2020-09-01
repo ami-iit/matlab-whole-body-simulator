@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.73"
+    ComputedModelVersion    "1.74"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -83,14 +83,14 @@ Model {
 	Dimension		9
 	Object {
 	  $ObjectID		  6
-	  IsActive		  [0]
+	  IsActive		  [1]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "122"
 	  Extents		  [2417.0, 1174.0]
-	  ZoomFactor		  [1.8687330416289811]
-	  Offset		  [229.1020432189199, -419.11656289242364]
-	  SceneRectInView	  [229.1020432189199, -419.11656289242364, 1293.3896635621602, 628.23312578484729]
+	  ZoomFactor		  [1.8687330416289809]
+	  Offset		  [229.1020432189199, -419.1165628924237]
+	  SceneRectInView	  [229.1020432189199, -419.1165628924237, 1293.3896635621602, 628.2331257848474]
 	}
 	Object {
 	  $ObjectID		  7
@@ -105,7 +105,7 @@ Model {
 	}
 	Object {
 	  $ObjectID		  8
-	  IsActive		  [1]
+	  IsActive		  [0]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
@@ -221,9 +221,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "giuseppe"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Sep 01 14:58:32 2020"
-  RTWModifiedTimeStamp	  520873033
-  ModelVersionFormat	  "1.%<AutoIncrement:73>"
+  LastModifiedDate	  "Tue Sep 01 18:36:46 2020"
+  RTWModifiedTimeStamp	  520884011
+  ModelVersionFormat	  "1.%<AutoIncrement:74>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1241,6 +1241,10 @@ Model {
       MultiThreadCoSim	      "auto"
     }
     Block {
+      BlockType		      Scope
+      DefaultConfigurationName "Simulink.scopes.TimeScopeBlockCfg"
+    }
+    Block {
       BlockType		      SubSystem
       ShowPortLabels	      "FromPortIcon"
       Permissions	      "ReadWrite"
@@ -1304,7 +1308,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "175"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "195"
+    SIDHighWatermark	    "196"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1765,6 +1769,40 @@ Model {
 	  }
 	}
 	Block {
+	  BlockType		  Scope
+	  Name			  "Scope"
+	  SID			  "196"
+	  Ports			  [2]
+	  Position		  [1090, 26, 1120, 59]
+	  ZOrder		  1250
+	  ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extmgr."
+	  "Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('Sources"
+	  "','WiredSimulink',true),extmgr.Configuration('Visuals','Time Domain',true,'SerializedDisplays',{struct('MinYLimReal"
+	  "','-103.38808','MaxYLimReal','178.84932','YLabelReal','','MinYLimMag',' 0.00000','MaxYLimMag','178.84932','LegendVi"
+	  "sibility','On','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.68627450980392"
+	  "2 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.0745098039215686 0.623529411764706 1;"
+	  "1 0.411764705882353 0.16078431372549;0.392156862745098 0.831372549019608 0.0745098039215686;0.717647058823529 0.274"
+	  "509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863],'Title','%<SignalLabel>','LinePropert"
+	  "iesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines',6,'LineNames',{{'wrench_LFoot:1','wrench_LFoot:2','wrench_"
+	  "LFoot:3','wrench_LFoot:4','wrench_LFoot:5','wrench_LFoot:6'}},'ShowContent',true,'Placement',1),struct('MinYLimReal"
+	  "','-83.37046','MaxYLimReal','566.85717','YLabelReal','','MinYLimMag','0','MaxYLimMag','10','LegendVisibility','On',"
+	  "'XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.68627450980"
+	  "3922 0.686274509803922],'ColorOrder',[1 1 0.0666666666666667;0.0745098039215686 0.623529411764706 1;1 0.41176470588"
+	  "2353 0.16078431372549;0.392156862745098 0.831372549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;"
+	  "0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},"
+	  "'UserDefinedChannelNames',{{}},'NumLines',6,'LineNames',{{'wrench_RFoot:1','wrench_RFoot:2','wrench_RFoot:3','wrenc"
+	  "h_RFoot:4','wrench_RFoot:5','wrench_RFoot:6'}},'ShowContent',true,'Placement',2)},'DisplayPropertyDefaults',struct("
+	  "'YLabelReal','','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.6862745098039"
+	  "22 0.686274509803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0."
+	  "16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608 0.0"
+	  "745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863]),'DisplayLayoutDimensions',[2 1],'Di"
+	  "splayContentCache',[]),extmgr.Configuration('Tools','Plot Navigation',true,'PreviousAutoscale','XY'),extmgr.Configu"
+	  "ration('Tools','Measurements',true,'Version','2020a')),'Version','2020a','Position',[3340 88 1491 864],'VisibleAtMo"
+	  "delOpen','on')"
+	  NumInputPorts		  "2"
+	  Floating		  off
+	}
+	Block {
 	  BlockType		  Outport
 	  Name			  "State"
 	  SID			  "128"
@@ -1819,8 +1857,18 @@ Model {
 	  Labels		  [0, 0]
 	  SrcBlock		  "MATLAB System1"
 	  SrcPort		  5
-	  DstBlock		  "wrench_LFoot"
-	  DstPort		  1
+	  Points		  [181, 0]
+	  Branch {
+	    ZOrder		    415
+	    Points		    [0, 105]
+	    DstBlock		    "Scope"
+	    DstPort		    1
+	  }
+	  Branch {
+	    ZOrder		    414
+	    DstBlock		    "wrench_LFoot"
+	    DstPort		    1
+	  }
 	}
 	Line {
 	  Name			  "wrench_RFoot"
@@ -1828,8 +1876,18 @@ Model {
 	  Labels		  [0, 0]
 	  SrcBlock		  "MATLAB System1"
 	  SrcPort		  6
-	  DstBlock		  "wrench_RFoot"
-	  DstPort		  1
+	  Points		  [191, 0]
+	  Branch {
+	    ZOrder		    417
+	    Points		    [0, 95]
+	    DstBlock		    "Scope"
+	    DstPort		    2
+	  }
+	  Branch {
+	    ZOrder		    416
+	    DstBlock		    "wrench_RFoot"
+	    DstPort		    1
+	  }
 	}
 	Line {
 	  Name			  "w_H_b"

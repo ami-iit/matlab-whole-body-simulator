@@ -7,7 +7,7 @@ function dot_R = get_R_dot(R, omega)
     % dot_R = wbc.skew(omega)*R;
 
     % apply Baumgardte stabilization
-    gain = 0.01;
+    gain = 0.001;
     A = gain * ((R' * R)' - eye(3));
 
     dot_R = (wbc.skew(omega) + A) * R;
