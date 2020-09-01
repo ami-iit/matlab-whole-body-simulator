@@ -58,11 +58,16 @@ classdef Visualizer < matlab.System
             iDynTreeWrappers.setRobotState(obj.KinDynModel, obj.config.world_H_base, obj.config.joints_positions, ...
                 initial_base_velocity, initial_joints_velocity, obj.g);
 
-            % Prepare figure, handles and variables required for the update, some extra
-            % options are commented.
+            % Prepare figure
             [obj.visualizer, ~] = iDynTreeWrappers.prepareVisualization(obj.KinDynModel, obj.config.meshFilePrefix, ...
                 'color', [1, 1, 1], 'material', 'metal', 'transparency', 1, 'debug', true, 'view', obj.pov, ...
                 'groundOn', true, 'groundColor', [0.5 0.5 0.5], 'groundTransparency', 0.5);
+            
+            x0=300;
+            y0=300;
+            width=1300;
+            height=1300;
+            set(gcf,'position',[x0,y0,width,height])
         end
 
         function followTheRobot(obj)

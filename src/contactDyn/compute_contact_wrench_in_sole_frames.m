@@ -14,7 +14,7 @@ function [wrench_left_foot, wrench_right_foot] = compute_contact_wrench_in_sole_
         wrench_left_foot(1:3) = wrench_left_foot(1:3) + R_LFOOT' * contact_forces_left(j:j + 2);
         wrench_left_foot(4:6) = wrench_left_foot(4:6) - wbc.skew(vertex(:, i)) * (R_LFOOT' * contact_forces_left(j:j + 2));
         wrench_right_foot(1:3) = wrench_right_foot(1:3) + R_RFOOT' * contact_forces_right(j:j + 2);
-        wrench_right_foot(4:6) = wrench_right_foot(4:6) - wbc.skew(vertex(:, i)) * (R_RFOOT' * contact_forces_left(j:j + 2));
+        wrench_right_foot(4:6) = wrench_right_foot(4:6) - wbc.skew(vertex(:, i)) * (R_RFOOT' * contact_forces_right(j:j + 2));
     end
 
 end

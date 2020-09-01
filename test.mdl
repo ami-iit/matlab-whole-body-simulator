@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.62"
+    ComputedModelVersion    "1.70"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -158,11 +158,11 @@ Model {
 	  IsActive		  [1]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "122"
+	  LoadSaveID		  "2"
 	  Extents		  [2417.0, 1174.0]
-	  ZoomFactor		  [1.0987535953978906]
-	  Offset		  [-379.1326352530541, -422.74171029668412]
-	  SceneRectInView	  [-379.1326352530541, -422.74171029668412, 2199.7652705061082, 1068.4834205933682]
+	  ZoomFactor		  [1.0]
+	  Offset		  [-601.546875, -273.5]
+	  SceneRectInView	  [-601.546875, -273.5, 2417.0, 1174.0]
 	}
 	Object {
 	  $ObjectID		  7
@@ -170,10 +170,10 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "34"
-	  Extents		  [656.0, 1174.0]
+	  Extents		  [2417.0, 1174.0]
 	  ZoomFactor		  [1.0]
 	  Offset		  [-679.26190732758619, -350.29141246684355]
-	  SceneRectInView	  [-679.26190732758619, -350.29141246684355, 656.0, 1174.0]
+	  SceneRectInView	  [-679.26190732758619, -350.29141246684355, 2417.0, 1174.0]
 	}
 	Object {
 	  $ObjectID		  8
@@ -214,10 +214,10 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [656.0, 1174.0]
-	  ZoomFactor		  [1.0]
-	  Offset		  [-294.0, -367.91221640488652]
-	  SceneRectInView	  [-294.0, -367.91221640488652, 656.0, 1174.0]
+	  Extents		  [2417.0, 1174.0]
+	  ZoomFactor		  [1.75]
+	  Offset		  [-384.60847552044373, -95.498977811019756]
+	  SceneRectInView	  [-384.60847552044373, -95.498977811019756, 1381.1428571428571, 670.85714285714289]
 	}
 	Object {
 	  $ObjectID		  12
@@ -235,11 +235,11 @@ Model {
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "2"
-	  Extents		  [1159.0, 1174.0]
-	  ZoomFactor		  [0.85559272349026594]
-	  Offset		  [-70.355113008399712, -372.57409095932815]
-	  SceneRectInView	  [-70.355113008399712, -372.57409095932815, 1354.6164760167994, 1372.1481819186563]
+	  LoadSaveID		  "122"
+	  Extents		  [2417.0, 1174.0]
+	  ZoomFactor		  [1.0]
+	  Offset		  [-461.30414193862759, -557.72949389179757]
+	  SceneRectInView	  [-461.30414193862759, -557.72949389179757, 2417.0, 1174.0]
 	}
 	Object {
 	  $ObjectID		  14
@@ -293,9 +293,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "giuseppe"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Aug 27 14:26:32 2020"
-  RTWModifiedTimeStamp	  520439191
-  ModelVersionFormat	  "1.%<AutoIncrement:62>"
+  LastModifiedDate	  "Tue Sep 01 14:56:57 2020"
+  RTWModifiedTimeStamp	  520873016
+  ModelVersionFormat	  "1.%<AutoIncrement:70>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1396,7 +1396,7 @@ Model {
   }
   System {
     Name		    "test"
-    Location		    [4364, 34, 5120, 1440]
+    Location		    [2603, 34, 5120, 1440]
     Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
@@ -1411,9 +1411,9 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "100"
+    ZoomFactor		    "175"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "187"
+    SIDHighWatermark	    "198"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1670,7 +1670,7 @@ Model {
       System {
 	Name			"Robot"
 	Location		[2603, 34, 5120, 1440]
-	Open			on
+	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
 	ExecutionDomainType	"Deduce"
@@ -1684,7 +1684,7 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"110"
+	ZoomFactor		"100"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport
@@ -1805,7 +1805,7 @@ Model {
 	  }
 	  System {
 	    Name		    "Dynamics and Kinematics"
-	    Location		    [4364, 34, 5120, 1440]
+	    Location		    [2603, 34, 5120, 1440]
 	    Open		    on
 	    PortBlocksUseCompactNotation off
 	    SetExecutionDomain	    off
@@ -3477,66 +3477,11 @@ Model {
 	  }
 	}
 	Block {
-	  BlockType		  MATLABSystem
-	  Name			  "MATLAB System"
-	  SID			  "184"
-	  Ports			  []
-	  Position		  [425, -410, 625, -250]
-	  ZOrder		  1245
-	  Commented		  "on"
-	  System		  "Robot_system"
-	  MaskType		  "Robot_system"
-	  MaskDisplay		  "disp('Robot_system');\n"
-	  config		  "Config"
-	  SimulateUsing		  "Interpreted execution"
-	}
-	Block {
-	  BlockType		  MATLABSystem
-	  Name			  "MATLAB System1"
-	  SID			  "185"
-	  Ports			  [2, 6]
-	  Position		  [530, -199, 800, -36]
-	  ZOrder		  1246
-	  System		  "step_block"
-	  MaskType		  "step_block"
-	  MaskDisplay		  "disp('step_block');\nport_label('input',1,'generalized_ext_wrench');\nport_label('input',2,'torque'"
-	  ");\nport_label('output',1,'w_H_b');\nport_label('output',2,'s');\nport_label('output',3,'base_pose_dot');\nport_lab"
-	  "el('output',4,'s_dot');\nport_label('output',5,'wrench_left_foot');\nport_label('output',6,'wrench_right_foot');\n"
-	  robot_config		  "robot_config"
-	  contact_config	  "contact_config"
-	  tStep			  "0.0001"
-	  SimulateUsing		  "Interpreted execution"
-	  Port {
-	    PortNumber		    1
-	    Name		    "w_H_b"
-	  }
-	  Port {
-	    PortNumber		    2
-	    Name		    "joints_position"
-	  }
-	  Port {
-	    PortNumber		    3
-	    Name		    "basePose_dot"
-	  }
-	  Port {
-	    PortNumber		    4
-	    Name		    "joints_velocity"
-	  }
-	  Port {
-	    PortNumber		    5
-	    Name		    "wrench_LFoot"
-	  }
-	  Port {
-	    PortNumber		    6
-	    Name		    "wrench_RFoot"
-	  }
-	}
-	Block {
 	  BlockType		  SubSystem
 	  Name			  "Robot visualizer"
 	  SID			  "133"
 	  Ports			  [1]
-	  Position		  [1345, -25, 1425, 55]
+	  Position		  [1420, -20, 1500, 60]
 	  ZOrder		  1234
 	  NameLocation		  "top"
 	  SystemSampleTime	  "confVisualizer.tStep"
@@ -3667,8 +3612,8 @@ Model {
 	  RequestExecContextInheritance	off
 	  System {
 	    Name		    "State Integration"
-	    Location		    [3861, 34, 5120, 1440]
-	    Open		    off
+	    Location		    [2603, 34, 5120, 1440]
+	    Open		    on
 	    PortBlocksUseCompactNotation off
 	    SetExecutionDomain	    off
 	    ExecutionDomainType	    "Deduce"
@@ -3682,7 +3627,7 @@ Model {
 	    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
-	    ZoomFactor		    "86"
+	    ZoomFactor		    "100"
 	    SimulinkSubDomain	    "Simulink"
 	    Block {
 	      BlockType		      Inport
@@ -4056,7 +4001,7 @@ Model {
 	      Name		      "get_R_dot\n"
 	      SID		      "23"
 	      Ports		      [2, 1]
-	      Position		      [495, 83, 620, 152]
+	      Position		      [620, 83, 745, 152]
 	      ZOrder		      1125
 	      ErrorFcn		      "Stateflow.Translate.translate"
 	      PermitHierarchicalResolution "ExplicitOnly"
@@ -4518,7 +4463,7 @@ Model {
 	    Points		    [0, -238]
 	    Branch {
 	      ZOrder		      208
-	      Points		      [0, -2]
+	      Points		      [65, 0; 0, 3]
 	      DstBlock		      "Robot visualizer"
 	      DstPort		      1
 	    }
@@ -4566,18 +4511,8 @@ Model {
 	  ZOrder		  105
 	  SrcBlock		  "generalized external wrench"
 	  SrcPort		  1
-	  Points		  [140, 0]
-	  Branch {
-	    ZOrder		    323
-	    Points		    [0, -385]
-	    DstBlock		    "MATLAB System1"
-	    DstPort		    1
-	  }
-	  Branch {
-	    ZOrder		    322
-	    DstBlock		    "MATLAB Function1"
-	    DstPort		    4
-	  }
+	  DstBlock		  "MATLAB Function1"
+	  DstPort		  4
 	}
 	Line {
 	  ZOrder		  97
@@ -4670,28 +4605,35 @@ Model {
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  326
+	  ZOrder		  332
+	  SrcBlock		  "Delay1"
+	  SrcPort		  1
+	  DstBlock		  "MATLAB Function1"
+	  DstPort		  3
+	}
+	Line {
+	  ZOrder		  407
 	  SrcBlock		  "State Integration"
 	  SrcPort		  1
 	  DstBlock		  "Bus\nCreator"
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  327
+	  ZOrder		  408
 	  SrcBlock		  "State Integration"
 	  SrcPort		  2
 	  DstBlock		  "Bus\nCreator"
 	  DstPort		  2
 	}
 	Line {
-	  ZOrder		  328
+	  ZOrder		  409
 	  SrcBlock		  "State Integration"
 	  SrcPort		  3
 	  DstBlock		  "Bus\nCreator"
 	  DstPort		  3
 	}
 	Line {
-	  ZOrder		  329
+	  ZOrder		  410
 	  SrcBlock		  "State Integration"
 	  SrcPort		  4
 	  DstBlock		  "Bus\nCreator"
@@ -4699,7 +4641,7 @@ Model {
 	}
 	Line {
 	  Name			  "wrench_LFoot"
-	  ZOrder		  330
+	  ZOrder		  411
 	  Labels		  [0, 0]
 	  SrcBlock		  "MATLAB Function1"
 	  SrcPort		  8
@@ -4708,29 +4650,12 @@ Model {
 	}
 	Line {
 	  Name			  "wrench_RFoot"
-	  ZOrder		  331
+	  ZOrder		  412
 	  Labels		  [0, 0]
 	  SrcBlock		  "MATLAB Function1"
 	  SrcPort		  9
 	  DstBlock		  "wrench_RFoot"
 	  DstPort		  1
-	}
-	Line {
-	  ZOrder		  332
-	  SrcBlock		  "Delay1"
-	  SrcPort		  1
-	  Points		  [30, 0]
-	  Branch {
-	    ZOrder		    325
-	    Points		    [0, -8; 8, 0; 0, -267]
-	    DstBlock		    "MATLAB System1"
-	    DstPort		    2
-	  }
-	  Branch {
-	    ZOrder		    324
-	    DstBlock		    "MATLAB Function1"
-	    DstPort		    3
-	  }
 	}
       }
     }
@@ -4822,6 +4747,9 @@ Stateflow {
     screen		    [1 1 3600 1200 1.180555555555556]
     treeNode		    [0 3 0 0]
     viewObj		    2
+    visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    27
     decomposition	    CLUSTER_CHART
     type		    EML_CHART
@@ -5980,6 +5908,12 @@ Stateflow {
     machine		    1
     name		    "sfun"
     description		    "Default Simulink S-Function Target."
-    linkNode		    [1 0 0]
+    linkNode		    [1 0 57]
+  }
+  target {
+    id			    57
+    machine		    1
+    name		    "rtw"
+    linkNode		    [1 56 0]
   }
 }

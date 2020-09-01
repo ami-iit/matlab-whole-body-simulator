@@ -4,7 +4,7 @@ classdef Robot < handle
 
     properties
         KinDynModel% kynDyn robot model
-        g = [0, 0, 9.81]% gravity vector
+        g = [0, 0, -9.81]% gravity vector
         M_iDyn = iDynTree.MatrixDynSize(); % mass matrix iDynTree
         J_LFoot_iDyntree; % Jacobian relative to left foot
         J_RFoot_iDyntree; % Jacobian relative to right foot
@@ -81,8 +81,6 @@ classdef Robot < handle
             % dot{x} = [x2;...
             %           dot{v}];
             % dot{v} = inv{M}(S*tau + external_forces - h)
-            torques
-            generalized_total_wrench
             M = obj.get_mass_matrix();
             h = obj.get_bias_forces();
             ddot = M \ (obj.S * torques + generalized_total_wrench - h);
