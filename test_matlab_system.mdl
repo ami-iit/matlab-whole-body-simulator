@@ -60,7 +60,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [2603.0, 34.0, 2517.0, 1406.0]
+      Location		      [43.0, 34.0, 2837.0, 1586.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -87,10 +87,10 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "122"
-	  Extents		  [2417.0, 1174.0]
+	  Extents		  [2737.0, 1354.0]
 	  ZoomFactor		  [1.8687330416289809]
 	  Offset		  [229.1020432189199, -419.1165628924237]
-	  SceneRectInView	  [229.1020432189199, -419.1165628924237, 1293.3896635621602, 628.2331257848474]
+	  SceneRectInView	  [229.1020432189199, -419.1165628924237, 1464.6286757011305, 724.55507011301825]
 	}
 	Object {
 	  $ObjectID		  7
@@ -99,9 +99,9 @@ Model {
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "133"
 	  Extents		  [2417.0, 1174.0]
-	  ZoomFactor		  [3.4272727272727268]
-	  Offset		  [625.91511936339521, 51.226790450928348]
-	  SceneRectInView	  [625.91511936339521, 51.226790450928348, 705.22546419098148, 342.5464190981433]
+	  ZoomFactor		  [5.7878787878787881]
+	  Offset		  [586.20157068062827, 126.58115183246073]
+	  SceneRectInView	  [586.20157068062827, 126.58115183246073, 417.59685863874347, 202.83769633507853]
 	}
 	Object {
 	  $ObjectID		  8
@@ -201,7 +201,7 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABiAP///wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAABrAD///8AAAmXAAAE0wAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
+      "QBjAHQAbwByAAAAAAD/////AAABrAD///8AAArXAAAFhwAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIATABlAGYAdAMAAAAA/////wAAAAAAAAAAAAAAAQAAAAEAAAA4AGMAbwBsAGwAYQBwAHMAaQBiA"
       "GwAZQBQAGEAbgBlAGwAVABvAG8AbABCAGEAcgBSAGkAZwBoAHQDAAAAAP////8AAAAAAAAAAAAAAAMAAAABAAAAOgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAQgBvAHQAdABvAG0AAAAAAP////8AAAAAAAAAAA=="
@@ -221,7 +221,7 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "giuseppe"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Sep 01 18:36:46 2020"
+  LastModifiedDate	  "Wed Sep 02 20:14:12 2020"
   RTWModifiedTimeStamp	  520884011
   ModelVersionFormat	  "1.%<AutoIncrement:74>"
   SampleTimeColors	  off
@@ -1543,7 +1543,7 @@ Model {
       RequestExecContextInheritance off
       System {
 	Name			"Robot"
-	Location		[2603, 34, 5120, 1440]
+	Location		[43, 34, 2880, 1620]
 	Open			on
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1675,7 +1675,7 @@ Model {
 	    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
 	    TiledPageScale	    1
 	    ShowPageBoundaries	    off
-	    ZoomFactor		    "343"
+	    ZoomFactor		    "579"
 	    SimulinkSubDomain	    "Simulink"
 	    Block {
 	      BlockType		      Inport
@@ -1797,8 +1797,7 @@ Model {
 	  "16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608 0.0"
 	  "745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156863]),'DisplayLayoutDimensions',[2 1],'Di"
 	  "splayContentCache',[]),extmgr.Configuration('Tools','Plot Navigation',true,'PreviousAutoscale','XY'),extmgr.Configu"
-	  "ration('Tools','Measurements',true,'Version','2020a')),'Version','2020a','Position',[3340 88 1491 864],'VisibleAtMo"
-	  "delOpen','on')"
+	  "ration('Tools','Measurements',true,'Version','2020a')),'Version','2020a','Position',[3340 88 1491 864])"
 	  NumInputPorts		  "2"
 	  Floating		  off
 	}
@@ -2029,9 +2028,6 @@ Stateflow {
     screen		    [1 1 3600 1200 1.180555555555556]
     treeNode		    [0 3 0 0]
     viewObj		    2
-    visible		    1
-    subviewS {
-    }
     ssIdHighWaterMark	    17
     decomposition	    CLUSTER_CHART
     type		    EML_CHART

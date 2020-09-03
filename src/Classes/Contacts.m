@@ -77,17 +77,28 @@ classdef Contacts < handle
             [H_LFOOT, H_RFOOT] = robot.get_feet_H();
             [J_LFoot, J_RFoot] = robot.get_feet_jacobians();
             [JDot_nu_LFOOT, JDot_nu_RFOOT] = robot.get_feet_JDot_nu();
+            J_L_lin = J_LFoot(1:3, :);
+            J_L_ang = J_LFoot(4:6, :);
+            J_R_lin = J_RFoot(1:3, :);
+            J_R_ang = J_RFoot(4:6, :);
+            JDot_nu_L_lin = JDot_nu_LFOOT(1:3, :);
+            JDot_nu_L_ang = JDot_nu_LFOOT(4:6, :);
+            JDot_nu_R_lin = JDot_nu_RFOOT(1:3, :);
+            JDot_nu_R_ang = JDot_nu_RFOOT(4:6, :);
+            R_LFOOT = H_LFOOT(1:3, 1:3);
+            R_RFOOT = H_RFOOT(1:3, 1:3);
 
             % the vertices are affected by pure forces. We need only the linear Jacobians
-            % for a vertex:
-            % J = J_linear - S(R*p) * J_angular
-            % JDot_nu = JDot_nu_linear - S(R*p) * JDot_nu_angular
+            % for a vertex i:
+            % Ji = J_linear - S(R*pi) * J_angular
+            % JDot_nui = JDot_nu_linear - S(R*pi) * JDot_nu_angular
             for ii = 1:obj.num_vertices
                 j = (ii - 1) * 3 + 1;
-                J_left_foot_print(j:j + 2, :) = J_LFoot(1:3, :) - wbc.skew(H_LFOOT(1:3, 1:3) * obj.foot_print(:, ii)) * J_LFoot(4:6, :);
-                JDot_nu_left_foot_print(j:j + 2, :) = JDot_nu_LFOOT(1:3, :) - wbc.skew(H_LFOOT(1:3, 1:3) * obj.foot_print(:, ii)) * JDot_nu_LFOOT(4:6, :);
-                J_right_foot_print(j:j + 2, :) = J_RFoot(1:3, :) - wbc.skew(H_RFOOT(1:3, 1:3) * obj.foot_print(:, ii)) * J_RFoot(4:6, :);
-                JDot_nu_right_foot_print(j:j + 2, :) = JDot_nu_RFOOT(1:3, :) - wbc.skew(H_RFOOT(1:3, 1:3) * obj.foot_print(:, ii)) * JDot_nu_RFOOT(4:6, :);
+                v_coords = obj.foot_print(:, ii);
+                J_left_foot_print(j:j + 2, :) = J_L_lin - wbc.skew(R_LFOOT * v_coords) * J_L_ang;
+                JDot_nu_left_foot_print(j:j + 2, :) = JDot_nu_L_lin - wbc.skew(R_LFOOT * v_coords) * JDot_nu_L_ang;
+                J_right_foot_print(j:j + 2, :) = J_R_lin - wbc.skew(R_RFOOT * v_coords) * J_R_ang;
+                JDot_nu_right_foot_print(j:j + 2, :) = JDot_nu_R_lin - wbc.skew(R_RFOOT * v_coords) * JDot_nu_R_ang;
             end
 
             % stack the matrices
@@ -134,6 +145,7 @@ classdef Contacts < handle
 
             end
 
+            % if a new contact is detected we should prevent that the velocity of the vertices that previusly were in contact is nonzero.
             if new_contact
 
                 for ii = 1:obj.num_vertices * 2
@@ -147,8 +159,8 @@ classdef Contacts < handle
 
             end
 
-            % compute the projection in the null space of the scaled Feet Jacobian
-            if isempty(J)
+            % compute the projection in the null space of the scaled Jacobian of the vertices if a new contact is detected
+            if ~new_contact
                 return
             else
                 N = (eye(robot.NDOF + 6) - M \ (J' * ((J * (M \ J')) \ J)));
@@ -183,14 +195,12 @@ classdef Contacts < handle
                 H = (H + H') / 2; % if non sym
             end
 
-            f = free_contact_acceleration;
-
             for i = 1:obj.num_vertices * 2
                 obj.Aeq(i, i * 3) = contact_point(i) > 0;
             end
 
             options = optimoptions('quadprog', 'Algorithm', 'active-set', 'Display', 'off');
-            forces = quadprog(H, f, obj.A, obj.b, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+            forces = quadprog(H, free_contact_acceleration, obj.A, obj.b, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
         end
 
         function [wrench_left_foot, wrench_right_foot] = compute_contact_wrench_in_sole_frames(obj, contact_forces, robot)
@@ -202,7 +212,7 @@ classdef Contacts < handle
 
             wrench_left_foot = zeros(6, 1);
             wrench_right_foot = zeros(6, 1);
-
+            % computed contact forces on every vertex - split left and right
             contact_forces_left = contact_forces(1:12);
             contact_forces_right = contact_forces(13:24);
 
@@ -226,15 +236,15 @@ classdef Contacts < handle
             obj.Aeq = zeros(total_num_vertices, num_variables);
             obj.beq = zeros(total_num_vertices, 1);
 
-            A = [1, 0, -obj.mu; ...% first 4 rows: simplified friction cone
-                0, 1, -obj.mu; ...
-                    -1, 0, -obj.mu; ...
-                    0, -1, -obj.mu; ...
-                    0, 0, -1]; ...% non negativity of vertical force
+            constr_matrix = [1,  0, -obj.mu; ...% first 4 rows: simplified friction cone
+                             0,  1, -obj.mu; ...
+                            -1,  0, -obj.mu; ...
+                             0, -1, -obj.mu; ...
+                             0,  0, -1]; ...% non negativity of vertical force
 
             % fill a block diagonal matrix with all the constraints
-            Ar = repmat(A, 1, total_num_vertices); % Repeat Matrix for every vertex
-            Ac = mat2cell(Ar, size(A, 1), repmat(size(A, 2), 1, total_num_vertices)); % Create Cell Array Of Orignal Repeated Matrix
+            Ar = repmat(constr_matrix, 1, total_num_vertices); % Repeat Matrix for every vertex
+            Ac = mat2cell(Ar, size(constr_matrix, 1), repmat(size(constr_matrix, 2), 1, total_num_vertices)); % Create Cell Array Of Orignal Repeated Matrix
             obj.A = blkdiag(Ac{:});
 
         end
