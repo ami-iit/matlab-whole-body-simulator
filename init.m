@@ -32,19 +32,17 @@ meshFilePrefix = [icubModelsInstallPrefix '/share'];
 robotName = 'iCubGenova04';
 modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
 fileName = 'model.urdf';
-
-Config.modelPath = modelPath;
-Config.fileName = fileName;
 %% GENERAL SIMULATION INFO
-
 % Simulation time and delta_t [s]
 Config.simulationTime = inf;
 Config.tStep = 0.001;
 
-% Visualizer
+% Do you want to enable the Visualizer?
 confVisualizer.visualizeRobot = true;
 
 %% ADD CONFIGURATION FILES
 % Run robot-specific and controller-specific configuration parameters
+Config.modelPath = modelPath;
+Config.fileName = fileName;
 run(strcat('app/robots/', robotName, '/configRobot.m'));
 run(strcat('app/robots/', robotName, '/initVisualizer.m'));

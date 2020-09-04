@@ -1,5 +1,5 @@
 function dot_R = get_R_dot(R, omega)
-    % Takes the rotation matrix R and the
+    % get_R_dot Takes the rotation matrix R and the
     % angular velocity omega to compute the
     % time derivative of R
 

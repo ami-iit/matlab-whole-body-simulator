@@ -1,8 +1,6 @@
 classdef Visualizer < matlab.System
-    % matlab.System handling the robot visualization
+    % Visualizer matlab.System handling the robot visualization.
     % go in app/robots/iCub*/initVisualizer.m to change the setup config
-
-    %@author: Giuseppe L'Erario
 
     properties (Nontunable)
         config
@@ -36,16 +34,20 @@ classdef Visualizer < matlab.System
         end
 
         function stepImpl(obj, world_H_base, base_velocity, joints_positions, joints_velocity)
-
+            % stepImpl Specifies the algorithm to execute when you run the System object
             if obj.config.visualizeRobot
+                % take the kinematic quantities and sets the robot state
                 iDynTreeWrappers.setRobotState(obj.KinDynModel, world_H_base, joints_positions, base_velocity, joints_velocity, obj.g);
+                % update the visualization accordingly
                 iDynTreeWrappers.updateVisualization(obj.KinDynModel, obj.visualizer);
+                % the visualizer follows the robot
                 obj.followTheRobot();
             end
 
         end
 
         function prepareRobot(obj)
+            % prepareRobot Prepares the visualization loading the information
             % Main variable of iDyntreeWrappers used for many things including updating
             % robot position and getting world to frame transforms
             obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, 'root_link', ...
@@ -54,7 +56,6 @@ classdef Visualizer < matlab.System
             % Set initial position of the robot
             initial_base_velocity = zeros(6, 1);
             initial_joints_velocity = zeros(length(obj.config.joints_positions));
-
             iDynTreeWrappers.setRobotState(obj.KinDynModel, obj.config.world_H_base, obj.config.joints_positions, ...
                 initial_base_velocity, initial_joints_velocity, obj.g);
 
@@ -62,12 +63,13 @@ classdef Visualizer < matlab.System
             [obj.visualizer, ~] = iDynTreeWrappers.prepareVisualization(obj.KinDynModel, obj.config.meshFilePrefix, ...
                 'color', [1, 1, 1], 'material', 'metal', 'transparency', 1, 'debug', true, 'view', obj.pov, ...
                 'groundOn', true, 'groundColor', [0.5 0.5 0.5], 'groundTransparency', 0.5);
-            
-            x0=300;
-            y0=300;
-            width=1300;
-            height=1300;
-            set(gcf,'position',[x0,y0,width,height])
+
+            % The size of the visualizer matlab figure
+            x0 = 300;
+            y0 = 300;
+            width = 1300;
+            height = 1300;
+            set(gcf, 'position', [x0, y0, width, height])
         end
 
         function followTheRobot(obj)
