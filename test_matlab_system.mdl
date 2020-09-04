@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.75"
+    ComputedModelVersion    "1.76"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -83,7 +83,7 @@ Model {
 	Dimension		9
 	Object {
 	  $ObjectID		  6
-	  IsActive		  [1]
+	  IsActive		  [0]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "122"
@@ -105,14 +105,14 @@ Model {
 	}
 	Object {
 	  $ObjectID		  8
-	  IsActive		  [0]
+	  IsActive		  [1]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [2417.0, 1174.0]
+	  Extents		  [2189.0, 1055.0]
 	  ZoomFactor		  [1.75]
 	  Offset		  [-384.60847552044373, -95.498977811019756]
-	  SceneRectInView	  [-384.60847552044373, -95.498977811019756, 1381.1428571428571, 670.85714285714289]
+	  SceneRectInView	  [-384.60847552044373, -95.498977811019756, 1250.8571428571429, 602.85714285714289]
 	}
 	Object {
 	  $ObjectID		  9
@@ -221,9 +221,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "giuseppe"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Sep 04 13:01:56 2020"
-  RTWModifiedTimeStamp	  521125315
-  ModelVersionFormat	  "1.%<AutoIncrement:75>"
+  LastModifiedDate	  "Fri Sep 04 15:22:41 2020"
+  RTWModifiedTimeStamp	  521133760
+  ModelVersionFormat	  "1.%<AutoIncrement:76>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1287,7 +1287,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system"
-    Location		    [43, 34, 2880, 1620]
+    Location		    [43, 34, 2332, 1321]
     Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off

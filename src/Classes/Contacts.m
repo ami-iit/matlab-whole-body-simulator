@@ -91,10 +91,10 @@ classdef Contacts < handle
             for ii = 1:obj.num_vertices
                 j = (ii - 1) * 3 + 1;
                 v_coords = obj.foot_print(:, ii);
-                J_left_foot_print(j:j + 2, :) = J_L_lin - wbc.skew(R_LFOOT * v_coords) * J_L_ang;
-                JDot_nu_left_foot_print(j:j + 2, :) = JDot_nu_L_lin - wbc.skew(R_LFOOT * v_coords) * JDot_nu_L_ang;
-                J_right_foot_print(j:j + 2, :) = J_R_lin - wbc.skew(R_RFOOT * v_coords) * J_R_ang;
-                JDot_nu_right_foot_print(j:j + 2, :) = JDot_nu_R_lin - wbc.skew(R_RFOOT * v_coords) * JDot_nu_R_ang;
+                J_left_foot_print(j:j + 2, :) = J_L_lin - skew(R_LFOOT * v_coords) * J_L_ang;
+                JDot_nu_left_foot_print(j:j + 2, :) = JDot_nu_L_lin - skew(R_LFOOT * v_coords) * JDot_nu_L_ang;
+                J_right_foot_print(j:j + 2, :) = J_R_lin - skew(R_RFOOT * v_coords) * J_R_ang;
+                JDot_nu_right_foot_print(j:j + 2, :) = JDot_nu_R_lin - skew(R_RFOOT * v_coords) * JDot_nu_R_ang;
             end
 
             % stack the matrices
@@ -221,9 +221,9 @@ classdef Contacts < handle
             for i = 1:obj.num_vertices
                 j = (i - 1) * 3 + 1;
                 wrench_left_foot(1:3) = wrench_left_foot(1:3) + R_LFOOT' * contact_forces_left(j:j + 2);
-                wrench_left_foot(4:6) = wrench_left_foot(4:6) - wbc.skew(obj.foot_print(:, i)) * (R_LFOOT' * contact_forces_left(j:j + 2));
+                wrench_left_foot(4:6) = wrench_left_foot(4:6) - skew(obj.foot_print(:, i)) * (R_LFOOT' * contact_forces_left(j:j + 2));
                 wrench_right_foot(1:3) = wrench_right_foot(1:3) + R_RFOOT' * contact_forces_right(j:j + 2);
-                wrench_right_foot(4:6) = wrench_right_foot(4:6) - wbc.skew(obj.foot_print(:, i)) * (R_RFOOT' * contact_forces_right(j:j + 2));
+                wrench_right_foot(4:6) = wrench_right_foot(4:6) - skew(obj.foot_print(:, i)) * (R_RFOOT' * contact_forces_right(j:j + 2));
             end
 
         end
