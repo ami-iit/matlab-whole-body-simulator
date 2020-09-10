@@ -174,10 +174,10 @@ classdef Contacts < handle
 
         end
 
-        function free_acceleration = compute_free_acceleration(obj, M, h, torque, generalized_jet_wrench)
+        function free_acceleration = compute_free_acceleration(obj, M, h, torque, generalized_ext_wrench)
             % compute_free_acceleration returns the system acceleration with NO contact forces
             % dot{v} = inv{M}(S*tau + external_forces - h)
-            free_acceleration = M \ (obj.S * torque + generalized_jet_wrench - h);
+            free_acceleration = M \ (obj.S * torque + generalized_ext_wrench - h);
         end
 
         function free_contact_acceleration = compute_free_contact_acceleration(obj, J_feet, free_acceleration, JDot_nu_feet)

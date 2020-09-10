@@ -11,3 +11,4 @@ function dot_R = get_R_dot(R, omega)
     A = gain * ((R' * R)' - eye(3));
 
     dot_R = (wbc.skew(omega) + A) * R;
+end

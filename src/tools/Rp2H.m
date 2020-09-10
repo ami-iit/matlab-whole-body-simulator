@@ -1,5 +1,5 @@
-function H = Rp2Hom(R, p)
-    % Rp2Hom Takes position p and rotation matrix R.
+function H = Rp2H(R, p)
+    % Rp2H Takes position p and rotation matrix R.
     % Returns the corresponding homogeneous transformation matrix H
 
     % check if det(R) = 1, if not use the SVD to correct the rotation matrix
