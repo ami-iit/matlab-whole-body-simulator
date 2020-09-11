@@ -9,7 +9,7 @@ In the simulator the ground is assumed to be flat and the contact forces are com
 - [iDynTree](https://github.com/robotology/idyntree)
 - [icub-models](https://github.com/robotology/icub-models) to access iCub models.
 
-It is to suggest to install `iDynTree`, `icub-models` using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild).
+It is suggested to install `iDynTree`, `icub-models` using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild).
 
 ## :runner: How to use the simulator
 
