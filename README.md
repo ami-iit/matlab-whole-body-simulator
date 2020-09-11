@@ -5,7 +5,7 @@ In the simulator the ground is assumed to be flat and the contact forces are com
 
 ## :hammer: Dependencies
 
-- [Matlab/Simulink](https://it.mathworks.com/products/matlab.html)
+- [Matlab/Simulink 2020a](https://it.mathworks.com/products/matlab.html)
 - [iDynTree](https://github.com/robotology/idyntree)
 - [icub-models](https://github.com/robotology/icub-models) to access iCub models.
 

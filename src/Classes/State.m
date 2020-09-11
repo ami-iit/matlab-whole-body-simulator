@@ -23,7 +23,7 @@ classdef State < handle
 
         function obj = State(dt)
             %STATE Construct an instance of this class
-            %   Detailed explanation goes here
+            %   INPUT: dt - the timestep of the integrator
             obj.dt = dt;
         end
 
