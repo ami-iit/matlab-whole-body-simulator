@@ -1,6 +1,6 @@
 Model {
   Name			  "test_matlab_system_19"
-  Version		  9.3
+  Version		  10.0
   SavedCharacterEncoding  "UTF-8"
   GraphicalInterface {
     NumRootInports	    0
@@ -17,10 +17,12 @@ Model {
     PreCompExecutionDomainType "Unset"
     IsExportFunctionModel   0
     IsArchitectureModel	    0
+    IsAUTOSARArchitectureModel 0
     NumParameterArguments   0
     NumExternalFileReferences 0
     OrderedModelArguments   1
   }
+  AnimationPlugin	  "on"
   SLCCPlugin		  "on"
   WebScopes_FoundationPlugin "on"
   LogicAnalyzerPlugin	  "on"
@@ -82,83 +84,101 @@ Model {
 	Object {
 	  $ObjectID		  6
 	  IsActive		  [0]
+	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "122"
 	  Extents		  [2189.0, 1055.0]
 	  ZoomFactor		  [1.8687330416289807]
 	  Offset		  [229.10204321891979, -419.1165628924237]
+	  SceneRectInView	  [229.10204321891979, -419.1165628924237, 1171.3818674131439, 564.55361814566788]
 	}
 	Object {
 	  $ObjectID		  7
 	  IsActive		  [0]
+	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "133"
 	  Extents		  [2417.0, 1174.0]
 	  ZoomFactor		  [5.7878787878787881]
 	  Offset		  [586.20157068062827, 126.58115183246073]
+	  SceneRectInView	  [586.20157068062827, 126.58115183246073, 417.59685863874347, 202.83769633507853]
 	}
 	Object {
 	  $ObjectID		  8
 	  IsActive		  [1]
+	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
 	  Extents		  [2189.0, 1055.0]
 	  ZoomFactor		  [1.75]
 	  Offset		  [-384.60847552044373, -95.498977811019756]
+	  SceneRectInView	  [-384.60847552044373, -95.498977811019756, 1250.8571428571429, 602.85714285714289]
 	}
 	Object {
 	  $ObjectID		  9
 	  IsActive		  [0]
+	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "34"
 	  Extents		  [2417.0, 1174.0]
 	  ZoomFactor		  [1.0]
 	  Offset		  [-679.26190732758619, -350.29141246684355]
+	  SceneRectInView	  [-679.26190732758619, -350.29141246684355, 2417.0, 1174.0]
 	}
 	Object {
 	  $ObjectID		  10
 	  IsActive		  [0]
+	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "48"
 	  Extents		  [2417.0, 1174.0]
 	  ZoomFactor		  [0.6]
 	  Offset		  [-875.24486488374964, -1180.5000000000002]
+	  SceneRectInView	  [-875.24486488374964, -1180.5000000000002, 4028.3333333333335, 1956.6666666666667]
 	}
 	Object {
 	  $ObjectID		  11
 	  IsActive		  [0]
+	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "39"
 	  Extents		  [2417.0, 1174.0]
 	  ZoomFactor		  [2.1895730296292935]
 	  Offset		  [212.06699685013245, -273.33879724801062]
+	  SceneRectInView	  [212.06699685013245, -273.33879724801062, 1103.8681821949604, 536.17759449602124]
 	}
 	Object {
 	  $ObjectID		  12
 	  IsActive		  [0]
+	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "44"
 	  Extents		  [1159.0, 1174.0]
 	  ZoomFactor		  [1.7499999999999998]
 	  Offset		  [-228.72071607519595, -136.92917420132613]
+	  SceneRectInView	  [-228.72071607519595, -136.92917420132613, 662.28571428571433, 670.85714285714289]
 	}
 	Object {
 	  $ObjectID		  13
 	  IsActive		  [0]
+	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "2"
 	  Extents		  [2417.0, 1174.0]
 	  ZoomFactor		  [1.0]
 	  Offset		  [-601.546875, -273.5]
+	  SceneRectInView	  [-601.546875, -273.5, 2417.0, 1174.0]
 	}
 	Object {
 	  $ObjectID		  14
 	  IsActive		  [0]
+	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "78"
 	  Extents		  [2417.0, 1174.0]
 	  ZoomFactor		  [5.95]
 	  Offset		  [-54.408022584033574, -40.15546218487394]
+	  SceneRectInView	  [-54.408022584033574, -40.15546218487394, 406.21848739495795, 197.31092436974788]
 	}
 	PropName		"EditorsInfo"
       }
@@ -185,7 +205,14 @@ Model {
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIATABlAGYAdAMAAAAA/////wAAAAAAAAAAAAAAAQAAAAEAAAA4AGMAbwBsAGwAYQBwAHMAaQBiA"
       "GwAZQBQAGEAbgBlAGwAVABvAG8AbABCAGEAcgBSAGkAZwBoAHQDAAAAAP////8AAAAAAAAAAAAAAAMAAAABAAAAOgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAQgBvAHQAdABvAG0AAAAAAP////8AAAAAAAAAAA=="
+      Array {
+	Type			"Cell"
+	Dimension		0
+	PropName		"PersistedApps"
+      }
+      WindowUuid	      "0b82776b-3568-4091-8b56-551a033ff4d9"
     }
+    BDUuid		    "4be60c2b-4b30-4b0b-a0c7-5255400b2066"
   }
   HideAutomaticNames	  on
   Created		  "Mon Aug 24 16:20:58 2020"
@@ -194,8 +221,8 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "giuseppe"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Oct 12 18:09:54 2020"
-  RTWModifiedTimeStamp	  524426994
+  LastModifiedDate	  "Mon Oct 12 18:16:45 2020"
+  RTWModifiedTimeStamp	  524427405
   ModelVersionFormat	  "1.%<AutoIncrement:77>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -232,6 +259,12 @@ Model {
   BrowserLookUnderMasks	  off
   MultiThreadCoSim	  "on"
   SimulationMode	  "normal"
+  SILPILModeSetting	  "automated"
+  SILPILSystemUnderTest	  "topmodel"
+  SILPILSimulationModeTopModel "normal"
+  SILPILSimulationModeModelRef "normal"
+  SimTabSimulationMode	  "normal"
+  CodeVerificationMode	  "software-in-the-loop (sil)"
   PauseTimes		  "5"
   NumberOfSteps		  1
   SnapshotBufferSize	  10
@@ -294,7 +327,7 @@ Model {
     Dimension		    1
     Simulink.ConfigSet {
       $ObjectID		      17
-      Version		      "19.0.0"
+      Version		      "19.1.0"
       DisabledProps	      []
       Description	      ""
       Array {
@@ -302,7 +335,7 @@ Model {
 	Dimension		10
 	Simulink.SolverCC {
 	  $ObjectID		  18
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  DisabledProps		  []
 	  Description		  ""
 	  Components		  []
@@ -345,7 +378,7 @@ Model {
 	}
 	Simulink.DataIOCC {
 	  $ObjectID		  19
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  DisabledProps		  []
 	  Description		  ""
 	  Components		  []
@@ -387,7 +420,7 @@ Model {
 	}
 	Simulink.OptimizationCC {
 	  $ObjectID		  20
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    9
@@ -456,10 +489,11 @@ Model {
 	  LabelGuidedReuse	  off
 	  MultiThreadedLoops	  off
 	  DenormalBehavior	  "GradualUnderflow"
+	  EfficientTunableParamExpr off
 	}
 	Simulink.DebuggingCC {
 	  $ObjectID		  21
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    1
@@ -542,6 +576,7 @@ Model {
 	  OperatingPointInterfaceChecksumMismatchMsg "warning"
 	  NonCurrentReleaseOperatingPointMsg "error"
 	  ChecksumConsistencyForSSReuse	"none"
+	  PregeneratedLibrarySubsystemCodeDiagnostic "warning"
 	  MatchCodeGenerationContextForUpdateDiagram "none"
 	  InitInArrayFormatMsg	  "warning"
 	  StrictBusMsg		  "ErrorLevel1"
@@ -579,7 +614,7 @@ Model {
 	}
 	Simulink.HardwareCC {
 	  $ObjectID		  22
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  DisabledProps		  []
 	  Description		  ""
 	  Components		  []
@@ -629,7 +664,7 @@ Model {
 	}
 	Simulink.ModelReferenceCC {
 	  $ObjectID		  23
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  DisabledProps		  []
 	  Description		  ""
 	  Components		  []
@@ -649,7 +684,7 @@ Model {
 	}
 	Simulink.SFSimCC {
 	  $ObjectID		  24
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  DisabledProps		  []
 	  Description		  ""
 	  Components		  []
@@ -679,11 +714,12 @@ Model {
 	  MATLABDynamicMemAllocThreshold 65536
 	  CustomCodeFunctionArrayLayout	[]
 	  DefaultCustomCodeFunctionArrayLayout "NotSpecified"
+	  CustomCodeUndefinedFunction "FilterOut"
 	}
 	Simulink.RTWCC {
 	  $BackupClass		  "Simulink.RTWCC"
 	  $ObjectID		  25
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  Array {
 	    Type		    "Cell"
 	    Dimension		    16
@@ -772,7 +808,7 @@ Model {
 	    Dimension		    2
 	    Simulink.CodeAppCC {
 	      $ObjectID		      26
-	      Version		      "19.0.0"
+	      Version		      "19.1.0"
 	      Array {
 		Type			"Cell"
 		Dimension		28
@@ -857,11 +893,12 @@ Model {
 	      ReqsInCode	      off
 	      UseSimReservedNames     off
 	      ReservedNameArray	      []
+	      EnumMemberNameClash     "error"
 	    }
 	    Simulink.GRTTargetCC {
 	      $BackupClass	      "Simulink.TargetCC"
 	      $ObjectID		      27
-	      Version		      "19.0.0"
+	      Version		      "19.1.0"
 	      Array {
 		Type			"Cell"
 		Dimension		16
@@ -966,7 +1003,7 @@ Model {
 	}
 	SlCovCC.ConfigComp {
 	  $ObjectID		  28
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  DisabledProps		  []
 	  Description		  "Simulink Coverage Configuration Component"
 	  Components		  []
@@ -1007,7 +1044,7 @@ Model {
 	}
 	hdlcoderui.hdlcc {
 	  $ObjectID		  29
-	  Version		  "19.0.0"
+	  Version		  "19.1.0"
 	  DisabledProps		  []
 	  Description		  "HDL Coder custom configuration component"
 	  Components		  []
@@ -1238,6 +1275,7 @@ Model {
       IsWebBlock	      off
       Latency		      "0"
       AutoFrameSizeCalculation off
+      IsWebBlockPanel	      off
     }
     Block {
       BlockType		      Terminator
@@ -1393,7 +1431,7 @@ Model {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
 	  SID			  "152::19"
-	  Tag			  "Stateflow S-Function test_matlab_system_19 5"
+	  Tag			  "Stateflow S-Function 5"
 	  Ports			  [5, 2]
 	  Position		  [180, 125, 230, 245]
 	  ZOrder		  10
@@ -1917,7 +1955,7 @@ Stateflow {
   machine {
     id			    1
     name		    "test_matlab_system_19"
-    sfVersion		    80000015
+    sfVersion		    80000019
     firstTarget		    13
   }
   chart {
