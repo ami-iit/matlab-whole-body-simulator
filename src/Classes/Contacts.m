@@ -200,7 +200,7 @@ classdef Contacts < handle
                 obj.Aeq(i, i * 3) = contact_point(i) > 0;
             end
 
-            options = optimoptions('quadprog', 'Algorithm', 'active-set', 'Display', 'off');
+            options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
             forces = quadprog(H, free_contact_acceleration, obj.A, obj.b, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
         end
 
