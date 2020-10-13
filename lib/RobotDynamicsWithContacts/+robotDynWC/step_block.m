@@ -19,9 +19,9 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
     methods (Access = protected)
 
         function setupImpl(obj)
-            obj.robot = Robot(obj.robot_config);
-            obj.contacts = Contacts(obj.contact_config.foot_print, obj.robot, obj.contact_config.friction_coefficient);
-            obj.state = State(obj.tStep);
+            obj.robot = wbs.Robot(obj.robot_config);
+            obj.contacts = wbs.Contacts(obj.contact_config.foot_print, obj.robot, obj.contact_config.friction_coefficient);
+            obj.state = wbs.State(obj.tStep);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
         end
