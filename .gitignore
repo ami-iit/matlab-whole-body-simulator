@@ -1,5 +1,6 @@
-
 *.slxc
 slprj/
 *.m~
 *.autosave
+.DS_Store
+
