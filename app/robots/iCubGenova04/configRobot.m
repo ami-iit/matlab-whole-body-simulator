@@ -45,7 +45,7 @@ end
 % Initial condition of iCub and for the integrators.
 Config.initialConditions.base_position = [0; 0; 0.65];
 Config.initialConditions.orientation = diag([-1, -1, 1]);
-Config.initialConditions.world_H_base = Rp2H(Config.initialConditions.orientation, Config.initialConditions.base_position);
+Config.initialConditions.world_H_base = State.Rp2H(Config.initialConditions.orientation, Config.initialConditions.base_position);
 % joint (inital) position
 Config.initialConditions.joints = [0.1744; 0.0007; 0.0001; ...
                                     -0.1745; 0.4363; 0.6981; 0.2618; ...
