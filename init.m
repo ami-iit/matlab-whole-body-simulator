@@ -16,10 +16,6 @@ clear variables
 close all
 clc
 
-% Set path to the utility functions and to WBC library
-import wbc.*
-addpath(genpath('./src/'));
-
 % REMARK : If you have installed the URDF models by https://github.com/robotology/icub-models
 % You could fill the required variables as follows:
 % % Substitute in the following the location of the install prefix of icub-models
