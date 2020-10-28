@@ -63,6 +63,11 @@ classdef Contacts < handle
             % update the contact log
             obj.was_in_contact = obj.is_in_contact;
         end
+        
+        function [left_foot_in_contact, right_foot_in_contact] = getFeetContactState(obj)
+            left_foot_in_contact = any(obj.is_in_contact(1:4));
+            right_foot_in_contact = any(obj.is_in_contact(5:8));
+        end
 
     end
 

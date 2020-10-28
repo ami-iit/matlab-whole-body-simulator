@@ -6,6 +6,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
         robot_config;
         contact_config;
         tStep;
+        OutputBusName = 'bus_name';
     end
 
     properties (DiscreteState)
@@ -26,7 +27,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
         end
 
-        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot] = stepImpl(obj, generalized_ext_wrench, torque)
+        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot, kinDynOut] = stepImpl(obj, generalized_ext_wrench, torque)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
 
@@ -40,14 +41,30 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             % integrate the dynamics
             [w_H_b, s, base_pose_dot, s_dot] = obj.state.ode_step(base_pose_ddot, s_ddot);
             % update the robot state
-            obj.robot.set_robot_state(w_H_b, s, base_pose_dot, s_dot)
+            obj.robot.set_robot_state(w_H_b, s, base_pose_dot, s_dot);
+            % Get feet contact state
+            [left_foot_in_contact, right_foot_in_contact] = obj.contacts.getFeetContactState();
+            
+            % output the kinematic and dynamic variables
+            kinDynOut.w_H_b = w_H_b;
+            kinDynOut.s = s;
+            kinDynOut.nu = [base_pose_dot;s_dot];
+            [kinDynOut.w_H_l_sole    , kinDynOut.w_H_r_sole    ] = obj.robot.get_feet_H();
+            [kinDynOut.J_l_sole      , kinDynOut.J_r_sole      ] = obj.robot.get_feet_jacobians();
+            [kinDynOut.JDot_l_sole_nu, kinDynOut.JDot_r_sole_nu] = obj.robot.get_feet_JDot_nu();
+            kinDynOut.M = obj.robot.get_mass_matrix();
+            kinDynOut.h = obj.robot.get_bias_forces();
+            kinDynOut.motorGrpI = zeros(obj.robot_config.N_DOF,1);
+            kinDynOut.fc = [wrench_left_foot;wrench_right_foot];
+            kinDynOut.nuDot = [base_pose_ddot;s_ddot];
+            kinDynOut.left_right_foot_in_contact = [left_foot_in_contact,right_foot_in_contact];
         end
 
         function resetImpl(obj)
 
         end
 
-        function [out, out2, out3, out4, out5, out6] = getOutputSizeImpl(~)
+        function [out, out2, out3, out4, out5, out6, out7] = getOutputSizeImpl(~)
             % Return size for each output port
             out = [4 4]; % homogeneous matrix dim
             out2 = [23 1]; % joints position vector dim
@@ -55,9 +72,10 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out4 = [23 1]; % joints velocity vector dim
             out5 = [6 1]; % wrench left foot vector dim
             out6 = [6 1]; % wrench right foot vector dim
+            out7 = 1;
         end
 
-        function [out, out2, out3, out4, out5, out6] = getOutputDataTypeImpl(~)
+        function [out, out2, out3, out4, out5, out6, out7] = getOutputDataTypeImpl(obj)
             % Return data type for each output port
             out = "double";
             out2 = "double";
@@ -65,9 +83,10 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out4 = "double";
             out5 = "double";
             out6 = "double";
+            out7 = obj.OutputBusName;
         end
 
-        function [out, out2, out3, out4, out5, out6] = isOutputComplexImpl(~)
+        function [out, out2, out3, out4, out5, out6, out7] = isOutputComplexImpl(~)
             % Return true for each output port with complex data
             out = false;
             out2 = false;
@@ -75,9 +94,10 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out4 = false;
             out5 = false;
             out6 = false;
+            out7 = false;
         end
 
-        function [out, out2, out3, out4, out5, out6] = isOutputFixedSizeImpl(~)
+        function [out, out2, out3, out4, out5, out6, out7] = isOutputFixedSizeImpl(~)
             % Return true for each output port with fixed size
             out = true;
             out2 = true;
@@ -85,6 +105,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out4 = true;
             out5 = true;
             out6 = true;
+            out7 = true;
         end
 
     end
