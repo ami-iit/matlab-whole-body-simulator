@@ -1,0 +1,4 @@
+*.m   diff=matlabSource
+*.mdl diff=matlabModel
+*.slx diff=matlabModel
+
