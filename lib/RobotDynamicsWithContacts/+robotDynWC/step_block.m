@@ -64,12 +64,12 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
 
         end
 
-        function [out, out2, out3, out4, out5, out6, out7] = getOutputSizeImpl(~)
+        function [out, out2, out3, out4, out5, out6, out7] = getOutputSizeImpl(obj)
             % Return size for each output port
             out = [4 4]; % homogeneous matrix dim
-            out2 = [23 1]; % joints position vector dim
+            out2 = [double(obj.robot_config.N_DOF),1]; % joints position vector dim
             out3 = [6 1]; % base velocity vector dim
-            out4 = [23 1]; % joints velocity vector dim
+            out4 = [double(obj.robot_config.N_DOF),1]; % joints velocity vector dim
             out5 = [6 1]; % wrench left foot vector dim
             out6 = [6 1]; % wrench right foot vector dim
             out7 = 1;

@@ -69,14 +69,15 @@ Config.vertex(:, 4) = [-0.06; -0.035; 0];
 Config.friction_coefficient = 0.1;
 
 % Robot frames list
-% Frames.BASE_LINK = 'root_link';
-% Frames.COM_FRAME = 'com';
-% Frames.LFOOT_FRAME = 'l_sole';
-% Frames.RFOOT_FRAME = 'r_sole';
+Frames.BASE = 'root_link';
+Frames.COM = 'com';
+Frames.LEFT_FOOT = 'l_sole';
+Frames.RIGHT_FOOT = 'r_sole';
 
 % structure used to configure the Robot class
 robot_config = Config;
 robot_config.jointOrder = jointOrder;
+robot_config.robotFrames = Frames;
 robot_config.initialConditions.w_H_b = Config.initialConditions.world_H_base;
 robot_config.initialConditions.s = Config.initialConditions.joints;
 robot_config.initialConditions.base_pose_dot = Config.initialConditions.base_velocity;
