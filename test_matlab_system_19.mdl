@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.87"
+    ComputedModelVersion    "1.89"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -21,8 +21,8 @@ Model {
     NumParameterArguments   0
     NumExternalFileReferences 1
     ExternalFileReference {
-      Reference		      "robotDynamicsWithContacts_lib/Robot"
-      Path		      "test_matlab_system_19/Robot"
+      Reference		      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
+      Path		      "test_matlab_system_19/RobotDynWithContacts"
       SID		      "197"
       Type		      "LIBRARY_BLOCK"
     }
@@ -240,9 +240,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Oct 30 13:19:07 2020"
-  RTWModifiedTimeStamp	  525964736
-  ModelVersionFormat	  "1.%<AutoIncrement:87>"
+  LastModifiedDate	  "Wed Nov 04 02:54:33 2020"
+  RTWModifiedTimeStamp	  526351566
+  ModelVersionFormat	  "1.%<AutoIncrement:89>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1581,26 +1581,6 @@ Model {
       }
     }
     Block {
-      BlockType		      Reference
-      Name		      "Robot"
-      SID		      "197"
-      Ports		      [2, 4]
-      Position		      [105, 232, 300, 343]
-      ZOrder		      1252
-      LibraryVersion	      "1.13"
-      SourceBlock	      "robotDynamicsWithContacts_lib/Robot"
-      SourceType	      "SubSystem"
-      SourceProductName	      "RobotDynamicsWithContacts"
-      ShowPortLabels	      "FromPortIcon"
-      SystemSampleTime	      "-1"
-      GeneratePreprocessorConditionals off
-      AllowZeroVariantControls off
-      PropagateVariantConditions off
-      ContentPreviewEnabled   on
-      Latency		      "0"
-      AutoFrameSizeCalculation off
-    }
-    Block {
       BlockType		      SubSystem
       Name		      "Robot visualizer"
       SID		      "133"
@@ -1729,6 +1709,26 @@ Model {
       }
     }
     Block {
+      BlockType		      Reference
+      Name		      "RobotDynWithContacts"
+      SID		      "197"
+      Ports		      [2, 4]
+      Position		      [105, 232, 300, 343]
+      ZOrder		      1252
+      LibraryVersion	      "1.14"
+      SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
+      SourceType	      "SubSystem"
+      SourceProductName	      "RobotDynamicsWithContacts"
+      ShowPortLabels	      "FromPortIcon"
+      SystemSampleTime	      "-1"
+      GeneratePreprocessorConditionals off
+      AllowZeroVariantControls off
+      PropagateVariantConditions off
+      ContentPreviewEnabled   on
+      Latency		      "0"
+      AutoFrameSizeCalculation off
+    }
+    Block {
       BlockType		      Terminator
       Name		      "Terminator"
       SID		      "203"
@@ -1746,7 +1746,7 @@ Model {
       ZOrder		      148
       SrcBlock		      "Constant1"
       SrcPort		      1
-      DstBlock		      "Robot"
+      DstBlock		      "RobotDynWithContacts"
       DstPort		      2
     }
     Line {
@@ -1769,7 +1769,7 @@ Model {
     }
     Line {
       ZOrder		      147
-      SrcBlock		      "Robot"
+      SrcBlock		      "RobotDynWithContacts"
       SrcPort		      1
       Points		      [105, 0]
       Branch {
@@ -1785,7 +1785,7 @@ Model {
     }
     Line {
       ZOrder		      149
-      SrcBlock		      "Robot"
+      SrcBlock		      "RobotDynWithContacts"
       SrcPort		      2
       Points		      [19, 0; 0, -125]
       DstBlock		      "MATLAB Function"
@@ -1793,7 +1793,7 @@ Model {
     }
     Line {
       ZOrder		      150
-      SrcBlock		      "Robot"
+      SrcBlock		      "RobotDynWithContacts"
       SrcPort		      3
       Points		      [39, 0; 0, -130]
       DstBlock		      "MATLAB Function"
@@ -1819,12 +1819,12 @@ Model {
       ZOrder		      146
       SrcBlock		      "Delay1"
       SrcPort		      1
-      DstBlock		      "Robot"
+      DstBlock		      "RobotDynWithContacts"
       DstPort		      1
     }
     Line {
       ZOrder		      160
-      SrcBlock		      "Robot"
+      SrcBlock		      "RobotDynWithContacts"
       SrcPort		      4
       DstBlock		      "Bus\nSelector1"
       DstPort		      1

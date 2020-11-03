@@ -33,7 +33,7 @@ classdef Robot < handle
         function obj = Robot(config)
             % ROBOT Sets up the object. Takes as input a config file
             % loading the model
-            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(config.jointOrder, 'root_link', ...
+            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(config.jointOrder, config.robotFrames.BASE, ...
                 config.modelPath, config.fileName, false);
 
             %initialize robot state
@@ -43,8 +43,8 @@ classdef Robot < handle
             % initialize general quantites and iDynTree objects
             obj.J_LFoot_iDyntree = iDynTree.MatrixDynSize(6, obj.KinDynModel.NDOF + 6);
             obj.J_RFoot_iDyntree = iDynTree.MatrixDynSize(6, obj.KinDynModel.NDOF + 6);
-            obj.LFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex('l_sole');
-            obj.RFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex('r_sole');
+            obj.LFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex(config.robotFrames.LEFT_FOOT);
+            obj.RFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex(config.robotFrames.RIGHT_FOOT);
             obj.h_iDyn = iDynTree.FreeFloatingGeneralizedTorques(obj.KinDynModel.kinDynComp.model);
             obj.M_iDyn = iDynTree.MatrixDynSize();
             obj.NDOF = obj.KinDynModel.NDOF;
