@@ -17,13 +17,13 @@ KinDynModel = iDynTreeWrappers.loadReducedModel(jointOrder, 'root_link', modelPa
 % General robot model information
 Config.N_DOF = KinDynModel.NDOF;
 Config.N_DOF_MATRIX = eye(Config.N_DOF);
-Config.GRAVITY_ACC = 9.81;
 
 % Robot configuration for WBToolbox
 WBTConfigRobot = WBToolbox.Configuration;
 WBTConfigRobot.RobotName = 'icubSim';
 WBTConfigRobot.UrdfFile = 'model.urdf';
 WBTConfigRobot.LocalName = 'WBT';
+WBTConfigRobotSim.GravityVector = [0,0,Config.GRAVITY_ACC];
 
 % Controlboards and joints list. Each joint is associated to the corresponding controlboard
 WBTConfigRobot.ControlBoardsNames = {'torso', 'left_arm', 'right_arm', 'left_leg', 'right_leg'};

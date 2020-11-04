@@ -31,6 +31,7 @@ fileName = 'model.urdf';
 %% GENERAL SIMULATION INFO
 % Simulation time and delta_t [s]
 Config.simulationTime = inf;
+Config.GRAVITY_ACC = [0,0,-9.81];
 Config.tStep = 0.001;
 
 % Do you want to enable the Visualizer?
@@ -42,3 +43,7 @@ Config.modelPath = modelPath;
 Config.fileName = fileName;
 run(strcat('app/robots/', robotName, '/configRobot.m'));
 run(strcat('app/robots/', robotName, '/initVisualizer.m'));
+
+%% Init simulator core physics paramaters
+physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
+physics_config.TIME_STEP = Config.tStep;

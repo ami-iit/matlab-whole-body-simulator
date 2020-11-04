@@ -17,12 +17,13 @@ classdef Robot < handle
 
     properties (Access = private)
         KinDynModel; % kynDyn robot model
-        g = [0, 0, -9.81]; % gravity vector
+        g; % gravity vector
         M_iDyn; % mass matrix iDynTree
         J_LFoot_iDyntree; % Jacobian relative to left foot
         J_RFoot_iDyntree; % Jacobian relative to right foot
         JDot_nu_LFoot_iDyntree; % \dot{J} \nu relative to left foot
         JDot_nu_RFoot_iDyntree; % \dot{J} \nu relative to right foot
+        LFoot_frameName; RFoot_frameName; % frame names relative to left and right foot
         LFoot_frameID; RFoot_frameID; % framesID relative to left and right foot
         h_iDyn; % bias forces iDynTree
         S; % selector matrix
@@ -30,19 +31,22 @@ classdef Robot < handle
 
     methods
 
-        function obj = Robot(config)
+        function obj = Robot(config,gravityAcc)
             % ROBOT Sets up the object. Takes as input a config file
             % loading the model
             obj.KinDynModel = iDynTreeWrappers.loadReducedModel(config.jointOrder, config.robotFrames.BASE, ...
                 config.modelPath, config.fileName, false);
 
             %initialize robot state
+            obj.g = gravityAcc;
             obj.set_robot_state(config.initialConditions.w_H_b, config.initialConditions.s, ...
                 config.initialConditions.base_pose_dot, config.initialConditions.s_dot);
 
             % initialize general quantites and iDynTree objects
             obj.J_LFoot_iDyntree = iDynTree.MatrixDynSize(6, obj.KinDynModel.NDOF + 6);
             obj.J_RFoot_iDyntree = iDynTree.MatrixDynSize(6, obj.KinDynModel.NDOF + 6);
+            obj.LFoot_frameName = config.robotFrames.LEFT_FOOT;
+            obj.RFoot_frameName = config.robotFrames.RIGHT_FOOT;
             obj.LFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex(config.robotFrames.LEFT_FOOT);
             obj.RFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex(config.robotFrames.RIGHT_FOOT);
             obj.h_iDyn = iDynTree.FreeFloatingGeneralizedTorques(obj.KinDynModel.kinDynComp.model);
@@ -104,8 +108,8 @@ classdef Robot < handle
             % get_feet_JDot_nu Returns the Jacobian derivative of the feet multiplied by the configuration velocity
             % OUTPUT: - JDot_nu_LFOOT: \dot{J} nu relative to the left foot
             %         - JDot_nu_RFOOT: \dot{J} nu relative to the right foot
-            obj.JDot_nu_LFoot_iDyntree = obj.KinDynModel.kinDynComp.getFrameBiasAcc('l_sole');
-            obj.JDot_nu_RFoot_iDyntree = obj.KinDynModel.kinDynComp.getFrameBiasAcc('r_sole');
+            obj.JDot_nu_LFoot_iDyntree = obj.KinDynModel.kinDynComp.getFrameBiasAcc(obj.LFoot_frameName);
+            obj.JDot_nu_RFoot_iDyntree = obj.KinDynModel.kinDynComp.getFrameBiasAcc(obj.RFoot_frameName);
             JDot_nu_LFOOT = obj.JDot_nu_LFoot_iDyntree.toMatlab;
             JDot_nu_RFOOT = obj.JDot_nu_RFoot_iDyntree.toMatlab;
         end
@@ -114,8 +118,8 @@ classdef Robot < handle
             % get_feet_H Returns the Homogenous transform of the feet in the world frame
             % OUTPUT: - H_LFOOT: w_H_b of relative to the left feet
             %         - H_RFOOT: w_H_b of relative to the right feet
-            H_LFOOT = iDynTreeWrappers.getWorldTransform(obj.KinDynModel, 'l_sole');
-            H_RFOOT = iDynTreeWrappers.getWorldTransform(obj.KinDynModel, 'r_sole');
+            H_LFOOT = iDynTreeWrappers.getWorldTransform(obj.KinDynModel, obj.LFoot_frameName);
+            H_RFOOT = iDynTreeWrappers.getWorldTransform(obj.KinDynModel, obj.RFoot_frameName);
         end
 
         function J = get_frame_jacobian(obj, frame)
