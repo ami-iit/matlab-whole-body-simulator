@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.76"
+    ComputedModelVersion    "1.77"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -19,7 +19,13 @@ Model {
     IsArchitectureModel	    0
     IsAUTOSARArchitectureModel 0
     NumParameterArguments   0
-    NumExternalFileReferences 0
+    NumExternalFileReferences 1
+    ExternalFileReference {
+      Reference		      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
+      Path		      "test_matlab_system/RobotDynWithContacts"
+      SID		      "198"
+      Type		      "LIBRARY_BLOCK"
+    }
     OrderedModelArguments   1
   }
   AnimationPlugin	  "on"
@@ -83,28 +89,6 @@ Model {
 	Dimension		9
 	Object {
 	  $ObjectID		  6
-	  IsActive		  [0]
-	  IsTabbed		  [1]
-	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "122"
-	  Extents		  [2189.0, 1055.0]
-	  ZoomFactor		  [1.8687330416289807]
-	  Offset		  [229.10204321891979, -419.1165628924237]
-	  SceneRectInView	  [229.10204321891979, -419.1165628924237, 1171.3818674131439, 564.55361814566788]
-	}
-	Object {
-	  $ObjectID		  7
-	  IsActive		  [0]
-	  IsTabbed		  [1]
-	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "133"
-	  Extents		  [2417.0, 1174.0]
-	  ZoomFactor		  [5.7878787878787881]
-	  Offset		  [586.20157068062827, 126.58115183246073]
-	  SceneRectInView	  [586.20157068062827, 126.58115183246073, 417.59685863874347, 202.83769633507853]
-	}
-	Object {
-	  $ObjectID		  8
 	  IsActive		  [1]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
@@ -113,6 +97,28 @@ Model {
 	  ZoomFactor		  [1.75]
 	  Offset		  [-384.60847552044373, -95.498977811019756]
 	  SceneRectInView	  [-384.60847552044373, -95.498977811019756, 1250.8571428571429, 602.85714285714289]
+	}
+	Object {
+	  $ObjectID		  7
+	  IsActive		  [0]
+	  IsTabbed		  [0]
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "122"
+	  Extents		  [2189.0, 1055.0]
+	  ZoomFactor		  [1.25]
+	  Offset		  [-28.852906924595004, -500.43413562159907]
+	  SceneRectInView	  [-28.852906924595004, -500.43413562159907, 1751.2, 844.0]
+	}
+	Object {
+	  $ObjectID		  8
+	  IsActive		  [0]
+	  IsTabbed		  [0]
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "133"
+	  Extents		  [2417.0, 1080.0]
+	  ZoomFactor		  [5.3244540808424965]
+	  Offset		  [568.0283740546829, 126.58115183246073]
+	  SceneRectInView	  [568.0283740546829, 126.58115183246073, 453.94325189063409, 202.83769633507853]
 	}
 	Object {
 	  $ObjectID		  9
@@ -221,9 +227,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "giuseppe"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Sep 04 15:22:41 2020"
-  RTWModifiedTimeStamp	  521133760
-  ModelVersionFormat	  "1.%<AutoIncrement:76>"
+  LastModifiedDate	  "Thu Nov 05 09:49:20 2020"
+  RTWModifiedTimeStamp	  526470457
+  ModelVersionFormat	  "1.%<AutoIncrement:77>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1139,12 +1145,6 @@ Model {
   }
   BlockParameterDefaults {
     Block {
-      BlockType		      BusCreator
-      DisplayOption	      "none"
-      OutDataTypeStr	      "Inherit: auto"
-      NonVirtualBus	      off
-    }
-    Block {
       BlockType		      BusSelector
       OutputAsBus	      off
     }
@@ -1304,7 +1304,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "175"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "196"
+    SIDHighWatermark	    "206"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1326,6 +1326,24 @@ Model {
       }
     }
     Block {
+      BlockType		      BusSelector
+      Name		      "Bus\nSelector1"
+      SID		      "204"
+      Ports		      [1, 2]
+      Position		      [345, 326, 350, 364]
+      ZOrder		      1261
+      ShowName		      off
+      OutputSignals	      "w_H_b,s"
+      Port {
+	PortNumber		1
+	Name			"<w_H_b>"
+      }
+      Port {
+	PortNumber		2
+	Name			"<s>"
+      }
+    }
+    Block {
       BlockType		      Constant
       Name		      "Constant"
       SID		      "154"
@@ -1339,9 +1357,20 @@ Model {
       BlockType		      Constant
       Name		      "Constant1"
       SID		      "140"
-      Position		      [0, 300, 30, 330]
+      Position		      [5, 315, 35, 345]
       ZOrder		      1236
       Value		      "zeros(Config.N_DOF + 6,1)"
+    }
+    Block {
+      BlockType		      Delay
+      Name		      "Delay1"
+      SID		      "199"
+      Ports		      [1, 1]
+      Position		      [55, 257, 90, 293]
+      ZOrder		      1250
+      InputPortMap	      "u0"
+      DelayLength	      "1"
+      InitialCondition	      "zeros(23,1)"
     }
     Block {
       BlockType		      SubSystem
@@ -1531,16 +1560,24 @@ Model {
     }
     Block {
       BlockType		      SubSystem
-      Name		      "Robot"
-      SID		      "122"
-      Ports		      [2, 3]
-      Position		      [100, 230, 325, 340]
-      ZOrder		      1229
+      Name		      "Robot visualizer"
+      SID		      "200"
+      Ports		      [1]
+      Position		      [500, 215, 580, 295]
+      ZOrder		      1251
+      NameLocation	      "top"
+      SystemSampleTime	      "confVisualizer.tStep"
       RequestExecContextInheritance off
+      Object {
+	$PropName		"MaskObject"
+	$ObjectID		31
+	$ClassName		"Simulink.Mask"
+	RunInitForIconRedraw	"off"
+      }
       System {
-	Name			"Robot"
+	Name			"Robot visualizer"
 	Location		[43, 34, 2332, 1321]
-	Open			on
+	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
 	ExecutionDomainType	"Deduce"
@@ -1554,340 +1591,143 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"187"
+	ZoomFactor		"532"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport
-	  Name			  "joints torque"
-	  SID			  "123"
-	  Position		  [360, -72, 390, -58]
-	  ZOrder		  1227
+	  Name			  "State"
+	  SID			  "201"
+	  Position		  [630, 218, 660, 232]
+	  ZOrder		  1129
 	}
 	Block {
-	  BlockType		  Inport
-	  Name			  "generalized external wrench"
-	  SID			  "124"
-	  Position		  [360, -152, 390, -138]
-	  ZOrder		  1228
-	  Port			  "2"
-	}
-	Block {
-	  BlockType		  BusCreator
-	  Name			  "Bus\nCreator"
-	  SID			  "115"
-	  Ports			  [4, 1]
-	  Position		  [1095, -180, 1100, -85]
-	  ZOrder		  1225
-	  Inputs		  "4"
-	  DisplayOption		  "bar"
-	  InheritFromInputs	  on
+	  BlockType		  BusSelector
+	  Name			  "Bus\nSelector"
+	  SID			  "202"
+	  Ports			  [1, 4]
+	  Position		  [695, 129, 700, 316]
+	  ZOrder		  1130
+	  OutputSignals		  "w_H_b,basePose_dot,joints_position,joints_velocity"
 	  Port {
 	    PortNumber		    1
-	    Name		    "state"
-	  }
-	}
-	Block {
-	  BlockType		  Delay
-	  Name			  "Delay1"
-	  SID			  "187"
-	  Ports			  [1, 1]
-	  Position		  [460, -83, 495, -47]
-	  ZOrder		  1249
-	  InputPortMap		  "u0"
-	  DelayLength		  "1"
-	  InitialCondition	  "zeros(23,1)"
-	}
-	Block {
-	  BlockType		  MATLABSystem
-	  Name			  "MATLAB System1"
-	  SID			  "185"
-	  Ports			  [2, 6]
-	  Position		  [585, -189, 855, -26]
-	  ZOrder		  1246
-	  System		  "step_block"
-	  MaskType		  "step_block"
-	  MaskDisplay		  "disp('step_block');\nport_label('input',1,'generalized_ext_wrench');\nport_label('input',2,'torque'"
-	  ");\nport_label('output',1,'w_H_b');\nport_label('output',2,'s');\nport_label('output',3,'base_pose_dot');\nport_lab"
-	  "el('output',4,'s_dot');\nport_label('output',5,'wrench_left_foot');\nport_label('output',6,'wrench_right_foot');\n"
-	  robot_config		  "robot_config"
-	  contact_config	  "contact_config"
-	  tStep			  "Config.tStep"
-	  SimulateUsing		  "Interpreted execution"
-	  Port {
-	    PortNumber		    1
-	    Name		    "w_H_b"
+	    Name		    "<w_H_b>"
 	  }
 	  Port {
 	    PortNumber		    2
-	    Name		    "joints_position"
+	    Name		    "<basePose_dot>"
 	  }
 	  Port {
 	    PortNumber		    3
-	    Name		    "basePose_dot"
+	    Name		    "<joints_position>"
 	  }
 	  Port {
 	    PortNumber		    4
-	    Name		    "joints_velocity"
-	  }
-	  Port {
-	    PortNumber		    5
-	    Name		    "wrench_LFoot"
-	  }
-	  Port {
-	    PortNumber		    6
-	    Name		    "wrench_RFoot"
+	    Name		    "<joints_velocity>"
 	  }
 	}
 	Block {
-	  BlockType		  SubSystem
-	  Name			  "Robot visualizer"
-	  SID			  "133"
-	  Ports			  [1]
-	  Position		  [1235, -170, 1315, -90]
-	  ZOrder		  1234
-	  NameLocation		  "top"
-	  SystemSampleTime	  "confVisualizer.tStep"
-	  RequestExecContextInheritance	off
-	  Object {
-	    $PropName		    "MaskObject"
-	    $ObjectID		    31
-	    $ClassName		    "Simulink.Mask"
-	    RunInitForIconRedraw    "off"
-	  }
-	  System {
-	    Name		    "Robot visualizer"
-	    Location		    [43, 34, 2880, 1620]
-	    Open		    on
-	    PortBlocksUseCompactNotation off
-	    SetExecutionDomain	    off
-	    ExecutionDomainType	    "Deduce"
-	    ModelBrowserVisibility  on
-	    ModelBrowserWidth	    200
-	    ScreenColor		    "white"
-	    PaperOrientation	    "landscape"
-	    PaperPositionMode	    "auto"
-	    PaperType		    "usletter"
-	    PaperUnits		    "inches"
-	    TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
-	    TiledPageScale	    1
-	    ShowPageBoundaries	    off
-	    ZoomFactor		    "579"
-	    SimulinkSubDomain	    "Simulink"
-	    Block {
-	      BlockType		      Inport
-	      Name		      "State"
-	      SID		      "134"
-	      Position		      [630, 218, 660, 232]
-	      ZOrder		      1129
-	    }
-	    Block {
-	      BlockType		      BusSelector
-	      Name		      "Bus\nSelector"
-	      SID		      "135"
-	      Ports		      [1, 4]
-	      Position		      [695, 129, 700, 316]
-	      ZOrder		      1130
-	      OutputSignals	      "w_H_b,basePose_dot,joints_position,joints_velocity"
-	      Port {
-		PortNumber		1
-		Name			"<w_H_b>"
-	      }
-	      Port {
-		PortNumber		2
-		Name			"<basePose_dot>"
-	      }
-	      Port {
-		PortNumber		3
-		Name			"<joints_position>"
-	      }
-	      Port {
-		PortNumber		4
-		Name			"<joints_velocity>"
-	      }
-	    }
-	    Block {
-	      BlockType		      MATLABSystem
-	      Name		      "MATLAB System"
-	      SID		      "144"
-	      Ports		      [4]
-	      Position		      [845, 135, 960, 310]
-	      ZOrder		      1132
-	      System		      "Visualizer"
-	      MaskType		      "Visualizer"
-	      MaskDisplay	      "disp(['Robot' char(10) 'Visualizer']);\nport_label('input',1,'world_H_base');\nport_label('i"
-	      "nput',2,'base_velocity');\nport_label('input',3,'joints_positions');\nport_label('input',4,'joints_velocity');\n"
-	      config		      "confVisualizer"
-	      SimulateUsing	      "Interpreted execution"
-	    }
-	    Line {
-	      ZOrder		      1
-	      SrcBlock		      "State"
-	      SrcPort		      1
-	      DstBlock		      "Bus\nSelector"
-	      DstPort		      1
-	    }
-	    Line {
-	      Name		      "<w_H_b>"
-	      ZOrder		      11
-	      Labels		      [0, 0]
-	      SrcBlock		      "Bus\nSelector"
-	      SrcPort		      1
-	      DstBlock		      "MATLAB System"
-	      DstPort		      1
-	    }
-	    Line {
-	      Name		      "<joints_position>"
-	      ZOrder		      13
-	      Labels		      [0, 0]
-	      SrcBlock		      "Bus\nSelector"
-	      SrcPort		      3
-	      DstBlock		      "MATLAB System"
-	      DstPort		      3
-	    }
-	    Line {
-	      Name		      "<basePose_dot>"
-	      ZOrder		      12
-	      Labels		      [0, 0]
-	      SrcBlock		      "Bus\nSelector"
-	      SrcPort		      2
-	      DstBlock		      "MATLAB System"
-	      DstPort		      2
-	    }
-	    Line {
-	      Name		      "<joints_velocity>"
-	      ZOrder		      14
-	      Labels		      [0, 0]
-	      SrcBlock		      "Bus\nSelector"
-	      SrcPort		      4
-	      DstBlock		      "MATLAB System"
-	      DstPort		      4
-	    }
-	  }
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "State"
-	  SID			  "128"
-	  Position		  [1170, -102, 1200, -88]
-	  ZOrder		  1232
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "wrench_LFoot"
-	  SID			  "125"
-	  Position		  [1170, -77, 1200, -63]
-	  ZOrder		  1229
-	  Port			  "2"
-	}
-	Block {
-	  BlockType		  Outport
-	  Name			  "wrench_RFoot"
-	  SID			  "126"
-	  Position		  [1170, -52, 1200, -38]
-	  ZOrder		  1230
-	  Port			  "3"
+	  BlockType		  MATLABSystem
+	  Name			  "MATLAB System"
+	  SID			  "203"
+	  Ports			  [4]
+	  Position		  [845, 135, 960, 310]
+	  ZOrder		  1132
+	  System		  "Visualizer"
+	  MaskType		  "Visualizer"
+	  MaskDisplay		  "disp(['Robot' char(10) 'Visualizer']);\nport_label('input',1,'world_H_base');\nport_label('input',2"
+	  ",'base_velocity');\nport_label('input',3,'joints_positions');\nport_label('input',4,'joints_velocity');\n"
+	  config		  "confVisualizer"
+	  SimulateUsing		  "Interpreted execution"
 	}
 	Line {
-	  Name			  "state"
-	  ZOrder		  244
-	  SrcBlock		  "Bus\nCreator"
+	  ZOrder		  1
+	  SrcBlock		  "State"
 	  SrcPort		  1
-	  Points		  [46, 0]
-	  Branch {
-	    ZOrder		    413
-	    Labels		    [1, 1]
-	    Points		    [0, 35]
-	    DstBlock		    "State"
-	    DstPort		    1
-	  }
-	  Branch {
-	    ZOrder		    243
-	    DstBlock		    "Robot visualizer"
-	    DstPort		    1
-	  }
+	  DstBlock		  "Bus\nSelector"
+	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  134
-	  SrcBlock		  "joints torque"
+	  Name			  "<w_H_b>"
+	  ZOrder		  2
+	  Labels		  [0, 0]
+	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  1
-	  DstBlock		  "Delay1"
+	  DstBlock		  "MATLAB System"
 	  DstPort		  1
 	}
 	Line {
-	  Name			  "wrench_LFoot"
-	  ZOrder		  354
+	  Name			  "<joints_position>"
+	  ZOrder		  3
 	  Labels		  [0, 0]
-	  SrcBlock		  "MATLAB System1"
-	  SrcPort		  5
-	  DstBlock		  "wrench_LFoot"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "wrench_RFoot"
-	  ZOrder		  355
-	  Labels		  [0, 0]
-	  SrcBlock		  "MATLAB System1"
-	  SrcPort		  6
-	  DstBlock		  "wrench_RFoot"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "w_H_b"
-	  ZOrder		  403
-	  Labels		  [0, 0]
-	  SrcBlock		  "MATLAB System1"
-	  SrcPort		  1
-	  DstBlock		  "Bus\nCreator"
-	  DstPort		  1
-	}
-	Line {
-	  Name			  "joints_position"
-	  ZOrder		  404
-	  Labels		  [0, 0]
-	  SrcBlock		  "MATLAB System1"
-	  SrcPort		  2
-	  DstBlock		  "Bus\nCreator"
-	  DstPort		  2
-	}
-	Line {
-	  Name			  "basePose_dot"
-	  ZOrder		  405
-	  Labels		  [0, 0]
-	  SrcBlock		  "MATLAB System1"
+	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  3
-	  DstBlock		  "Bus\nCreator"
+	  DstBlock		  "MATLAB System"
 	  DstPort		  3
 	}
 	Line {
-	  Name			  "joints_velocity"
-	  ZOrder		  406
+	  Name			  "<basePose_dot>"
+	  ZOrder		  4
 	  Labels		  [0, 0]
-	  SrcBlock		  "MATLAB System1"
-	  SrcPort		  4
-	  DstBlock		  "Bus\nCreator"
-	  DstPort		  4
-	}
-	Line {
-	  ZOrder		  409
-	  SrcBlock		  "Delay1"
-	  SrcPort		  1
-	  DstBlock		  "MATLAB System1"
+	  SrcBlock		  "Bus\nSelector"
+	  SrcPort		  2
+	  DstBlock		  "MATLAB System"
 	  DstPort		  2
 	}
 	Line {
-	  ZOrder		  411
-	  SrcBlock		  "generalized external wrench"
-	  SrcPort		  1
-	  DstBlock		  "MATLAB System1"
-	  DstPort		  1
+	  Name			  "<joints_velocity>"
+	  ZOrder		  5
+	  Labels		  [0, 0]
+	  SrcBlock		  "Bus\nSelector"
+	  SrcPort		  4
+	  DstBlock		  "MATLAB System"
+	  DstPort		  4
 	}
       }
     }
+    Block {
+      BlockType		      Reference
+      Name		      "RobotDynWithContacts"
+      SID		      "198"
+      Ports		      [2, 4]
+      Position		      [105, 244, 300, 356]
+      ZOrder		      1240
+      LibraryVersion	      "1.17"
+      SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
+      SourceType	      "SubSystem"
+      SourceProductName	      "RobotDynamicsWithContacts"
+      ShowPortLabels	      "FromPortIcon"
+      SystemSampleTime	      "-1"
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      GeneratePreprocessorConditionals off
+      AllowZeroVariantControls off
+      PropagateVariantConditions off
+      ContentPreviewEnabled   on
+      Latency		      "0"
+      AutoFrameSizeCalculation off
+    }
+    Block {
+      BlockType		      Terminator
+      Name		      "Terminator"
+      SID		      "205"
+      Position		      [400, 325, 420, 345]
+      ZOrder		      1262
+    }
+    Block {
+      BlockType		      Terminator
+      Name		      "Terminator1"
+      SID		      "206"
+      Position		      [400, 345, 420, 365]
+      ZOrder		      1263
+    }
     Line {
-      ZOrder		      119
+      ZOrder		      148
       SrcBlock		      "Constant1"
       SrcPort		      1
-      DstBlock		      "Robot"
+      DstBlock		      "RobotDynWithContacts"
       DstPort		      2
     }
     Line {
@@ -1909,26 +1749,34 @@ Model {
       DstPort		      3
     }
     Line {
-      ZOrder		      130
-      SrcBlock		      "Robot"
+      ZOrder		      141
+      SrcBlock		      "RobotDynWithContacts"
       SrcPort		      1
-      Points		      [135, 0]
-      DstBlock		      "Bus\nSelector"
-      DstPort		      1
+      Points		      [160, 0]
+      Branch {
+	ZOrder			146
+	DstBlock		"Robot visualizer"
+	DstPort			1
+      }
+      Branch {
+	ZOrder			145
+	DstBlock		"Bus\nSelector"
+	DstPort			1
+      }
     }
     Line {
-      ZOrder		      131
-      SrcBlock		      "Robot"
+      ZOrder		      142
+      SrcBlock		      "RobotDynWithContacts"
       SrcPort		      2
-      Points		      [44, 0; 0, -135]
+      Points		      [69, 0; 0, -135]
       DstBlock		      "MATLAB Function"
       DstPort		      4
     }
     Line {
-      ZOrder		      132
-      SrcBlock		      "Robot"
+      ZOrder		      143
+      SrcBlock		      "RobotDynWithContacts"
       SrcPort		      3
-      Points		      [68, 0; 0, -150]
+      Points		      [93, 0; 0, -145]
       DstBlock		      "MATLAB Function"
       DstPort		      5
     }
@@ -1940,12 +1788,44 @@ Model {
       DstPort		      1
     }
     Line {
-      ZOrder		      136
+      ZOrder		      147
       Labels		      [0, 0]
       SrcBlock		      "MATLAB Function"
       SrcPort		      1
-      Points		      [-20, 0; 0, 130]
-      DstBlock		      "Robot"
+      Points		      [-56, 0; 0, 145]
+      DstBlock		      "Delay1"
+      DstPort		      1
+    }
+    Line {
+      ZOrder		      137
+      SrcBlock		      "Delay1"
+      SrcPort		      1
+      DstBlock		      "RobotDynWithContacts"
+      DstPort		      1
+    }
+    Line {
+      ZOrder		      144
+      SrcBlock		      "RobotDynWithContacts"
+      SrcPort		      4
+      DstBlock		      "Bus\nSelector1"
+      DstPort		      1
+    }
+    Line {
+      Name		      "<w_H_b>"
+      ZOrder		      139
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector1"
+      SrcPort		      1
+      DstBlock		      "Terminator"
+      DstPort		      1
+    }
+    Line {
+      Name		      "<s>"
+      ZOrder		      140
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector1"
+      SrcPort		      2
+      DstBlock		      "Terminator1"
       DstPort		      1
     }
   }
