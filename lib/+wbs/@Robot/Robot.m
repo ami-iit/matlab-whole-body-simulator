@@ -2,7 +2,7 @@ classdef Robot < handle
     %ROBOT The Robot class exploits the iDynTree wrappers to compute Kinematic and Dynamic quantities.
     % Robot Methods:
     %    set_robot_state - Sets the robot state with kinematic information
-    %    get_mass_matrix - Returns the mass matrix
+    %    get_mass_matrix - Returns the mass matrix with or without the motor reflected inertias
     %    get_bias_forces - Returns the bias force
     %    get_feet_jacobians - Returns the Jacobians of the feet
     %    get_feet_JDot_nu - Returns the Jacobian derivative of the feet multiplied by the configuration velocity
@@ -19,6 +19,8 @@ classdef Robot < handle
         KinDynModel; % kynDyn robot model
         g; % gravity vector
         M_iDyn; % mass matrix iDynTree
+        useMotorReflectedInertias; % Adds the reflected inetias to the mass matrix
+        T; % motor coupling matrix
         J_LFoot_iDyntree; % Jacobian relative to left foot
         J_RFoot_iDyntree; % Jacobian relative to right foot
         JDot_nu_LFoot_iDyntree; % \dot{J} \nu relative to left foot
@@ -51,6 +53,8 @@ classdef Robot < handle
             obj.RFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex(config.robotFrames.RIGHT_FOOT);
             obj.h_iDyn = iDynTree.FreeFloatingGeneralizedTorques(obj.KinDynModel.kinDynComp.model);
             obj.M_iDyn = iDynTree.MatrixDynSize();
+            obj.useMotorReflectedInertias = config.SIMULATE_MOTOR_REFLECTED_INERTIA;
+            obj.T = config.MOTOR_REFLECTED_INERTIA_COUPLING;
             obj.NDOF = obj.KinDynModel.NDOF;
             obj.S = [zeros(6, obj.KinDynModel.NDOF); eye(obj.KinDynModel.NDOF)];
         end
@@ -65,15 +69,19 @@ classdef Robot < handle
                 base_pose_dot, s_dot, obj.g);
         end
 
-        function M = get_mass_matrix(obj)
+        function M = get_mass_matrix(obj,motorInertias)
             % get_mass_matrix Returns the mass matrix
             % OUTPUT: - M: mass matrix
             if (~obj.KinDynModel.kinDynComp.getFreeFloatingMassMatrix(obj.M_iDyn))
                 error('[Robot: get_mass_matrix] Unable to retrieve the mass matrix');
             end
 
-            M = obj.M_iDyn.toMatlab;
-
+            % Add the reflected inertia if the feature is activated
+            if obj.useMotorReflectedInertias
+                M = obj.M_iDyn.toMatlab + obj.T*diag([zeros(6,1);motorInertias]);
+            else
+                M = obj.M_iDyn.toMatlab;
+            end
         end
 
         function h = get_bias_forces(obj)
@@ -144,14 +152,14 @@ classdef Robot < handle
             JDot_nu = JDot_nu_iDyntree.toMatlab;
         end
 
-        function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench)
+        function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench,motorInertias)
             % forward_dynamics Compute forward dynamics
             % \dot{v} = inv{M}(S*tau + generalized_external_forces - h)
             % INPUT: - torque: the joints torque
             %        - generalized_total_wrench: the sum of the external wrenches in the configuration space
             % OUTPUT: - base_pose_ddot: the linear and angular acceleration of the base
             %         - s_ddot: the joints acceleration
-            M = obj.get_mass_matrix();
+            M = obj.get_mass_matrix(motorInertias);
             h = obj.get_bias_forces();
             ddot = M \ (obj.S * torque + generalized_total_wrench - h);
             base_pose_ddot = ddot(1:6);

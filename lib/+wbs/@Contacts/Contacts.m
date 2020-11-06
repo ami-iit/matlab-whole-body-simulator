@@ -34,7 +34,7 @@ classdef Contacts < handle
         end
 
         function [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                compute_contact(obj, robot, torque, generalized_ext_wrench, base_pose_dot, s_dot)
+                compute_contact(obj, robot, torque, generalized_ext_wrench, motorInertias, base_pose_dot, s_dot)
             % compute_contact Computes the contact forces and the configuration velocity after a (possible) impact
             % INPUTS: - robot: instance of the Robot object
             %         - torque: joint torques
@@ -46,7 +46,7 @@ classdef Contacts < handle
 
             % collecting robot quantities
             h = robot.get_bias_forces();
-            M = robot.get_mass_matrix();
+            M = robot.get_mass_matrix(motorInertias);
             [J_feet, JDot_nu_feet] = obj.compute_J_and_JDot_nu(robot);
             % compute the vertical distance of every vertex from the ground
             contact_points = obj.compute_contact_points(robot);
