@@ -27,17 +27,17 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
         end
 
-        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot, kinDynOut] = stepImpl(obj, generalized_ext_wrench, torque)
+        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot, kinDynOut] = stepImpl(obj, generalized_ext_wrench, torque, motorInertias)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
 
             % computes the contact quantites and the velocity after a possible impact
             [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, obj.state.base_pose_dot, obj.state.s_dot);
+                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot);
             % sets the velocity in the state
             obj.state.set_velocity(base_pose_dot, s_dot);
             % compute the robot acceleration
-            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench);
+            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench,motorInertias);
             % integrate the dynamics
             [w_H_b, s, base_pose_dot, s_dot] = obj.state.ode_step(base_pose_ddot, s_ddot);
             % update the robot state
@@ -52,7 +52,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             [kinDynOut.w_H_l_sole    , kinDynOut.w_H_r_sole    ] = obj.robot.get_feet_H();
             [kinDynOut.J_l_sole      , kinDynOut.J_r_sole      ] = obj.robot.get_feet_jacobians();
             [kinDynOut.JDot_l_sole_nu, kinDynOut.JDot_r_sole_nu] = obj.robot.get_feet_JDot_nu();
-            kinDynOut.M = obj.robot.get_mass_matrix();
+            kinDynOut.M = obj.robot.get_mass_matrix(motorInertias);
             kinDynOut.h = obj.robot.get_bias_forces();
             kinDynOut.motorGrpI = zeros(obj.robot_config.N_DOF,1);
             kinDynOut.fc = [wrench_left_foot;wrench_right_foot];
