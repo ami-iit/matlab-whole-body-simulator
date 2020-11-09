@@ -47,3 +47,4 @@ run(strcat('app/robots/', robotName, '/initVisualizer.m'));
 %% Init simulator core physics paramaters
 physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
 physics_config.TIME_STEP = Config.tStep;
+robot_config.SIMULATE_MOTOR_REFLECTED_INERTIA = Config.SIMULATE_MOTOR_REFLECTED_INERTIA;

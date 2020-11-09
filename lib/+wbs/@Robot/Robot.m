@@ -20,7 +20,6 @@ classdef Robot < handle
         g; % gravity vector
         M_iDyn; % mass matrix iDynTree
         useMotorReflectedInertias; % Adds the reflected inetias to the mass matrix
-        T; % motor coupling matrix
         J_LFoot_iDyntree; % Jacobian relative to left foot
         J_RFoot_iDyntree; % Jacobian relative to right foot
         JDot_nu_LFoot_iDyntree; % \dot{J} \nu relative to left foot
@@ -54,7 +53,6 @@ classdef Robot < handle
             obj.h_iDyn = iDynTree.FreeFloatingGeneralizedTorques(obj.KinDynModel.kinDynComp.model);
             obj.M_iDyn = iDynTree.MatrixDynSize();
             obj.useMotorReflectedInertias = config.SIMULATE_MOTOR_REFLECTED_INERTIA;
-            obj.T = config.MOTOR_REFLECTED_INERTIA_COUPLING;
             obj.NDOF = obj.KinDynModel.NDOF;
             obj.S = [zeros(6, obj.KinDynModel.NDOF); eye(obj.KinDynModel.NDOF)];
         end
@@ -78,7 +76,7 @@ classdef Robot < handle
 
             % Add the reflected inertia if the feature is activated
             if obj.useMotorReflectedInertias
-                M = obj.M_iDyn.toMatlab + obj.T*diag([zeros(6,1);motorInertias]);
+                M = obj.M_iDyn.toMatlab + diag([zeros(6,1);motorInertias]);
             else
                 M = obj.M_iDyn.toMatlab;
             end

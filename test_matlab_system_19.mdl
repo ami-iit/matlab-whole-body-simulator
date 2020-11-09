@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.89"
+    ComputedModelVersion    "1.91"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -68,7 +68,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [40.0, 23.0, 1752.0, 1097.0]
+      Location		      [39.0, 23.0, 1753.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -95,10 +95,10 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1638.0, 868.0]
+	  Extents		  [1639.0, 868.0]
 	  ZoomFactor		  [3.116883116883117]
-	  Offset		  [-5.2624999999999886, 73.508333333333354]
-	  SceneRectInView	  [-5.2624999999999886, 73.508333333333354, 525.525, 278.48333333333329]
+	  Offset		  [-5.4229166666666515, 73.508333333333354]
+	  SceneRectInView	  [-5.4229166666666515, 73.508333333333354, 525.8458333333333, 278.48333333333329]
 	}
 	Object {
 	  $ObjectID		  7
@@ -220,7 +220,7 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABrAAf//wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAaMAAADoQAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
+      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAaNAAADoQAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIATABlAGYAdAMAAAAA/////wAAAAAAAAAAAAAAAQAAAAEAAAA4AGMAbwBsAGwAYQBwAHMAaQBiA"
       "GwAZQBQAGEAbgBlAGwAVABvAG8AbABCAGEAcgBSAGkAZwBoAHQDAAAAAP////8AAAAAAAAAAAAAAAMAAAABAAAAOgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAQgBvAHQAdABvAG0AAAAAAP////8AAAAAAAAAAA=="
@@ -240,9 +240,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Nov 04 02:54:33 2020"
-  RTWModifiedTimeStamp	  526351566
-  ModelVersionFormat	  "1.%<AutoIncrement:89>"
+  LastModifiedDate	  "Mon Nov 09 21:55:27 2020"
+  RTWModifiedTimeStamp	  526859590
+  ModelVersionFormat	  "1.%<AutoIncrement:91>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1300,7 +1300,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system_19"
-    Location		    [40, 23, 1792, 1120]
+    Location		    [39, 23, 1792, 1120]
     Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
@@ -1317,7 +1317,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "312"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "204"
+    SIDHighWatermark	    "205"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1372,16 +1372,24 @@ Model {
       BlockType		      Constant
       Name		      "Constant1"
       SID		      "140"
-      Position		      [0, 300, 30, 330]
+      Position		      [0, 275, 30, 305]
       ZOrder		      1236
       Value		      "zeros(Config.N_DOF + 6,1)"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant2"
+      SID		      "205"
+      Position		      [0, 310, 30, 340]
+      ZOrder		      1261
+      Value		      "zeros(Config.N_DOF,1)"
     }
     Block {
       BlockType		      Delay
       Name		      "Delay1"
       SID		      "187"
       Ports		      [1, 1]
-      Position		      [55, 249, 80, 271]
+      Position		      [55, 244, 80, 266]
       ZOrder		      1250
       InputPortMap	      "u0"
       DelayLength	      "1"
@@ -1712,10 +1720,10 @@ Model {
       BlockType		      Reference
       Name		      "RobotDynWithContacts"
       SID		      "197"
-      Ports		      [2, 4]
+      Ports		      [3, 4]
       Position		      [105, 232, 300, 343]
       ZOrder		      1252
-      LibraryVersion	      "1.14"
+      LibraryVersion	      "1.18"
       SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
       SourceType	      "SubSystem"
       SourceProductName	      "RobotDynamicsWithContacts"
@@ -1811,7 +1819,7 @@ Model {
       Labels		      [0, 0]
       SrcBlock		      "MATLAB Function"
       SrcPort		      1
-      Points		      [-10, 0]
+      Points		      [-8, 0; 0, 125]
       DstBlock		      "Delay1"
       DstPort		      1
     }
@@ -1846,6 +1854,13 @@ Model {
       SrcPort		      1
       DstBlock		      "Terminator"
       DstPort		      1
+    }
+    Line {
+      ZOrder		      169
+      SrcBlock		      "Constant2"
+      SrcPort		      1
+      DstBlock		      "RobotDynWithContacts"
+      DstPort		      3
     }
   }
 }
