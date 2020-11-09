@@ -68,6 +68,9 @@ Config.vertex(:, 4) = [-0.06; -0.035; 0];
 % friction coefficient for the feet
 Config.friction_coefficient = 0.1;
 
+% Reflected inertia
+Config.SIMULATE_MOTOR_REFLECTED_INERTIA = true;
+
 % Robot frames list
 Frames.BASE = 'root_link';
 Frames.COM = 'com';
