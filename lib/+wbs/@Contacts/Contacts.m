@@ -11,12 +11,14 @@ classdef Contacts < handle
         is_in_contact = ones(8, 1); % this vector says if the vertex is in contact (1) or not (0)
         S; % selector matrix for the robot torque
         mu; % friction coefficient
-        A; b; Aeq; beq; % matrix used in the optimization problem
+        useOSQP; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
+        A; AxLb; AxUb; Aeq; beq; % matrices used in the optimization problem
+        osqpProb; % OSQP solver object
     end
 
     methods
 
-        function obj = Contacts(foot_print, robot, friction_coefficient)
+        function obj = Contacts(foot_print, robot, friction_coefficient,useOSQP)
             %CONTACTS The Contact class needs the coordinates of the vertices of the foot
             % Arguments
             %   foot_print - the coordinates of every vertex in xyz
@@ -30,6 +32,7 @@ classdef Contacts < handle
             obj.S = [zeros(6, robot.NDOF); ...
                     eye(robot.NDOF)];
             obj.mu = friction_coefficient;
+            obj.useOSQP = useOSQP;
             obj.prepare_optimization_matrix();
         end
 
@@ -192,21 +195,41 @@ classdef Contacts < handle
 
         function forces = compute_unilateral_linear_contact(obj, J_feet, M, h, torque, JDot_nu_feet, contact_point, generalized_ext_wrench)
             % compute_unilateral_linear_contact returns the pure forces acting on the feet vertices
-
+            
+            persistent firstSolverIter;
+            
+            if isempty(firstSolverIter)
+                firstSolverIter = true;
+            end
+            
             free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
             free_contact_acceleration = obj.compute_free_contact_acceleration(J_feet, free_acceleration, JDot_nu_feet);
             H = J_feet * (M \ J_feet');
-
+            
             if ~issymmetric(H)
                 H = (H + H') / 2; % if non sym
             end
-
+            
             for i = 1:obj.num_vertices * 2
                 obj.Aeq(i, i * 3) = contact_point(i) > 0;
             end
-
-            options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
-            forces = quadprog(H, free_contact_acceleration, obj.A, obj.b, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+            
+            if obj.useOSQP
+                if firstSolverIter
+                    % Setup workspace and change alpha parameter
+                    obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.AxLb;obj.beq], [obj.AxUb;obj.beq], 'alpha', 1);
+                    firstSolverIter = false;
+                else
+                    % Update the problem
+                    obj.osqpProb.update('Px', sparse(triu(H)), 'q', free_contact_acceleration, 'Ax', sparse(triu([obj.A;obj.Aeq])));
+                end
+                % Solve problem
+                res = obj.osqpProb.solve();
+                forces = res.x;
+            else
+                options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
+                forces = quadprog(H, free_contact_acceleration, obj.A, obj.AxUb, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+            end
         end
 
         function [wrench_left_foot, wrench_right_foot] = compute_contact_wrench_in_sole_frames(obj, contact_forces, robot)
@@ -234,30 +257,43 @@ classdef Contacts < handle
         end
 
         function prepare_optimization_matrix(obj)
-            % prepare_optimization_matrix Fills the matrix used in the optimization problem
-
+            % prepare_optimization_matrix Fills the matrix used by the optimization problem solver.
+            % A being the matrix of friction cone constraints, for ...
+            % - quadprog: Ax <= b (should include -x <= 0).
+            % - OSQP    : l <= Ax <= u (should include -Inf <= -x <= 0).
+            %
+            % So in both cases we define: AxLb <= Ax <= AxUb where AxLb = -Inf.
+            
             total_num_vertices = obj.num_vertices * 2; % number of vertex per foot * number feet
-            num_variables = 3 * total_num_vertices; % number of unknowns - 3 forces per vertex
+            num_variables = 3 * total_num_vertices; % number of unknowns (3 force components per vertex)
             num_constr = 5 * total_num_vertices; % number of constraint: simplified friction cone + non negativity of vertical force
             % fill the optimization matrix
             obj.A = zeros(num_constr, num_variables);
-            obj.b = zeros(num_constr, 1);
+            obj.AxUb = zeros(num_constr, 1);
+            obj.AxLb = -Inf(num_constr, 1);
+            
+            % Constraint "Fz=0 if no contact" formulated as Aeq x = 0.
+            % Aeq shall be concatenated with A in the case of OSQP.
             obj.Aeq = zeros(total_num_vertices, num_variables);
             obj.beq = zeros(total_num_vertices, 1);
-
-            constr_matrix = [1, 0, -obj.mu; ...% first 4 rows: simplified friction cone
-                        0, 1, -obj.mu; ...
-                            -1, 0, -obj.mu; ...
-                            0, -1, -obj.mu; ...
-                            0, 0, -1]; ...% non negativity of vertical force
-
+            
+            constr_matrix = [...
+                1, 0, -obj.mu; ...% first 4 rows: simplified friction cone
+                0, 1, -obj.mu; ...
+                -1, 0, -obj.mu; ...
+                0, -1, -obj.mu; ...
+                0, 0, -1]; ...% non negativity of vertical force
+                
             % fill a block diagonal matrix with all the constraints
             Ar = repmat(constr_matrix, 1, total_num_vertices); % Repeat Matrix for every vertex
             Ac = mat2cell(Ar, size(constr_matrix, 1), repmat(size(constr_matrix, 2), 1, total_num_vertices)); % Create Cell Array Of Orignal Repeated Matrix
             obj.A = blkdiag(Ac{:});
-
+            
+            % Create an OSQP problem object
+            if obj.useOSQP
+                obj.osqpProb = osqp;
+            end
         end
-
     end
 
 end
