@@ -34,6 +34,10 @@ Config.simulationTime = inf;
 Config.GRAVITY_ACC = [0,0,-9.81];
 Config.tStep = 0.001;
 
+% Use qpOASES instead of quadprog, typically in the case where the optimization toolbox is not
+% available.
+Config.USE_QPOASES = true;
+
 % Do you want to enable the Visualizer?
 confVisualizer.visualizeRobot = true;
 
@@ -47,4 +51,5 @@ run(strcat('app/robots/', robotName, '/initVisualizer.m'));
 %% Init simulator core physics paramaters
 physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
 physics_config.TIME_STEP = Config.tStep;
+physics_config.USE_QPOASES = Config.USE_QPOASES;
 robot_config.SIMULATE_MOTOR_REFLECTED_INERTIA = Config.SIMULATE_MOTOR_REFLECTED_INERTIA;

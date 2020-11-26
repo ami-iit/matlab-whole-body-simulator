@@ -11,12 +11,13 @@ classdef Contacts < handle
         is_in_contact = ones(8, 1); % this vector says if the vertex is in contact (1) or not (0)
         S; % selector matrix for the robot torque
         mu; % friction coefficient
+        useQPoases; % Use the qpOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
         A; b; Aeq; beq; % matrix used in the optimization problem
     end
 
     methods
 
-        function obj = Contacts(foot_print, robot, friction_coefficient)
+        function obj = Contacts(foot_print, robot, friction_coefficient,useQPoases)
             %CONTACTS The Contact class needs the coordinates of the vertices of the foot
             % Arguments
             %   foot_print - the coordinates of every vertex in xyz
@@ -30,7 +31,8 @@ classdef Contacts < handle
             obj.S = [zeros(6, robot.NDOF); ...
                     eye(robot.NDOF)];
             obj.mu = friction_coefficient;
-            obj.prepare_optimization_matrix();
+            obj.useQPoases = useQPoases;
+            obj.prepare_optimization_matrix_for_quadprog();
         end
 
         function [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
@@ -233,8 +235,9 @@ classdef Contacts < handle
 
         end
 
-        function prepare_optimization_matrix(obj)
-            % prepare_optimization_matrix Fills the matrix used in the optimization problem
+        function prepare_optimization_matrix_for_quadprog(obj)
+            % prepare_optimization_matrix Fills the matrix used by the optimization problem solver
+            % quadprog: vertical concatenation of Ax <= b and -x <= 0.
 
             total_num_vertices = obj.num_vertices * 2; % number of vertex per foot * number feet
             num_variables = 3 * total_num_vertices; % number of unknowns - 3 forces per vertex
@@ -258,6 +261,30 @@ classdef Contacts < handle
 
         end
 
+        function prepare_optimization_matrix_for_qpOASES(obj)
+            % prepare_optimization_matrix Fills the matrix used by the optimization problem solver
+            % qpOASES: lbA <= Ax <= ubA and the constraint on the output lb <= x <= ub.
+
+            total_num_vertices = obj.num_vertices * 2; % number of vertex per foot * number feet
+            num_variables = 3 * total_num_vertices; % number of unknowns - 3 forces per vertex
+            num_constr = 5 * total_num_vertices; % number of constraint: simplified friction cone + non negativity of vertical force
+            % fill the optimization matrix
+            obj.A = zeros(num_constr, num_variables);
+            obj.b = zeros(num_constr, 1);
+            obj.Aeq = zeros(total_num_vertices, num_variables);
+            obj.beq = zeros(total_num_vertices, 1);
+
+            constr_matrix = [1, 0, -obj.mu; ...% first 4 rows: simplified friction cone
+                        0, 1, -obj.mu; ...
+                            -1, 0, -obj.mu; ...
+                            0, -1, -obj.mu; ...
+                            0, 0, -1]; ...% non negativity of vertical force
+
+            % fill a block diagonal matrix with all the constraints
+            Ar = repmat(constr_matrix, 1, total_num_vertices); % Repeat Matrix for every vertex
+            Ac = mat2cell(Ar, size(constr_matrix, 1), repmat(size(constr_matrix, 2), 1, total_num_vertices)); % Create Cell Array Of Orignal Repeated Matrix
+            obj.A = blkdiag(Ac{:});
+        end
     end
 
 end
