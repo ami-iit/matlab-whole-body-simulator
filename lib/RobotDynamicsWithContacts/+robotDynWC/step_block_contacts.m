@@ -28,85 +28,53 @@ classdef step_block_contacts < matlab.System & matlab.system.mixin.Propagates
             wbs.StepBlockInit.setSharedConfig(obj);
         end
 
-        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot, kinDynOut] = stepImpl(obj, motorInertias, torque, generalized_ext_wrench)
+        function [J_feet, M, h, JDot_nu_feet, contact_points] = stepImpl(obj, motorInertias, torque, generalized_ext_wrench)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
 
-            % computes the contact quantites and the velocity after a possible impact
-            [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot);
-            % sets the velocity in the state
-            obj.state.set_velocity(base_pose_dot, s_dot);
-            % compute the robot acceleration
-            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench,motorInertias);
-            % integrate the dynamics
-            [w_H_b, s, base_pose_dot, s_dot] = obj.state.ode_step(base_pose_ddot, s_ddot);
-            % update the robot state
-            obj.robot.set_robot_state(w_H_b, s, base_pose_dot, s_dot);
-            % Get feet contact state
-            [left_foot_in_contact, right_foot_in_contact] = obj.contacts.getFeetContactState();
-            
-            % output the kinematic and dynamic variables
-            kinDynOut.w_H_b = w_H_b;
-            kinDynOut.s = s;
-            kinDynOut.nu = [base_pose_dot;s_dot];
-            [kinDynOut.w_H_l_sole    , kinDynOut.w_H_r_sole    ] = obj.robot.get_feet_H();
-            [kinDynOut.J_l_sole      , kinDynOut.J_r_sole      ] = obj.robot.get_feet_jacobians();
-            [kinDynOut.JDot_l_sole_nu, kinDynOut.JDot_r_sole_nu] = obj.robot.get_feet_JDot_nu();
-            kinDynOut.M = obj.robot.get_mass_matrix(motorInertias);
-            kinDynOut.h = obj.robot.get_bias_forces();
-            kinDynOut.motorGrpI = zeros(obj.robot_config.N_DOF,1);
-            kinDynOut.fc = [wrench_left_foot;wrench_right_foot];
-            kinDynOut.nuDot = [base_pose_ddot;s_ddot];
-            kinDynOut.left_right_foot_in_contact = [left_foot_in_contact,right_foot_in_contact];
+            % computes the inputs for estimating the contact quantites and the velocity after a possible impact
+            [J_feet, M, h, JDot_nu_feet, contact_points] = ...
+                obj.contacts.compute_inputs_for_unilateral_linear_contact_est(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot);
         end
 
         function resetImpl(obj)
 
         end
 
-        function [out, out2, out3, out4, out5, out6, out7] = getOutputSizeImpl(obj)
+        function [out, out2, out3, out4, out5] = getOutputSizeImpl(obj)
             % Return size for each output port
-            out = [4 4]; % homogeneous matrix dim
-            out2 = [double(obj.robot_config.N_DOF),1]; % joints position vector dim
-            out3 = [6 1]; % base velocity vector dim
-            out4 = [double(obj.robot_config.N_DOF),1]; % joints velocity vector dim
-            out5 = [6 1]; % wrench left foot vector dim
-            out6 = [6 1]; % wrench right foot vector dim
-            out7 = 1;
+            out = [6,2*(6+double(obj.robot_config.N_DOF))]; % [Jacobian,Jacobian] dim
+            out2 = [6+double(obj.robot_config.N_DOF),1]; % h dim
+            out3 = [6+double(obj.robot_config.N_DOF),6+double(obj.robot_config.N_DOF)]; % M dim
+            out4 = [6,2]; % [JDot_nu_feet,JDot_nu_feet] dim
+            out5 = [24 1]; % wrench left foot vector dim
         end
 
-        function [out, out2, out3, out4, out5, out6, out7] = getOutputDataTypeImpl(obj)
+        function [out, out2, out3, out4, out5] = getOutputDataTypeImpl(obj)
             % Return data type for each output port
             out = "double";
             out2 = "double";
             out3 = "double";
             out4 = "double";
             out5 = "double";
-            out6 = "double";
-            out7 = obj.OutputBusName;
         end
 
-        function [out, out2, out3, out4, out5, out6, out7] = isOutputComplexImpl(~)
+        function [out, out2, out3, out4, out5] = isOutputComplexImpl(~)
             % Return true for each output port with complex data
             out = false;
             out2 = false;
             out3 = false;
             out4 = false;
             out5 = false;
-            out6 = false;
-            out7 = false;
         end
 
-        function [out, out2, out3, out4, out5, out6, out7] = isOutputFixedSizeImpl(~)
+        function [out, out2, out3, out4, out5] = isOutputFixedSizeImpl(~)
             % Return true for each output port with fixed size
             out = true;
             out2 = true;
             out3 = true;
             out4 = true;
             out5 = true;
-            out6 = true;
-            out7 = true;
         end
 
     end

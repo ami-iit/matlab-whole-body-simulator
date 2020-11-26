@@ -1,5 +1,5 @@
-classdef step_block < matlab.System & matlab.system.mixin.Propagates
-    % step_block This block takes as input the joint torques and the
+classdef step_block_forwardDyn < matlab.System & matlab.system.mixin.Propagates
+    % step_block_forwardDyn This block takes as input the joint torques and the
     % applied external forces and evolves the state of the robot
 
     properties (Nontunable)
@@ -23,13 +23,15 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             obj = wbs.StepBlockInit.getSharedConfig(obj);
         end
 
-        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot, kinDynOut] = stepImpl(obj, generalized_ext_wrench, torque, motorInertias)
-            % Implement algorithm. Calculate y as a function of input u and
-            % discrete states.
+        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot, kinDynOut] = stepImpl(obj, J_feet, M, contact_forces, generalized_ext_wrench, torque, motorInertias)
+            % Update the contacts and robot state data from the shared context.
+            obj = wbs.StepBlockInit.getSharedConfig(obj);
+            
+            % Implement the rest of the algorithm: velocity after impact, forward dynamics, ...
 
             % computes the contact quantites and the velocity after a possible impact
             [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot);
+                obj.contacts.compute_contact(obj.robot, J_feet, M, contact_forces, generalized_ext_wrench, obj.state.base_pose_dot, obj.state.s_dot);
             % sets the velocity in the state
             obj.state.set_velocity(base_pose_dot, s_dot);
             % compute the robot acceleration
