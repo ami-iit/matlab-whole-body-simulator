@@ -212,6 +212,7 @@ classdef Contacts < handle
             
             for i = 1:obj.num_vertices * 2
                 obj.Aeq(i, i * 3) = contact_point(i) > 0;
+%                 obj.Aeq(i,i*3-2:i*3) = contact_point(i) > 0;
             end
             
             if obj.useOSQP
@@ -221,7 +222,7 @@ classdef Contacts < handle
                     firstSolverIter = false;
                 else
                     % Update the problem
-                    obj.osqpProb.update('Px', sparse(triu(H)), 'q', free_contact_acceleration, 'Ax', sparse(triu([obj.A;obj.Aeq])));
+                    obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', free_contact_acceleration, 'Ax', sparse([obj.A;obj.Aeq]));
                 end
                 % Solve problem
                 res = obj.osqpProb.solve();
