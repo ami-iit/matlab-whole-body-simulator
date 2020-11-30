@@ -218,8 +218,9 @@ classdef Contacts < handle
             if obj.useOSQP
                 if firstSolverIter
                     % Setup workspace and change alpha parameter
+                    obj.osqpProb = osqp;
                     obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
-                    firstSolverIter = false;
+                    firstSolverIter = true;
                 else
                     % Update the problem
                     obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', free_contact_acceleration, 'Ax', sparse([obj.A;obj.Aeq]));
