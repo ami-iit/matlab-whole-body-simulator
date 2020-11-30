@@ -5,11 +5,40 @@ In the simulator the ground is assumed to be flat and the contact forces are com
 
 ## :hammer: Dependencies
 
-- [Matlab/Simulink 2020a](https://it.mathworks.com/products/matlab.html)
+- [Matlab/Simulink 2019b](https://it.mathworks.com/products/matlab.html)
 - [iDynTree](https://github.com/robotology/idyntree)
+- [OSQP](https://github.com/oxfordcontrol/osqp.git)
+- [osqp-matlab](https://github.com/oxfordcontrol/osqp-matlab) (the OSQP MATLAB bindings).
 - [icub-models](https://github.com/robotology/icub-models) to access iCub models.
 
-It is to suggest to install `iDynTree`, `icub-models` using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild).
+It is recommended to install `iDynTree`, `icub-models` and `OSQP` using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild):
+- `icub-models`: set the profile option `ROBOTOLOGY_ENABLE_CORE`.
+- `iDynTree` and `OSQP`: set the profile option `ROBOTOLOGY_ENABLE_DYNAMICS`.
+
+## :floppy_disk: Installing the OSQP MATLAB bindings
+
+- `OSQP` library:<br/>
+    It is recommended to install the `OSQP` library through the [robotology-superbuild](https://github.com/robotology/robotology-superbuild), by setting the profile `ROBOTOLOGY_ENABLE_DYNAMICS`in the superbuild cmake options. The `OSQP` library will then be installed along with `iDynTree` as an external dependency.
+
+- `OSQP` MATLAB bindings (https://osqp.org/docs/get_started/matlab.html):<br/>
+    - Clone the repository [osqp-matlab](https://github.com/oxfordcontrol/osqp-matlab) (the OSQP MATLAB bindings) in the location of your choice.
+    ```
+    cd <some-path>
+    !git clone --recurse-submodules https://github.com/oxfordcontrol/osqp-matlab
+    cd osqp-matlab
+    make_osqp
+    ```
+    - Set accordingly the environment variable `OSQP_MATLAB_PATH` in the bash profile (on Linux: /home/<user>/.bashrc, on MacOS: /home/\<user\>/.bash_profile):
+    ```
+    export OSQP_MATLAB_PATH=<some-path>/osqp-matlab
+    ```
+    - The option `Config.USE_OSQP` in the main [init](https://github.com/dic-iit/matlab-whole-body-simulators/blob/devel/init.m) file must be set to `true` (default value), otherwise the native MATLAB solver `quadprog` is used instead.
+    
+    For your information, you can find further information on the OSQP library setup and use of the MATLAB interface (bindings) in https://osqp.org/docs:
+    
+    https://osqp.org/docs/index.html<br/>
+    https://osqp.org/docs/get_started/matlab.html<br/>
+    https://osqp.org/docs/interfaces/matlab.html#matlab-interface
 
 ## :runner: How to use the simulator
 
