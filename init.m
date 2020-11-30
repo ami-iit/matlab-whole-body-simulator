@@ -35,7 +35,7 @@ Config.simulationTime = inf;
 Config.GRAVITY_ACC = [0,0,-9.81];
 Config.tStep = 0.001;
 
-% Use qpOASES instead of quadprog, typically in the case where the optimization toolbox is not
+% Use OSQP instead of quadprog, typically in the case where the optimization toolbox is not
 % available.
 Config.USE_OSQP = true;
 

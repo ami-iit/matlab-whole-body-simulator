@@ -12,7 +12,7 @@ classdef Contacts < handle
         S; % selector matrix for the robot torque
         mu; % friction coefficient
         useOSQP; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
-        A; AxLb; AxUb; Aeq; beq; % matrices used in the optimization problem
+        A; Ax_Lb; Ax_Ub; Aeq; beq; % matrices used in the optimization problem
         osqpProb; % OSQP solver object
     end
 
@@ -218,7 +218,7 @@ classdef Contacts < handle
             if obj.useOSQP
                 if firstSolverIter
                     % Setup workspace and change alpha parameter
-                    obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.AxLb;obj.beq], [obj.AxUb;obj.beq], 'alpha', 1);
+                    obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
                     firstSolverIter = false;
                 else
                     % Update the problem
@@ -229,7 +229,7 @@ classdef Contacts < handle
                 forces = res.x;
             else
                 options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
-                forces = quadprog(H, free_contact_acceleration, obj.A, obj.AxUb, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+                forces = quadprog(H, free_contact_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
             end
         end
 
@@ -263,15 +263,15 @@ classdef Contacts < handle
             % - quadprog: Ax <= b (should include -x <= 0).
             % - OSQP    : l <= Ax <= u (should include -Inf <= -x <= 0).
             %
-            % So in both cases we define: AxLb <= Ax <= AxUb where AxLb = -Inf.
+            % So in both cases we define: Ax_Lb <= Ax <= Ax_Ub where Ax_Lb = -Inf.
             
             total_num_vertices = obj.num_vertices * 2; % number of vertex per foot * number feet
             num_variables = 3 * total_num_vertices; % number of unknowns (3 force components per vertex)
             num_constr = 5 * total_num_vertices; % number of constraint: simplified friction cone + non negativity of vertical force
             % fill the optimization matrix
             obj.A = zeros(num_constr, num_variables);
-            obj.AxUb = zeros(num_constr, 1);
-            obj.AxLb = -Inf(num_constr, 1);
+            obj.Ax_Ub = zeros(num_constr, 1);
+            obj.Ax_Lb = -Inf(num_constr, 1);
             
             % Constraint "Fz=0 if no contact" formulated as Aeq x = 0.
             % Aeq shall be concatenated with A in the case of OSQP.
