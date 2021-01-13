@@ -20,12 +20,9 @@ classdef Robot < handle
         g; % gravity vector
         M_iDyn; % mass matrix iDynTree
         useMotorReflectedInertias; % Adds the reflected inetias to the mass matrix
-        J_LFoot_iDyntree; % Jacobian relative to left foot
-        J_RFoot_iDyntree; % Jacobian relative to right foot
         JDot_nu_LFoot_iDyntree; % \dot{J} \nu relative to left foot
         JDot_nu_RFoot_iDyntree; % \dot{J} \nu relative to right foot
         LFoot_frameName; RFoot_frameName; % frame names relative to left and right foot
-        LFoot_frameID; RFoot_frameID; % framesID relative to left and right foot
         h_iDyn; % bias forces iDynTree
         S; % selector matrix
     end
@@ -35,7 +32,7 @@ classdef Robot < handle
         function obj = Robot(config,gravityAcc)
             % ROBOT Sets up the object. Takes as input a config file
             % loading the model
-            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(config.jointOrder, config.robotFrames.BASE, ...
+            obj.KinDynModel = iDynTree2WBTmappers.loadReducedModel(config.jointOrder, config.robotFrames.BASE, ...
                 config.modelPath, config.fileName, false);
 
             %initialize robot state
@@ -44,14 +41,8 @@ classdef Robot < handle
                 config.initialConditions.base_pose_dot, config.initialConditions.s_dot);
 
             % initialize general quantites and iDynTree objects
-            obj.J_LFoot_iDyntree = iDynTree.MatrixDynSize(6, obj.KinDynModel.NDOF + 6);
-            obj.J_RFoot_iDyntree = iDynTree.MatrixDynSize(6, obj.KinDynModel.NDOF + 6);
             obj.LFoot_frameName = config.robotFrames.LEFT_FOOT;
             obj.RFoot_frameName = config.robotFrames.RIGHT_FOOT;
-            obj.LFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex(config.robotFrames.LEFT_FOOT);
-            obj.RFoot_frameID = obj.KinDynModel.kinDynComp.getFrameIndex(config.robotFrames.RIGHT_FOOT);
-            obj.h_iDyn = iDynTree.FreeFloatingGeneralizedTorques(obj.KinDynModel.kinDynComp.model);
-            obj.M_iDyn = iDynTree.MatrixDynSize();
             obj.useMotorReflectedInertias = config.SIMULATE_MOTOR_REFLECTED_INERTIA;
             obj.NDOF = obj.KinDynModel.NDOF;
             obj.S = [zeros(6, obj.KinDynModel.NDOF); eye(obj.KinDynModel.NDOF)];
@@ -63,8 +54,7 @@ classdef Robot < handle
             %        - s = [NDOF, 1] Joints position vector
             %        - base_pose_dot = [6,1] linear and angular velocity of the base
             %        - s_dot = [NDOF, 1] Joints velocity vector
-            iDynTreeWrappers.setRobotState(obj.KinDynModel, w_H_b, s, ...
-                base_pose_dot, s_dot, obj.g);
+            obj.KinDynModel.kinDynComp.setRobotState(w_H_b, s, base_pose_dot, s_dot);
         end
 
         function M = get_mass_matrix(obj,motorInertias)
@@ -98,16 +88,15 @@ classdef Robot < handle
             % get_feet_jacobians Returns the Jacobians of the feet
             % OUTPUT: - J_left_foot: Jacobian of the left foot
             %         - J_right_foot: Jacobian of the right foot
-            if (~obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian(obj.LFoot_frameID, obj.J_LFoot_iDyntree))
+            [ack,J_LFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian('LFoot');
+            if (~ack)
                 error('[Robot: get_feet_jacobians] Unable to retrieve the left foot jacobian');
             end
 
-            if (~obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian(obj.RFoot_frameID, obj.J_RFoot_iDyntree))
+            [ack,J_RFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian('RFoot');
+            if (~ack)
                 error('[Robot: get_feet_jacobians] Unable to retrieve the left foot jacobian');
             end
-
-            J_LFoot = obj.J_LFoot_iDyntree.toMatlab;
-            J_RFoot = obj.J_RFoot_iDyntree.toMatlab;
         end
 
         function [JDot_nu_LFOOT, JDot_nu_RFOOT] = get_feet_JDot_nu(obj)

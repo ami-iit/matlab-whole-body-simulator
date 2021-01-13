@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.98"
+    ComputedModelVersion    "1.102"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -111,22 +111,22 @@ Model {
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "133"
-	  Extents		  [1636.0, 868.0]
-	  ZoomFactor		  [4.3076923076923075]
-	  Offset		  [605.10714285714289, 125.75]
-	  SceneRectInView	  [605.10714285714289, 125.75, 379.78571428571428, 201.5]
+	  LoadSaveID		  "197"
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [1.5]
+	  Offset		  [141.54359776142212, -417.20493649803115]
+	  SceneRectInView	  [141.54359776142212, -417.20493649803115, 1091.3333333333333, 578.66666666666663]
 	}
 	Object {
 	  $ObjectID		  8
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "197"
+	  LoadSaveID		  "133"
 	  Extents		  [1636.0, 868.0]
-	  ZoomFactor		  [1.5]
-	  Offset		  [141.87693109475538, -417.20493649803115]
-	  SceneRectInView	  [141.87693109475538, -417.20493649803115, 1090.6666666666667, 578.66666666666663]
+	  ZoomFactor		  [4.3076923076923075]
+	  Offset		  [605.10714285714289, 125.75]
+	  SceneRectInView	  [605.10714285714289, 125.75, 379.78571428571428, 201.5]
 	}
 	Object {
 	  $ObjectID		  9
@@ -246,9 +246,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Jan 13 18:27:43 2021"
-  RTWModifiedTimeStamp	  532463247
-  ModelVersionFormat	  "1.%<AutoIncrement:98>"
+  LastModifiedDate	  "Thu Jan 14 09:17:36 2021"
+  RTWModifiedTimeStamp	  532516653
+  ModelVersionFormat	  "1.%<AutoIncrement:102>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1323,7 +1323,7 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "242"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "207"
+    SIDHighWatermark	    "212"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1744,18 +1744,16 @@ Model {
       Ports		      [3, 4]
       Position		      [105, 232, 300, 343]
       ZOrder		      1252
-      LibraryVersion	      "1.18"
+      ForegroundColor	      "red"
+      BackgroundColor	      "yellow"
+      LibraryVersion	      "1.30"
       SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
-      SourceType	      "SubSystem"
+      SourceType	      ""
       SourceProductName	      "RobotDynamicsWithContacts"
-      ShowPortLabels	      "FromPortIcon"
-      SystemSampleTime	      "-1"
-      GeneratePreprocessorConditionals off
-      AllowZeroVariantControls off
-      PropagateVariantConditions off
-      ContentPreviewEnabled   on
-      Latency		      "0"
-      AutoFrameSizeCalculation off
+      ContentPreviewEnabled   off
+      robot_config	      "robot_config"
+      contact_config	      "contact_config"
+      physics_config	      "physics_config"
     }
     Block {
       BlockType		      Terminator

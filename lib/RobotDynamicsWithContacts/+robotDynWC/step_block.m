@@ -108,6 +108,10 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out7 = true;
         end
 
+        function names = getSimulinkFunctionNamesImpl(~)
+            names = {'simFunc_getFrameFreeFloatingJacobianLFoot','simFunc_getFrameFreeFloatingJacobianRFoot'};
+        end
+
     end
 
 end
