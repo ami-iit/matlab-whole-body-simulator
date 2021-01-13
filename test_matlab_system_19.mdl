@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.91"
+    ComputedModelVersion    "1.98"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -19,7 +19,13 @@ Model {
     IsArchitectureModel	    0
     IsAUTOSARArchitectureModel 0
     NumParameterArguments   0
-    NumExternalFileReferences 1
+    NumExternalFileReferences 2
+    ExternalFileReference {
+      Reference		      "WBToolboxLibrary/Utilities/Configuration"
+      Path		      "test_matlab_system_19/Configuration"
+      SID		      "206"
+      Type		      "LIBRARY_BLOCK"
+    }
     ExternalFileReference {
       Reference		      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
       Path		      "test_matlab_system_19/RobotDynWithContacts"
@@ -68,7 +74,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [39.0, 23.0, 1753.0, 1097.0]
+      Location		      [41.0, 23.0, 1751.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -95,24 +101,35 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1639.0, 868.0]
-	  ZoomFactor		  [3.116883116883117]
-	  Offset		  [-5.4229166666666515, 73.508333333333354]
-	  SceneRectInView	  [-5.4229166666666515, 73.508333333333354, 525.8458333333333, 278.48333333333329]
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [2.41726618705036]
+	  Offset		  [-81.105654761904759, -5.7916666666666572]
+	  SceneRectInView	  [-81.105654761904759, -5.7916666666666572, 677.21130952380952, 359.08333333333331]
 	}
 	Object {
 	  $ObjectID		  7
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "197"
-	  Extents		  [1637.0, 868.0]
-	  ZoomFactor		  [2.39]
-	  Offset		  [415.05481825313808, -288.08995815899584]
-	  SceneRectInView	  [415.05481825313808, -288.08995815899584, 684.93723849372384, 363.17991631799163]
+	  LoadSaveID		  "133"
+	  Extents		  [1636.0, 868.0]
+	  ZoomFactor		  [4.3076923076923075]
+	  Offset		  [605.10714285714289, 125.75]
+	  SceneRectInView	  [605.10714285714289, 125.75, 379.78571428571428, 201.5]
 	}
 	Object {
 	  $ObjectID		  8
+	  IsActive		  [0]
+	  IsTabbed		  [0]
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "197"
+	  Extents		  [1636.0, 868.0]
+	  ZoomFactor		  [1.5]
+	  Offset		  [141.87693109475538, -417.20493649803115]
+	  SceneRectInView	  [141.87693109475538, -417.20493649803115, 1090.6666666666667, 578.66666666666663]
+	}
+	Object {
+	  $ObjectID		  9
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -121,17 +138,6 @@ Model {
 	  ZoomFactor		  [2.39335798506942]
 	  Offset		  [415.74422807835822, -287.83517957089555]
 	  SceneRectInView	  [415.74422807835822, -287.83517957089555, 683.55841884328356, 362.67035914179104]
-	}
-	Object {
-	  $ObjectID		  9
-	  IsActive		  [0]
-	  IsTabbed		  [0]
-	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "133"
-	  Extents		  [2417.0, 1174.0]
-	  ZoomFactor		  [5.7878787878787881]
-	  Offset		  [586.20157068062827, 126.58115183246073]
-	  SceneRectInView	  [586.20157068062827, 126.58115183246073, 417.59685863874347, 202.83769633507853]
 	}
 	Object {
 	  $ObjectID		  10
@@ -220,7 +226,7 @@ Model {
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABrAAf//wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAaNAAADoQAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
+      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAaLAAADoQAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIATABlAGYAdAMAAAAA/////wAAAAAAAAAAAAAAAQAAAAEAAAA4AGMAbwBsAGwAYQBwAHMAaQBiA"
       "GwAZQBQAGEAbgBlAGwAVABvAG8AbABCAGEAcgBSAGkAZwBoAHQDAAAAAP////8AAAAAAAAAAAAAAAMAAAABAAAAOgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAQgBvAHQAdABvAG0AAAAAAP////8AAAAAAAAAAA=="
@@ -240,9 +246,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Mon Nov 09 21:55:27 2020"
-  RTWModifiedTimeStamp	  526859590
-  ModelVersionFormat	  "1.%<AutoIncrement:91>"
+  LastModifiedDate	  "Wed Jan 13 18:27:43 2021"
+  RTWModifiedTimeStamp	  532463247
+  ModelVersionFormat	  "1.%<AutoIncrement:98>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1300,7 +1306,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system_19"
-    Location		    [39, 23, 1792, 1120]
+    Location		    [41, 23, 1792, 1120]
     Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
@@ -1315,9 +1321,9 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "312"
+    ZoomFactor		    "242"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "205"
+    SIDHighWatermark	    "207"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1359,6 +1365,21 @@ Model {
       }
     }
     Block {
+      BlockType		      Reference
+      Name		      "Configuration"
+      SID		      "206"
+      Ports		      []
+      Position		      [225, 0, 300, 30]
+      ZOrder		      1262
+      LibraryVersion	      "1.676"
+      SourceBlock	      "WBToolboxLibrary/Utilities/Configuration"
+      SourceType	      ""
+      SourceProductName	      "WholeBodyToolbox"
+      ContentPreviewEnabled   on
+      ConfigSource	      "Workspace"
+      ConfigObject	      "'WBTConfigRobotSim'"
+    }
+    Block {
       BlockType		      Constant
       Name		      "Constant"
       SID		      "154"
@@ -1366,7 +1387,7 @@ Model {
       ZOrder		      1239
       BlockMirror	      on
       NamePlacement	      "alternate"
-      Value		      "Config.initialConditions.joints"
+      Value		      "robot_config.initialConditions.s"
     }
     Block {
       BlockType		      Constant
@@ -1374,7 +1395,7 @@ Model {
       SID		      "140"
       Position		      [0, 275, 30, 305]
       ZOrder		      1236
-      Value		      "zeros(Config.N_DOF + 6,1)"
+      Value		      "zeros(robot_config.N_DOF + 6,1)"
     }
     Block {
       BlockType		      Constant
@@ -1382,7 +1403,7 @@ Model {
       SID		      "205"
       Position		      [0, 310, 30, 340]
       ZOrder		      1261
-      Value		      "zeros(Config.N_DOF,1)"
+      Value		      "zeros(robot_config.N_DOF,1)"
     }
     Block {
       BlockType		      Delay
@@ -1621,7 +1642,7 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"579"
+	ZoomFactor		"431"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport

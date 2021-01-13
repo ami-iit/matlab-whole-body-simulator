@@ -23,12 +23,6 @@ clc
 % if installed with robotology superbuild you can directly use
 icubModelsInstallPrefix = getenv('ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX');
 
-meshFilePrefix = [icubModelsInstallPrefix '/share'];
-% Select the robot using the folder name
-% Example
-robotName = 'iCubGenova04';
-modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
-fileName = 'model.urdf';
 %% GENERAL SIMULATION INFO
 % Simulation time and delta_t [s]
 Config.simulationTime = inf;
@@ -43,9 +37,10 @@ Config.USE_OSQP = true;
 confVisualizer.visualizeRobot = true;
 
 %% ADD CONFIGURATION FILES
+% Select the robot name from YARP_ROBOT_NAME
+robotName = getenv('YARP_ROBOT_NAME');
+
 % Run robot-specific and controller-specific configuration parameters
-Config.modelPath = modelPath;
-Config.fileName = fileName;
 run(strcat('app/robots/', robotName, '/configRobot.m'));
 run(strcat('app/robots/', robotName, '/initVisualizer.m'));
 
@@ -53,4 +48,3 @@ run(strcat('app/robots/', robotName, '/initVisualizer.m'));
 physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
 physics_config.TIME_STEP = Config.tStep;
 physics_config.USE_OSQP = Config.USE_OSQP;
-robot_config.SIMULATE_MOTOR_REFLECTED_INERTIA = Config.SIMULATE_MOTOR_REFLECTED_INERTIA;

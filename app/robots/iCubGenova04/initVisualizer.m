@@ -1,15 +1,13 @@
 %% configuration for the matlab iDyntree visualizer
 
 confVisualizer.robotName = robotName;
-confVisualizer.fileName = fileName;
-confVisualizer.meshFilePrefix = meshFilePrefix;
-confVisualizer.modelPath = modelPath;
-confVisualizer.jointOrder = jointOrder;
+confVisualizer.fileName = robot_config.fileName;
+confVisualizer.meshFilePrefix = robot_config.meshFilePrefix;
+confVisualizer.modelPath = robot_config.modelPath;
+confVisualizer.jointOrder = robot_config.jointOrder;
 % initial infos specified in configRobot
-confVisualizer.joints_positions = Config.initialConditions.joints;
-confVisualizer.world_H_base = ones(4);
-confVisualizer.world_H_base(1:3, 1:3) = Config.initialConditions.orientation;
-confVisualizer.world_H_base(1:3, 4) = Config.initialConditions.base_position;
+confVisualizer.joints_positions = robot_config.initialConditions.s;
+confVisualizer.world_H_base = robot_config.initialConditions.w_H_b;
 
 % size of the square you see around the robot
 confVisualizer.aroundRobot = 1; % mt
