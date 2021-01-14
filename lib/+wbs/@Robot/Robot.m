@@ -60,15 +60,14 @@ classdef Robot < handle
         function M = get_mass_matrix(obj,motorInertias)
             % get_mass_matrix Returns the mass matrix
             % OUTPUT: - M: mass matrix
-            if (~obj.KinDynModel.kinDynComp.getFreeFloatingMassMatrix(obj.M_iDyn))
+            [ack,M] = obj.KinDynModel.kinDynComp.getFreeFloatingMassMatrix();
+            if (~ack)
                 error('[Robot: get_mass_matrix] Unable to retrieve the mass matrix');
             end
 
             % Add the reflected inertia if the feature is activated
             if obj.useMotorReflectedInertias
-                M = obj.M_iDyn.toMatlab + diag([zeros(6,1);motorInertias]);
-            else
-                M = obj.M_iDyn.toMatlab;
+                M = M + diag([zeros(6,1);motorInertias]);
             end
         end
 

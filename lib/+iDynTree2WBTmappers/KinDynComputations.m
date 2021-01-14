@@ -38,8 +38,9 @@ classdef KinDynComputations < handle
             end
         end
         
-        function M = getFreeFloatingMassMatrix(obj)
+        function [ack,M] = getFreeFloatingMassMatrix(obj)
             M = simFunc_getFreeFloatingMassMatrix(obj.w_H_b,obj.s);
+            ack = true;
         end
     end
 end
