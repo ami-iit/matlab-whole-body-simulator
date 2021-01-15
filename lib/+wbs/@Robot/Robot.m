@@ -74,13 +74,10 @@ classdef Robot < handle
         function h = get_bias_forces(obj)
             % get_bias_forces Returns the bias force
             % OUTPUT: - h: bias force
-            if (~obj.KinDynModel.kinDynComp.generalizedBiasForces(obj.h_iDyn))
+            [ack,h] = obj.KinDynModel.kinDynComp.generalizedBiasForces();
+            if (~ack)
                 error('[Robot: get_bias_forces] Unable to retrieve the bias force')
             end
-
-            h_b = obj.h_iDyn.baseWrench.toMatlab;
-            h_s = obj.h_iDyn.jointTorques.toMatlab;
-            h = [h_b; h_s];
         end
 
         function [J_LFoot, J_RFoot] = get_feet_jacobians(obj)
@@ -102,10 +99,8 @@ classdef Robot < handle
             % get_feet_JDot_nu Returns the Jacobian derivative of the feet multiplied by the configuration velocity
             % OUTPUT: - JDot_nu_LFOOT: \dot{J} nu relative to the left foot
             %         - JDot_nu_RFOOT: \dot{J} nu relative to the right foot
-            obj.JDot_nu_LFoot_iDyntree = obj.KinDynModel.kinDynComp.getFrameBiasAcc(obj.LFoot_frameName);
-            obj.JDot_nu_RFoot_iDyntree = obj.KinDynModel.kinDynComp.getFrameBiasAcc(obj.RFoot_frameName);
-            JDot_nu_LFOOT = obj.JDot_nu_LFoot_iDyntree.toMatlab;
-            JDot_nu_RFOOT = obj.JDot_nu_RFoot_iDyntree.toMatlab;
+            JDot_nu_LFOOT = obj.KinDynModel.kinDynComp.getFrameBiasAcc('LFoot');
+            JDot_nu_RFOOT = obj.KinDynModel.kinDynComp.getFrameBiasAcc('RFoot');
         end
 
         function [H_LFOOT, H_RFOOT] = get_feet_H(obj)

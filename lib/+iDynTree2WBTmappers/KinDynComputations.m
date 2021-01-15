@@ -42,5 +42,21 @@ classdef KinDynComputations < handle
             M = simFunc_getFreeFloatingMassMatrix(obj.w_H_b,obj.s);
             ack = true;
         end
+        
+        function [ack,h] = generalizedBiasForces(obj)
+            h = simFunc_generalizedBiasForces(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
+            ack = true;
+        end
+        
+        function JDot_nu_LRfoot = getFrameBiasAcc(obj,LRfoot)
+            switch LRfoot
+                case 'LFoot'
+                    JDot_nu_LRfoot = simFunc_getFrameBiasAccLFoot(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
+                case 'RFoot'
+                    JDot_nu_LRfoot = simFunc_getFrameBiasAccRFoot(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
+                otherwise
+                    error('Unsupported "getFrameBiasAccRFoot" input parameter.');
+            end
+        end
     end
 end
