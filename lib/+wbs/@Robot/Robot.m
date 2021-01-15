@@ -111,28 +111,6 @@ classdef Robot < handle
             H_RFOOT = iDynTreeWrappers.getWorldTransform(obj.KinDynModel, obj.RFoot_frameName);
         end
 
-        function J = get_frame_jacobian(obj, frame)
-            % get_frame_jacobian Returns the Jacobian of a specified frame
-            % INPUT: - frame: the frame string
-            % OUTPUT: j: the Jacobian of the frame
-            J_iDyntree = iDynTree.MatrixDynSize(6, obj.KinDynModel.NDOF + 6);
-            frame_id = obj.KinDynModel.kinDynComp.getFrameIndex(frame);
-
-            if (~obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian(frame_id, J_iDyntree))
-                error(['[Robot: get_frame_Jacobian] Unable to retrieve the', frame, 'jacobian']);
-            end
-
-            J = J_iDyntree.toMatlab;
-        end
-
-        function JDot_nu = get_frame_JDot_nu(obj, frame)
-            % get_frame_JDot_nu Returns the Jacobian derivative of a specified frame multiplied by the configuration velocity
-            % INPUT: - frame: the frame string
-            % OUTPUT: J: \dot{J} nu of the frame
-            JDot_nu_iDyntree = obj.KinDynModel.kinDynComp.getFrameBiasAcc(frame);
-            JDot_nu = JDot_nu_iDyntree.toMatlab;
-        end
-
         function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench,motorInertias)
             % forward_dynamics Compute forward dynamics
             % \dot{v} = inv{M}(S*tau + generalized_external_forces - h)
