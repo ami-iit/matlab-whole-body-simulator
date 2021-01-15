@@ -107,8 +107,8 @@ classdef Robot < handle
             % get_feet_H Returns the Homogenous transform of the feet in the world frame
             % OUTPUT: - H_LFOOT: w_H_b of relative to the left feet
             %         - H_RFOOT: w_H_b of relative to the right feet
-            H_LFOOT = iDynTreeWrappers.getWorldTransform(obj.KinDynModel, obj.LFoot_frameName);
-            H_RFOOT = iDynTreeWrappers.getWorldTransform(obj.KinDynModel, obj.RFoot_frameName);
+            H_LFOOT = obj.KinDynModel.kinDynComp.getWorldTransform('LFoot');
+            H_RFOOT = obj.KinDynModel.kinDynComp.getWorldTransform('RFoot');
         end
 
         function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench,motorInertias)

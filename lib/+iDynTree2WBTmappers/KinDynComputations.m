@@ -58,5 +58,16 @@ classdef KinDynComputations < handle
                     error('Unsupported "getFrameBiasAccRFoot" input parameter.');
             end
         end
+        
+        function transform = getWorldTransform(obj,LRfoot)
+            switch LRfoot
+                case 'LFoot'
+                    transform = simFunc_getWorldTransformLFoot(obj.w_H_b,obj.s);
+                case 'RFoot'
+                    transform = simFunc_getWorldTransformRFoot(obj.w_H_b,obj.s);
+                otherwise
+                    error('Unsupported "getWorldTransform" input parameter.');
+            end
+        end
     end
 end
