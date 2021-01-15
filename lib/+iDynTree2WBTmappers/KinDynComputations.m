@@ -25,7 +25,7 @@ classdef KinDynComputations < handle
             [w_H_b,s,base_pose_dot,s_dot,NDOF] = deal(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot,obj.NDOF);
         end
         
-        function [ack,J_LRfoot] = getFrameFreeFloatingJacobian(obj,LRfoot)
+        function [ack,J_LRfoot] = getFrameFreeFloatingJacobianLRfoot(obj,LRfoot)
             ack = true;
             switch LRfoot
                 case 'LFoot'
@@ -48,7 +48,7 @@ classdef KinDynComputations < handle
             ack = true;
         end
         
-        function JDot_nu_LRfoot = getFrameBiasAcc(obj,LRfoot)
+        function JDot_nu_LRfoot = getFrameBiasAccLRfoot(obj,LRfoot)
             switch LRfoot
                 case 'LFoot'
                     JDot_nu_LRfoot = simFunc_getFrameBiasAccLFoot(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
@@ -59,7 +59,7 @@ classdef KinDynComputations < handle
             end
         end
         
-        function transform = getWorldTransform(obj,LRfoot)
+        function transform = getWorldTransformLRfoot(obj,LRfoot)
             switch LRfoot
                 case 'LFoot'
                     transform = simFunc_getWorldTransformLFoot(obj.w_H_b,obj.s);

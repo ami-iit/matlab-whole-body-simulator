@@ -84,12 +84,12 @@ classdef Robot < handle
             % get_feet_jacobians Returns the Jacobians of the feet
             % OUTPUT: - J_left_foot: Jacobian of the left foot
             %         - J_right_foot: Jacobian of the right foot
-            [ack,J_LFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian('LFoot');
+            [ack,J_LFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobianLRfoot('LFoot');
             if (~ack)
                 error('[Robot: get_feet_jacobians] Unable to retrieve the left foot jacobian');
             end
 
-            [ack,J_RFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian('RFoot');
+            [ack,J_RFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobianLRfoot('RFoot');
             if (~ack)
                 error('[Robot: get_feet_jacobians] Unable to retrieve the left foot jacobian');
             end
@@ -99,16 +99,16 @@ classdef Robot < handle
             % get_feet_JDot_nu Returns the Jacobian derivative of the feet multiplied by the configuration velocity
             % OUTPUT: - JDot_nu_LFOOT: \dot{J} nu relative to the left foot
             %         - JDot_nu_RFOOT: \dot{J} nu relative to the right foot
-            JDot_nu_LFOOT = obj.KinDynModel.kinDynComp.getFrameBiasAcc('LFoot');
-            JDot_nu_RFOOT = obj.KinDynModel.kinDynComp.getFrameBiasAcc('RFoot');
+            JDot_nu_LFOOT = obj.KinDynModel.kinDynComp.getFrameBiasAccLRfoot('LFoot');
+            JDot_nu_RFOOT = obj.KinDynModel.kinDynComp.getFrameBiasAccLRfoot('RFoot');
         end
 
         function [H_LFOOT, H_RFOOT] = get_feet_H(obj)
             % get_feet_H Returns the Homogenous transform of the feet in the world frame
             % OUTPUT: - H_LFOOT: w_H_b of relative to the left feet
             %         - H_RFOOT: w_H_b of relative to the right feet
-            H_LFOOT = obj.KinDynModel.kinDynComp.getWorldTransform('LFoot');
-            H_RFOOT = obj.KinDynModel.kinDynComp.getWorldTransform('RFoot');
+            H_LFOOT = obj.KinDynModel.kinDynComp.getWorldTransformLRfoot('LFoot');
+            H_RFOOT = obj.KinDynModel.kinDynComp.getWorldTransformLRfoot('RFoot');
         end
 
         function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench,motorInertias)
