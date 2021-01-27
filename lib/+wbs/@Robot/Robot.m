@@ -18,12 +18,10 @@ classdef Robot < handle
     properties (Access = private)
         KinDynModel; % kynDyn robot model
         g; % gravity vector
-        M_iDyn; % mass matrix iDynTree
         useMotorReflectedInertias; % Adds the reflected inetias to the mass matrix
         JDot_nu_LFoot_iDyntree; % \dot{J} \nu relative to left foot
         JDot_nu_RFoot_iDyntree; % \dot{J} \nu relative to right foot
         LFoot_frameName; RFoot_frameName; % frame names relative to left and right foot
-        h_iDyn; % bias forces iDynTree
         S; % selector matrix
     end
 

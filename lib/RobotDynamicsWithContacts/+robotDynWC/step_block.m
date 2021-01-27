@@ -2,8 +2,11 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
     % step_block This block takes as input the joint torques and the
     % applied external forces and evolves the state of the robot
 
+    properties
+        robot_config = struct();
+    end
+    
     properties (Nontunable)
-        robot_config;
         contact_config;
         physics_config;
         OutputBusName = 'bus_name';
@@ -21,7 +24,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
 
         function setupImpl(obj)
             obj.robot = wbs.Robot(obj.robot_config,obj.physics_config.GRAVITY_ACC);
-            obj.contacts = wbs.Contacts(obj.contact_config.foot_print, obj.robot, obj.contact_config.friction_coefficient,obj.physics_config.USE_OSQP);
+            obj.contacts = wbs.Contacts(obj.contact_config.foot_print, obj.robot, obj.contact_config.friction_coefficient,obj.physics_config.USE_OSQP,obj.physics_config.USE_QPOASES);
             obj.state = wbs.State(obj.physics_config.TIME_STEP);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
@@ -117,7 +120,8 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
                 'simFunc_getFrameBiasAccLFoot', ...
                 'simFunc_getFrameBiasAccRFoot', ...
                 'simFunc_getWorldTransformLFoot', ...
-                'simFunc_getWorldTransformRFoot'};
+                'simFunc_getWorldTransformRFoot', ...
+                'simFunc_qpOASES'};
         end
 
     end

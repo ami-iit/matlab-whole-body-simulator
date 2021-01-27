@@ -31,7 +31,8 @@ Config.tStep = 0.001;
 
 % Use OSQP instead of quadprog, typically in the case where the optimization toolbox is not
 % available.
-Config.USE_OSQP = true;
+Config.USE_OSQP = false;
+Config.USE_QPOASES = true;
 
 % Do you want to enable the Visualizer?
 confVisualizer.visualizeRobot = true;
@@ -48,3 +49,4 @@ run(strcat('app/robots/', robotName, '/initVisualizer.m'));
 physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
 physics_config.TIME_STEP = Config.tStep;
 physics_config.USE_OSQP = Config.USE_OSQP;
+physics_config.USE_QPOASES = Config.USE_QPOASES;

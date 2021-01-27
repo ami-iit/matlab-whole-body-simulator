@@ -12,13 +12,14 @@ classdef Contacts < handle
         S; % selector matrix for the robot torque
         mu; % friction coefficient
         useOSQP; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
+        useQPOASES;
         A; Ax_Lb; Ax_Ub; Aeq; beq; % matrices used in the optimization problem
         osqpProb; % OSQP solver object
     end
 
     methods
 
-        function obj = Contacts(foot_print, robot, friction_coefficient,useOSQP)
+        function obj = Contacts(foot_print, robot, friction_coefficient,useOSQP,useQPOASES)
             %CONTACTS The Contact class needs the coordinates of the vertices of the foot
             % Arguments
             %   foot_print - the coordinates of every vertex in xyz
@@ -33,6 +34,7 @@ classdef Contacts < handle
                     eye(robot.NDOF)];
             obj.mu = friction_coefficient;
             obj.useOSQP = useOSQP;
+            obj.useQPOASES = useQPOASES;
             obj.prepare_optimization_matrix();
         end
 
@@ -96,6 +98,10 @@ classdef Contacts < handle
             % for a vertex i:
             % Ji = J_linear - S(R*pi) * J_angular
             % JDot_nui = JDot_nu_linear - S(R*pi) * JDot_nu_angular
+            J_left_foot_print = zeros(3*obj.num_vertices,size(J_L_lin,2));
+            J_right_foot_print = zeros(3*obj.num_vertices,size(J_R_lin,2));
+            JDot_nu_left_foot_print = zeros(3*obj.num_vertices,size(JDot_nu_L_lin,2));
+            JDot_nu_right_foot_print = zeros(3*obj.num_vertices,size(JDot_nu_R_lin,2));
             for ii = 1:obj.num_vertices
                 j = (ii - 1) * 3 + 1;
                 v_coords = obj.foot_print(:, ii);
@@ -216,21 +222,23 @@ classdef Contacts < handle
             end
             
             if obj.useOSQP
-                if firstSolverIter
-                    % Setup workspace and change alpha parameter
-                    obj.osqpProb = osqp;
-                    obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
-                    firstSolverIter = true;
-                else
-                    % Update the problem
-                    obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', free_contact_acceleration, 'Ax', sparse([obj.A;obj.Aeq]));
-                end
-                % Solve problem
-                res = obj.osqpProb.solve();
-                forces = res.x;
+%                 if firstSolverIter
+%                     % Setup workspace and change alpha parameter
+%                     obj.osqpProb = osqp;
+%                     obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
+%                     firstSolverIter = true;
+%                 else
+%                     % Update the problem
+%                     obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', free_contact_acceleration, 'Ax', sparse([obj.A;obj.Aeq]));
+%                 end
+%                 % Solve problem
+%                 res = obj.osqpProb.solve();
+%                 forces = res.x;
+            elseif obj.useQPOASES
+                forces = simFunc_qpOASES(H, free_contact_acceleration, [obj.A;obj.Aeq], [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq]);
             else
-                options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
-                forces = quadprog(H, free_contact_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+%                 options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
+%                 forces = quadprog(H, free_contact_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
             end
         end
 
@@ -287,13 +295,12 @@ classdef Contacts < handle
                 0, 0, -1]; ...% non negativity of vertical force
                 
             % fill a block diagonal matrix with all the constraints
-            Ar = repmat(constr_matrix, 1, total_num_vertices); % Repeat Matrix for every vertex
-            Ac = mat2cell(Ar, size(constr_matrix, 1), repmat(size(constr_matrix, 2), 1, total_num_vertices)); % Create Cell Array Of Orignal Repeated Matrix
-            obj.A = blkdiag(Ac{:});
+            Ac = repmat({constr_matrix}, 1, total_num_vertices); % Repeat Matrix for every vertex as a cell array
+            obj.A = blkdiag(Ac{1:4});
             
             % Create an OSQP problem object
             if obj.useOSQP
-                obj.osqpProb = osqp;
+%                 obj.osqpProb = osqp;
             end
         end
     end
