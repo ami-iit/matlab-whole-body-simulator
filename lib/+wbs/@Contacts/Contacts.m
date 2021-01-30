@@ -4,22 +4,25 @@ classdef Contacts < handle
     % Contacts Methods:
     %   compute_contact - computes the wrench and the state velocity after a (possible) impact
 
-    properties (Access = private)
+    properties (Constant)
         num_vertices = 4;
+        useOSQP=false; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
+        useQPOASES=true;
+    end
+    
+    properties (Access = private)
         foot_print; % the coordinates of the vertices
         was_in_contact = ones(8, 1); % this vector says if the vertex was in contact (1) or not (0)
         is_in_contact = ones(8, 1); % this vector says if the vertex is in contact (1) or not (0)
         S; % selector matrix for the robot torque
         mu; % friction coefficient
-        useOSQP; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
-        useQPOASES;
         A; Ax_Lb; Ax_Ub; Aeq; beq; % matrices used in the optimization problem
         osqpProb; % OSQP solver object
     end
 
     methods
 
-        function obj = Contacts(foot_print, robot, friction_coefficient,useOSQP,useQPOASES)
+        function obj = Contacts(foot_print, robot, friction_coefficient)
             %CONTACTS The Contact class needs the coordinates of the vertices of the foot
             % Arguments
             %   foot_print - the coordinates of every vertex in xyz
@@ -33,8 +36,6 @@ classdef Contacts < handle
             obj.S = [zeros(6, robot.NDOF); ...
                     eye(robot.NDOF)];
             obj.mu = friction_coefficient;
-            obj.useOSQP = useOSQP;
-            obj.useQPOASES = useQPOASES;
             obj.prepare_optimization_matrix();
         end
 
@@ -143,41 +144,29 @@ classdef Contacts < handle
             % the velocity does not change if there is no impact
             % the velocity change if there is the impact
 
-            % initialize the jacobian relative to the vertices that will be in contact
-            J = [];
+            % We shall stack the jacobians relative to the vertices that will be in contact. For
+            % those vertices, the velocity after impact should be zero.
+            mapVerticesNewContact = obj.is_in_contact & obj.was_in_contact;
+            new_contact = any(mapVerticesNewContact);
 
-            new_contact = false;
-
-            for ii = 1:obj.num_vertices * 2
-                j = (ii - 1) * 3 + 1;
-                % the impact occurs if the point was not in contact and now it is
-                if obj.is_in_contact(ii) == 1 && obj.was_in_contact(ii) == 0
-                    % stack the jacobians of the vertices that NOW are in contact
-                    J = vertcat(J, J_feet(j:j + 2, :));
-                    new_contact = true;
-                end
-
-            end
-
-            % if a new contact is detected we should prevent that the velocity of the vertices that previusly were in contact is nonzero.
+            % If a new contact is detected we should make sure that the velocity of the vertices
+            % previously in contact is zero.
             if new_contact
-
-                for ii = 1:obj.num_vertices * 2
-                    j = (ii - 1) * 3 + 1;
-
-                    if obj.was_in_contact(ii)
-                        % stack the jacobian of the vertices that WERE in contact
-                        J = vertcat(J, J_feet(j:j + 2, :));
-                    end
-
-                end
-
+                mapVerticesAtZeroVel = mapVerticesNewContact | obj.was_in_contact;
+            else
+                mapVerticesAtZeroVel = mapVerticesNewContact;
             end
 
-            % compute the projection in the null space of the scaled Jacobian of the vertices if a new contact is detected
-            if ~new_contact
-                return
-            else
+            allIndexes = 1:numel(mapVerticesAtZeroVel);
+            indexesVerticesAtZeroVel = allIndexes(mapVerticesAtZeroVel);
+            expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
+            expandedIdxesVerticesAtZeroVel = expandedIdxesVerticesAtZeroVel(1:end);
+            J = J_feet(expandedIdxesVerticesAtZeroVel,1:end);
+
+            % compute the projection in the null space of the scaled Jacobian of the vertices if a
+            % new contact is detected, otherwise just resuse the input variables (base_pose_dot,
+            % s_dot).
+            if new_contact
                 N = (eye(robot.NDOF + 6) - M \ (J' * ((J * (M \ J')) \ J)));
                 % the velocity after the impact is a function of the velocity before the impact
                 % under the constraint that the vertex velocity is equal to zeros
@@ -185,7 +174,6 @@ classdef Contacts < handle
                 base_pose_dot = x(1:6);
                 s_dot = x(7:end);
             end
-
         end
 
         function free_acceleration = compute_free_acceleration(obj, M, h, torque, generalized_ext_wrench)
@@ -222,23 +210,23 @@ classdef Contacts < handle
             end
             
             if obj.useOSQP
-%                 if firstSolverIter
-%                     % Setup workspace and change alpha parameter
-%                     obj.osqpProb = osqp;
-%                     obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
-%                     firstSolverIter = true;
-%                 else
-%                     % Update the problem
-%                     obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', free_contact_acceleration, 'Ax', sparse([obj.A;obj.Aeq]));
-%                 end
-%                 % Solve problem
-%                 res = obj.osqpProb.solve();
-%                 forces = res.x;
+                if firstSolverIter
+                    % Setup workspace and change alpha parameter
+                    obj.osqpProb = osqp;
+                    obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
+                    firstSolverIter = true;
+                else
+                    % Update the problem
+                    obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', free_contact_acceleration, 'Ax', sparse([obj.A;obj.Aeq]));
+                end
+                % Solve problem
+                res = obj.osqpProb.solve();
+                forces = res.x;
             elseif obj.useQPOASES
                 forces = simFunc_qpOASES(H, free_contact_acceleration, [obj.A;obj.Aeq], [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq]);
             else
-%                 options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
-%                 forces = quadprog(H, free_contact_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+                options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
+                forces = quadprog(H, free_contact_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
             end
         end
 
@@ -296,11 +284,11 @@ classdef Contacts < handle
                 
             % fill a block diagonal matrix with all the constraints
             Ac = repmat({constr_matrix}, 1, total_num_vertices); % Repeat Matrix for every vertex as a cell array
-            obj.A = blkdiag(Ac{1:4});
+            obj.A = blkdiag(Ac{1:total_num_vertices});
             
             % Create an OSQP problem object
             if obj.useOSQP
-%                 obj.osqpProb = osqp;
+                obj.osqpProb = osqp;
             end
         end
     end

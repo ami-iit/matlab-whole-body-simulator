@@ -78,6 +78,7 @@ vertex(:, 3) = [0.11; -0.035; 0];
 vertex(:, 4) = [-0.06; -0.035; 0];
 
 contact_config.foot_print = vertex;
+contact_config.total_num_vertices = size(vertex,2)*2;
 
 % friction coefficient for the feet
 contact_config.friction_coefficient = 0.1;
