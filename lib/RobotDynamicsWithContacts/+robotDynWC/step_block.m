@@ -57,7 +57,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             [kinDynOut.JDot_l_sole_nu, kinDynOut.JDot_r_sole_nu] = obj.robot.get_feet_JDot_nu();
             kinDynOut.M = obj.robot.get_mass_matrix(motorInertias);
             kinDynOut.h = obj.robot.get_bias_forces();
-            kinDynOut.motorGrpI = zeros(obj.robot_config.N_DOF,1);
+            kinDynOut.motorGrpI = zeros(size(s));
             kinDynOut.fc = [wrench_left_foot;wrench_right_foot];
             kinDynOut.nuDot = [base_pose_ddot;s_ddot];
             kinDynOut.left_right_foot_in_contact = [left_foot_in_contact,right_foot_in_contact];

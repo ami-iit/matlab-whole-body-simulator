@@ -18,6 +18,7 @@ classdef Contacts < handle
         mu; % friction coefficient
         A; Ax_Lb; Ax_Ub; Aeq; beq; % matrices used in the optimization problem
         osqpProb; % OSQP solver object
+        firstSolverIter; % For handing osqp.setp and osqp.update
     end
 
     methods
@@ -37,6 +38,9 @@ classdef Contacts < handle
                     eye(robot.NDOF)];
             obj.mu = friction_coefficient;
             obj.prepare_optimization_matrix();
+            
+            % initialize the setup/update step of the osqp solver
+            obj.firstSolverIter = true;
         end
 
         function [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
@@ -190,12 +194,6 @@ classdef Contacts < handle
         function forces = compute_unilateral_linear_contact(obj, J_feet, M, h, torque, JDot_nu_feet, contact_point, generalized_ext_wrench)
             % compute_unilateral_linear_contact returns the pure forces acting on the feet vertices
             
-            persistent firstSolverIter;
-            
-            if isempty(firstSolverIter)
-                firstSolverIter = true;
-            end
-            
             free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
             free_contact_acceleration = obj.compute_free_contact_acceleration(J_feet, free_acceleration, JDot_nu_feet);
             H = J_feet * (M \ J_feet');
@@ -210,11 +208,11 @@ classdef Contacts < handle
             end
             
             if obj.useOSQP
-                if firstSolverIter
+                if obj.firstSolverIter
                     % Setup workspace and change alpha parameter
                     obj.osqpProb = osqp;
                     obj.osqpProb.setup(sparse(H), free_contact_acceleration, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
-                    firstSolverIter = true;
+                    obj.firstSolverIter = true;
                 else
                     % Update the problem
                     obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', free_contact_acceleration, 'Ax', sparse([obj.A;obj.Aeq]));

@@ -3,11 +3,11 @@ classdef KinDynComputations < handle
     %   Detailed explanation goes here
     
     properties (Access = private)
-        w_H_b;
+        w_H_b (4, 4) double;;
         s;
-        base_pose_dot;
+        base_pose_dot (6, 1) double;;
         s_dot;
-        NDOF;
+        NDOF double;
     end
     
     methods
