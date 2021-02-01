@@ -9,7 +9,7 @@ WBTConfigRobotSim = WBToolbox.Configuration;
 WBTConfigRobotSim.RobotName = 'icubSim';
 WBTConfigRobotSim.UrdfFile = 'model.urdf';
 WBTConfigRobotSim.LocalName = 'WBT';
-WBTConfigRobotSim.GravityVector = [0,0,Config.GRAVITY_ACC];
+WBTConfigRobotSim.GravityVector = Config.GRAVITY_ACC;
 
 % Controlboards and joints list. Each joint is associated to the corresponding controlboard
 WBTConfigRobotSim.ControlBoardsNames = {'torso', 'left_arm', 'right_arm', 'left_leg', 'right_leg'};
