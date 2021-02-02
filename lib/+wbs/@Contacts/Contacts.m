@@ -150,7 +150,7 @@ classdef Contacts < handle
 
             % We shall stack the jacobians relative to the vertices that will be in contact. For
             % those vertices, the velocity after impact should be zero.
-            mapVerticesNewContact = obj.is_in_contact & obj.was_in_contact;
+            mapVerticesNewContact = obj.is_in_contact & ~obj.was_in_contact;
             new_contact = any(mapVerticesNewContact);
 
             % If a new contact is detected we should make sure that the velocity of the vertices
@@ -162,7 +162,7 @@ classdef Contacts < handle
             end
 
             allIndexes = 1:numel(mapVerticesAtZeroVel);
-            indexesVerticesAtZeroVel = allIndexes(mapVerticesAtZeroVel);
+            indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel)-1)*3+1; % each vertex has 3 components
             expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
             expandedIdxesVerticesAtZeroVel = expandedIdxesVerticesAtZeroVel(1:end);
             J = J_feet(expandedIdxesVerticesAtZeroVel,1:end);
