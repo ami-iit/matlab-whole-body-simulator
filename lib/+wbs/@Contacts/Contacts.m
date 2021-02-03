@@ -16,7 +16,7 @@ classdef Contacts < handle
         is_in_contact = ones(8, 1); % this vector says if the vertex is in contact (1) or not (0)
         S; % selector matrix for the robot torque
         mu; % friction coefficient
-        A; Ax_Lb; Ax_Ub; Aeq; beq; % matrices used in the optimization problem
+        A; Ax_Lb; Ax_Ub; Aeq; beq; ulb; % matrices used in the optimization problem
         osqpProb; % OSQP solver object
         firstSolverIter; % For handing osqp.setp and osqp.update
     end
@@ -164,7 +164,7 @@ classdef Contacts < handle
             allIndexes = 1:numel(mapVerticesAtZeroVel);
             indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel)-1)*3+1; % each vertex has 3 components
             expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
-            expandedIdxesVerticesAtZeroVel = expandedIdxesVerticesAtZeroVel(1:end);
+            expandedIdxesVerticesAtZeroVel = expandedIdxesVerticesAtZeroVel(:);
             J = J_feet(expandedIdxesVerticesAtZeroVel,1:end);
 
             % compute the projection in the null space of the scaled Jacobian of the vertices if a
@@ -202,12 +202,10 @@ classdef Contacts < handle
                 H = (H + H') / 2; % if non sym
             end
             
+            if obj.useOSQP
             for i = 1:obj.num_vertices * 2
                 obj.Aeq(i, i * 3) = contact_point(i) > 0;
-%                 obj.Aeq(i,i*3-2:i*3) = contact_point(i) > 0;
             end
-            
-            if obj.useOSQP
                 if obj.firstSolverIter
                     % Setup workspace and change alpha parameter
                     obj.osqpProb = osqp;
@@ -221,8 +219,18 @@ classdef Contacts < handle
                 res = obj.osqpProb.solve();
                 forces = res.x;
             elseif obj.useQPOASES
-                forces = simFunc_qpOASES(H, free_contact_acceleration, [obj.A;obj.Aeq], [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq]);
+                for i = 1:obj.num_vertices * 2
+                    if (contact_point(i) > 0) % vertex NOT in contact with the ground
+                        obj.ulb(3*i-2:3*i) = 0;
+                    else % vertex in contact with the ground
+                        obj.ulb(3*i-2:3*i) = inf;
+                    end
+                end
+                forces = simFunc_qpOASES(H, free_contact_acceleration, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
             else
+                for i = 1:obj.num_vertices * 2
+                    obj.Aeq(i, i * 3) = contact_point(i) > 0;
+                end
                 options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
                 forces = quadprog(H, free_contact_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
             end
@@ -272,6 +280,7 @@ classdef Contacts < handle
             % Aeq shall be concatenated with A in the case of OSQP.
             obj.Aeq = zeros(total_num_vertices, num_variables);
             obj.beq = zeros(total_num_vertices, 1);
+            obj.ulb = zeros(3*total_num_vertices, 1);
             
             constr_matrix = [...
                 1, 0, -obj.mu; ...% first 4 rows: simplified friction cone
