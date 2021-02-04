@@ -89,7 +89,7 @@ classdef Robot < handle
 
             [ack,J_RFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobianLRfoot('RFoot');
             if (~ack)
-                error('[Robot: get_feet_jacobians] Unable to retrieve the left foot jacobian');
+                error('[Robot: get_feet_jacobians] Unable to retrieve the right foot jacobian');
             end
         end
 

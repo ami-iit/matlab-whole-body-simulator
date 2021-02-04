@@ -3,9 +3,9 @@ classdef KinDynComputations < handle
     %   Detailed explanation goes here
     
     properties (Access = private)
-        w_H_b (4, 4) double;;
+        w_H_b (4, 4) double;
         s;
-        base_pose_dot (6, 1) double;;
+        base_pose_dot (6, 1) double;
         s_dot;
         NDOF double;
     end
@@ -33,7 +33,6 @@ classdef KinDynComputations < handle
                 case 'RFoot'
                     J_LRfoot = simFunc_getFrameFreeFloatingJacobianRFoot(obj.w_H_b,obj.s);
                 otherwise
-                    error('Unsupported "getFrameFreeFloatingJacobian" input parameter.');
                     ack = false;
             end
         end
