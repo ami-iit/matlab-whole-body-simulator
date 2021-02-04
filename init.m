@@ -29,8 +29,11 @@ Config.simulationTime = inf;
 Config.GRAVITY_ACC = [0,0,-9.81];
 Config.tStep = 0.001;
 
-% Use OSQP instead of quadprog, typically in the case where the optimization toolbox is not
-% available.
+% Since we cannot assume that the optimization toolbox license is available, we use another QP
+% solver in place of the MATLAB native solver 'quadprog'.
+% The alternate optional solver was the OSQP, but after the changes to support the code generation in
+% the Matlab System block 'step_block', only the QPOASES solver (Simulink block) is supported.
+% So the option below is DEPRECATED.
 Config.USE_OSQP = false;
 Config.USE_QPOASES = true;
 
@@ -48,5 +51,3 @@ run(strcat('app/robots/', robotName, '/initVisualizer.m'));
 %% Init simulator core physics paramaters
 physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
 physics_config.TIME_STEP = Config.tStep;
-physics_config.USE_OSQP = Config.USE_OSQP;
-physics_config.USE_QPOASES = Config.USE_QPOASES;
