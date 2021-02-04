@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.102"
+    ComputedModelVersion    "1.111"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -74,7 +74,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [41.0, 23.0, 1751.0, 1097.0]
+      Location		      [45.0, 23.0, 1747.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -101,10 +101,10 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1637.0, 868.0]
+	  Extents		  [1633.0, 868.0]
 	  ZoomFactor		  [2.41726618705036]
-	  Offset		  [-81.105654761904759, -5.7916666666666572]
-	  SceneRectInView	  [-81.105654761904759, -5.7916666666666572, 677.21130952380952, 359.08333333333331]
+	  Offset		  [-80.2782738095238, -5.7916666666666572]
+	  SceneRectInView	  [-80.2782738095238, -5.7916666666666572, 675.55654761904759, 359.08333333333331]
 	}
 	Object {
 	  $ObjectID		  7
@@ -112,10 +112,10 @@ Model {
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "197"
-	  Extents		  [1637.0, 868.0]
-	  ZoomFactor		  [1.5]
-	  Offset		  [141.54359776142212, -417.20493649803115]
-	  SceneRectInView	  [141.54359776142212, -417.20493649803115, 1091.3333333333333, 578.66666666666663]
+	  Extents		  [1633.0, 868.0]
+	  ZoomFactor		  [1.1290322580645162]
+	  Offset		  [34.3377232142858, -192.39999999999998]
+	  SceneRectInView	  [34.3377232142858, -192.39999999999998, 1446.3714285714284, 768.8]
 	}
 	Object {
 	  $ObjectID		  8
@@ -123,10 +123,10 @@ Model {
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "133"
-	  Extents		  [1636.0, 868.0]
-	  ZoomFactor		  [4.3076923076923075]
-	  Offset		  [605.10714285714289, 125.75]
-	  SceneRectInView	  [605.10714285714289, 125.75, 379.78571428571428, 201.5]
+	  Extents		  [1633.0, 868.0]
+	  ZoomFactor		  [4.2997931164190337]
+	  Offset		  [605.10714285714289, 125.56491120636866]
+	  SceneRectInView	  [605.10714285714289, 125.56491120636866, 379.78571428571422, 201.87017758726267]
 	}
 	Object {
 	  $ObjectID		  9
@@ -224,9 +224,9 @@ Model {
       }
       WindowState	      "AAAA/wAAAAD9AAAAAgAAAAAAAAC9AAAB+PwCAAAAA/sAAAAWAEQAbwBjAGsAVwBpAGQAZwBlAHQAMwEAAAAxAAAB+AAAA"
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
-      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABrAAf//wAAAAEAAAAAAAAAAPwCA"
+      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABqAAf//wAAAAEAAAAAAAAAAPwCA"
       "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAaLAAADoQAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
+      "QBjAHQAbwByAAAAAAD/////AAAAOQD///8AAAaHAAADoQAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIATABlAGYAdAMAAAAA/////wAAAAAAAAAAAAAAAQAAAAEAAAA4AGMAbwBsAGwAYQBwAHMAaQBiA"
       "GwAZQBQAGEAbgBlAGwAVABvAG8AbABCAGEAcgBSAGkAZwBoAHQDAAAAAP////8AAAAAAAAAAAAAAAMAAAABAAAAOgBjAG8AbABsAGEAcABzAGkAY"
       "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAQgBvAHQAdABvAG0AAAAAAP////8AAAAAAAAAAA=="
@@ -246,9 +246,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Jan 14 09:17:36 2021"
-  RTWModifiedTimeStamp	  532516653
-  ModelVersionFormat	  "1.%<AutoIncrement:102>"
+  LastModifiedDate	  "Thu Feb 04 03:26:38 2021"
+  RTWModifiedTimeStamp	  534309826
+  ModelVersionFormat	  "1.%<AutoIncrement:111>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -300,7 +300,7 @@ Model {
   EnablePacing		  off
   PacingRate		  1
   LinearizationMsg	  "none"
-  Profile		  off
+  Profile		  on
   ParamWorkspaceSource	  "MATLABWorkspace"
   AccelSystemTargetFile	  "accel.tlc"
   AccelTemplateMakefile	  "accel_default_tmf"
@@ -1306,7 +1306,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system_19"
-    Location		    [41, 23, 1792, 1120]
+    Location		    [45, 23, 1792, 1120]
     Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
@@ -1378,6 +1378,12 @@ Model {
       ContentPreviewEnabled   on
       ConfigSource	      "Workspace"
       ConfigObject	      "'WBTConfigRobotSim'"
+      RobotName		      "'icubSim'"
+      UrdfFile		      "'model.urdf'"
+      ControlledJoints	      "{'l_elbow','l_shoulder_pitch','torso_roll'}"
+      ControlBoardsNames      "{'left_arm','right_arm','torso'}"
+      LocalName		      "'WBT'"
+      GravityVector	      "[0,0,-9.81]"
     }
     Block {
       BlockType		      Constant
@@ -1428,6 +1434,7 @@ Model {
       ErrorFcn		      "Stateflow.Translate.translate"
       PermitHierarchicalResolution "ExplicitOnly"
       TreatAsAtomicUnit	      on
+      SystemSampleTime	      "Config.tStep"
       RequestExecContextInheritance off
       SFBlockType	      "MATLAB Function"
       ContentPreviewEnabled   on
@@ -1617,6 +1624,7 @@ Model {
       Position		      [435, 210, 515, 290]
       ZOrder		      1251
       NamePlacement	      "alternate"
+      TreatAsAtomicUnit	      on
       SystemSampleTime	      "confVisualizer.tStep"
       RequestExecContextInheritance off
       Object {
@@ -1627,7 +1635,7 @@ Model {
       }
       System {
 	Name			"Robot visualizer"
-	Location		[42, 23, 1792, 1120]
+	Location		[45, 23, 1792, 1120]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1642,7 +1650,7 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"431"
+	ZoomFactor		"430"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport
@@ -1746,12 +1754,11 @@ Model {
       ZOrder		      1252
       ForegroundColor	      "red"
       BackgroundColor	      "yellow"
-      LibraryVersion	      "1.30"
+      LibraryVersion	      "1.50"
       SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
       SourceType	      ""
       SourceProductName	      "RobotDynamicsWithContacts"
       ContentPreviewEnabled   off
-      robot_config	      "robot_config"
       contact_config	      "contact_config"
       physics_config	      "physics_config"
     }
