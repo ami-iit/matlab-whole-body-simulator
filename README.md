@@ -9,9 +9,10 @@ In the simulator the ground is assumed to be flat and the contact forces are com
 - [iDynTree](https://github.com/robotology/idyntree)
 - [OSQP](https://github.com/oxfordcontrol/osqp.git)
 - [osqp-matlab](https://github.com/oxfordcontrol/osqp-matlab) (the OSQP MATLAB bindings).
+- [qpOASES](https://github.com/robotology-dependencies/qpOASES)
 - [icub-models](https://github.com/robotology/icub-models) to access iCub models.
 
-It is recommended to install `iDynTree`, `icub-models` and `OSQP` using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild):
+It is recommended to install `iDynTree`, `icub-models`, `OSQP` and `qpOASES` using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild):
 - `icub-models`: set the profile option `ROBOTOLOGY_ENABLE_CORE`.
 - `iDynTree` and `OSQP`: set the profile option `ROBOTOLOGY_ENABLE_DYNAMICS`.
 
@@ -32,7 +33,7 @@ It is recommended to install `iDynTree`, `icub-models` and `OSQP` using the [rob
     ```
     export OSQP_MATLAB_PATH=<some-path>/osqp-matlab
     ```
-    - The option `Config.USE_OSQP` in the main [init](https://github.com/dic-iit/matlab-whole-body-simulators/blob/devel/init.m) file must be set to `true` (default value), otherwise the native MATLAB solver `quadprog` is used instead.
+    - The option `Config.USE_OSQP` in the main [init](https://github.com/dic-iit/matlab-whole-body-simulators/blob/devel/init.m) is deprecated, as SWIG bindings, OSQP bindings and the native MATLAB solver `quadprog` are not supported by the Simulink code generation build option in the `step_block` MATLAB System block. For this reason, the `step_block` MATLAB System block uses the qpOASES WBT block through a Simulink function call, and this choice is hardcoded in the class `Contacts`. As soon as the OSQP WBT block is created, it will replace the qpOASES Solver block.
     
     For your information, you can find further information on the OSQP library setup and use of the MATLAB interface (bindings) in https://osqp.org/docs:
     
