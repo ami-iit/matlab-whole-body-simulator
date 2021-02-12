@@ -1,4 +1,4 @@
-classdef KinDynComputations < handle
+classdef KinDynComputations
     %KINDYNCOMPUTATIONS The calss wraps the iDynTree::KinDynComputations methods using Simulink function calls.
     %   Detailed explanation goes here
     
@@ -14,7 +14,7 @@ classdef KinDynComputations < handle
         function obj = KinDynComputations()
         end
         
-        function setRobotState(obj,w_H_b,s,base_pose_dot,s_dot)
+        function obj = setRobotState(obj,w_H_b,s,base_pose_dot,s_dot)
             % Sets the robot state the wrapper methods depend on
             [obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot] = deal(w_H_b,s,base_pose_dot,s_dot);
             obj.NDOF = numel(s_dot);

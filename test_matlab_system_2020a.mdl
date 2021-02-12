@@ -1,12 +1,12 @@
 Model {
-  Name			  "test_matlab_system"
+  Name			  "test_matlab_system_2020a"
   Version		  10.1
   SavedCharacterEncoding  "UTF-8"
   GraphicalInterface {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.77"
+    ComputedModelVersion    "1.112"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -19,21 +19,27 @@ Model {
     IsArchitectureModel	    0
     IsAUTOSARArchitectureModel 0
     NumParameterArguments   0
-    NumExternalFileReferences 1
+    NumExternalFileReferences 2
+    ExternalFileReference {
+      Reference		      "WBToolboxLibrary/Utilities/Configuration"
+      Path		      "test_matlab_system_2020a/Configuration"
+      SID		      "206"
+      Type		      "LIBRARY_BLOCK"
+    }
     ExternalFileReference {
       Reference		      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
-      Path		      "test_matlab_system/RobotDynWithContacts"
-      SID		      "198"
+      Path		      "test_matlab_system_2020a/RobotDynWithContacts"
+      SID		      "197"
       Type		      "LIBRARY_BLOCK"
     }
     OrderedModelArguments   1
   }
-  AnimationPlugin	  "on"
   SLCCPlugin		  "on"
-  WebScopes_FoundationPlugin "on"
-  LogicAnalyzerPlugin	  "on"
   DiagnosticSuppressor	  "on"
+  AnimationPlugin	  "on"
+  WebScopes_FoundationPlugin "on"
   NotesPlugin		  "on"
+  LogicAnalyzerPlugin	  "on"
   slprops.hdlmdlprops {
     $PropName		    "HDLParams"
     $ObjectID		    1
@@ -45,6 +51,8 @@ Model {
       PropName		      "mdlProps"
     }
   }
+  PostLoadFcn		  "% Set path to the utility functions and to WBC library\nimport wbc.*\naddpath(genpath('./src'));\nad"
+  "dpath('./lib/RobotDynamicsWithContacts');"
   EnableAccessToBaseWorkspace on
   ScopeRefreshTime	  0.035000
   OverrideScopeRefreshTime on
@@ -56,7 +64,7 @@ Model {
   FPTRunName		  "Run 1"
   MaxMDLFileLineLength	  120
   InitFcn		  "init"
-  LastSavedArchitecture	  "glnxa64"
+  LastSavedArchitecture	  "maci64"
   Object {
     $PropName		    "BdWindowsInfo"
     $ObjectID		    2
@@ -66,7 +74,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [43.0, 34.0, 2289.0, 1287.0]
+      Location		      [45.0, 23.0, 1747.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -86,28 +94,28 @@ Model {
       }
       Array {
 	Type			"Simulink.EditorInfo"
-	Dimension		9
+	Dimension		10
 	Object {
 	  $ObjectID		  6
 	  IsActive		  [1]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [2189.0, 1055.0]
-	  ZoomFactor		  [1.75]
-	  Offset		  [-384.60847552044373, -95.498977811019756]
-	  SceneRectInView	  [-384.60847552044373, -95.498977811019756, 1250.8571428571429, 602.85714285714289]
+	  Extents		  [1633.0, 868.0]
+	  ZoomFactor		  [2.3529411764705883]
+	  Offset		  [-89.512499999999989, -5.9499999999999886]
+	  SceneRectInView	  [-89.512499999999989, -5.9499999999999886, 694.025, 368.9]
 	}
 	Object {
 	  $ObjectID		  7
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "122"
-	  Extents		  [2189.0, 1055.0]
-	  ZoomFactor		  [1.25]
-	  Offset		  [-28.852906924595004, -500.43413562159907]
-	  SceneRectInView	  [-28.852906924595004, -500.43413562159907, 1751.2, 844.0]
+	  LoadSaveID		  "197"
+	  Extents		  [1633.0, 868.0]
+	  ZoomFactor		  [1.1290322580645162]
+	  Offset		  [34.3377232142858, -192.39999999999998]
+	  SceneRectInView	  [34.3377232142858, -192.39999999999998, 1446.3714285714284, 768.8]
 	}
 	Object {
 	  $ObjectID		  8
@@ -115,13 +123,24 @@ Model {
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
 	  LoadSaveID		  "133"
-	  Extents		  [2417.0, 1080.0]
-	  ZoomFactor		  [5.3244540808424965]
-	  Offset		  [568.0283740546829, 126.58115183246073]
-	  SceneRectInView	  [568.0283740546829, 126.58115183246073, 453.94325189063409, 202.83769633507853]
+	  Extents		  [1633.0, 868.0]
+	  ZoomFactor		  [4.2997931164190337]
+	  Offset		  [605.10714285714289, 125.56491120636866]
+	  SceneRectInView	  [605.10714285714289, 125.56491120636866, 379.78571428571422, 201.87017758726267]
 	}
 	Object {
 	  $ObjectID		  9
+	  IsActive		  [0]
+	  IsTabbed		  [0]
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "122"
+	  Extents		  [1636.0, 868.0]
+	  ZoomFactor		  [2.39335798506942]
+	  Offset		  [415.74422807835822, -287.83517957089555]
+	  SceneRectInView	  [415.74422807835822, -287.83517957089555, 683.55841884328356, 362.67035914179104]
+	}
+	Object {
+	  $ObjectID		  10
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -132,7 +151,7 @@ Model {
 	  SceneRectInView	  [-679.26190732758619, -350.29141246684355, 2417.0, 1174.0]
 	}
 	Object {
-	  $ObjectID		  10
+	  $ObjectID		  11
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -143,7 +162,7 @@ Model {
 	  SceneRectInView	  [-875.24486488374964, -1180.5000000000002, 4028.3333333333335, 1956.6666666666667]
 	}
 	Object {
-	  $ObjectID		  11
+	  $ObjectID		  12
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -154,7 +173,7 @@ Model {
 	  SceneRectInView	  [212.06699685013245, -273.33879724801062, 1103.8681821949604, 536.17759449602124]
 	}
 	Object {
-	  $ObjectID		  12
+	  $ObjectID		  13
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -165,7 +184,7 @@ Model {
 	  SceneRectInView	  [-228.72071607519595, -136.92917420132613, 662.28571428571433, 670.85714285714289]
 	}
 	Object {
-	  $ObjectID		  13
+	  $ObjectID		  14
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -176,7 +195,7 @@ Model {
 	  SceneRectInView	  [-601.546875, -273.5, 2417.0, 1174.0]
 	}
 	Object {
-	  $ObjectID		  14
+	  $ObjectID		  15
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -188,29 +207,47 @@ Model {
 	}
 	PropName		"EditorsInfo"
       }
-      Object {
-	$PropName		"DockComponentsInfo"
-	$ObjectID		15
-	$ClassName		"Simulink.DockComponentInfo"
-	Type			"GLUE2:PropertyInspector"
-	ID			"Property Inspector"
-	Visible			[1]
-	CreateCallback		""
-	UserData		""
-	Floating		[0]
-	DockPosition		"Right"
-	Width			[640]
-	Height			[480]
-	Minimized		"On"
+      Array {
+	Type			"Simulink.DockComponentInfo"
+	Dimension		2
+	Object {
+	  $ObjectID		  16
+	  Type			  "GLUE2:PropertyInspector"
+	  ID			  "Property Inspector"
+	  Visible		  [1]
+	  CreateCallback	  ""
+	  UserData		  ""
+	  Floating		  [0]
+	  DockPosition		  "Right"
+	  Width			  [640]
+	  Height		  [480]
+	  Minimized		  "On"
+	}
+	Object {
+	  $ObjectID		  17
+	  Type			  "Simulink:Editor:ReferencedFiles"
+	  ID			  "Referenced Files"
+	  Visible		  [0]
+	  CreateCallback	  ""
+	  UserData		  "{\"filterShowRefModels\":\"true\",\"filterShowRefSubs\":\"true\",\"filterShowOnlyDirtyFiles\":\"false\"}\n"
+	  Floating		  [0]
+	  DockPosition		  "Left"
+	  Width			  [640]
+	  Height		  [480]
+	  Minimized		  "Unset"
+	}
+	PropName		"DockComponentsInfo"
       }
-      WindowState	      "AAAA/wAAAAD9AAAAAgAAAAAAAAC9AAAB+PwCAAAAA/sAAAAWAEQAbwBjAGsAVwBpAGQAZwBlAHQAMwEAAAAxAAAB+AAAA"
+      WindowState	      "AAAA/wAAAAD9AAAAAgAAAAAAAADMAAADofwCAAAABPsAAAAWAEQAbwBjAGsAVwBpAGQAZwBlAHQAMwEAAAAxAAAB+AAAA"
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
-      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAAP////8AAABiAP///wAAAAEAAAAAAAAAAPwCA"
-      "AAAAfsAAABUAEcATABVAEUAMgA6AFAAcgBvAHAAZQByAHQAeQBJAG4AcwBwAGUAYwB0AG8AcgAvAFAAcgBvAHAAZQByAHQAeQAgAEkAbgBzAHAAZ"
-      "QBjAHQAbwByAAAAAAD/////AAABrAD///8AAAizAAAEXAAAAAEAAAACAAAAAQAAAAL8AAAAAwAAAAAAAAABAAAANgBjAG8AbABsAGEAcABzAGkAY"
-      "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIATABlAGYAdAMAAAAA/////wAAAAAAAAAAAAAAAQAAAAEAAAA4AGMAbwBsAGwAYQBwAHMAaQBiA"
-      "GwAZQBQAGEAbgBlAGwAVABvAG8AbABCAGEAcgBSAGkAZwBoAHQDAAAAAP////8AAAAAAAAAAAAAAAMAAAABAAAAOgBjAG8AbABsAGEAcABzAGkAY"
-      "gBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAQgBvAHQAdABvAG0AAAAAAP////8AAAAAAAAAAA=="
+      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAeQAAA6EAAABqAAf///sAAABgAFMAaQBtAHUAb"
+      "ABpAG4AawA6AEUAZABpAHQAbwByADoAUgBlAGYAZQByAGUAbgBjAGUAZABGAGkAbABlAHMALwBSAGUAZgBlAHIAZQBuAGMAZQBkACAARgBpAGwAZ"
+      "QBzAAAAAAD/////AAAAjgD///8AAAABAAAAAAAAAAD8AgAAAAH7AAAAVABHAEwAVQBFADIAOgBQAHIAbwBwAGUAcgB0AHkASQBuAHMAcABlAGMAd"
+      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGhwAAA6EAAAABAAAAAgAAAAEAAAAC/"
+      "AAAAAMAAAAAAAAAAQAAADYAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEwAZQBmAHQDAAAAAP////8AAAAAA"
+      "AAAAAAAAAEAAAABAAAAOABjAG8AbABsAGEAcABzAGkAYgBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAUgBpAGcAaAB0AwAAAAD/////AAAAA"
+      "AAAAAAAAAADAAAAAQAAADoAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEIAbwB0AHQAbwBtAAAAAAD/////A"
+      "AAAAAAAAAA="
       Array {
 	Type			"Cell"
 	Dimension		0
@@ -218,18 +255,18 @@ Model {
       }
       WindowUuid	      "0b82776b-3568-4091-8b56-551a033ff4d9"
     }
-    BDUuid		    "ab024dd0-9381-4ce7-a294-2271a03d8a02"
+    BDUuid		    "5ce80bdf-c9c7-44d8-a14f-65ba253eb534"
   }
   HideAutomaticNames	  on
   Created		  "Mon Aug 24 16:20:58 2020"
   Creator		  "giuseppe"
   UpdateHistory		  "UpdateHistoryNever"
   ModifiedByFormat	  "%<Auto>"
-  LastModifiedBy	  "giuseppe"
+  LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Nov 05 09:49:20 2020"
-  RTWModifiedTimeStamp	  526470457
-  ModelVersionFormat	  "1.%<AutoIncrement:77>"
+  LastModifiedDate	  "Fri Feb 12 17:00:43 2021"
+  RTWModifiedTimeStamp	  535050043
+  ModelVersionFormat	  "1.%<AutoIncrement:0>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -249,7 +286,6 @@ Model {
   ShowTestPointIcons	  on
   ShowSignalResolutionIcons on
   ShowViewerIcons	  on
-  SortedOrder		  off
   VariantCondition	  off
   ShowLinearizationAnnotations on
   ShowVisualizeInsertedRTB on
@@ -279,7 +315,7 @@ Model {
   EnablePacing		  off
   PacingRate		  1
   LinearizationMsg	  "none"
-  Profile		  off
+  Profile		  on
   ParamWorkspaceSource	  "MATLABWorkspace"
   AccelSystemTargetFile	  "accel.tlc"
   AccelTemplateMakefile	  "accel_default_tmf"
@@ -287,14 +323,14 @@ Model {
   TryForcingSFcnDF	  off
   Object {
     $PropName		    "DataLoggingOverride"
-    $ObjectID		    16
+    $ObjectID		    18
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
-    model_		    "test_matlab_system"
+    model_		    "test_matlab_system_2020a"
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
       Dimension		      1
-      Cell		      "test_matlab_system"
+      Cell		      "test_matlab_system_2020a"
       PropName		      "logAsSpecifiedByModels_"
     }
     Array {
@@ -332,7 +368,7 @@ Model {
     Type		    "Handle"
     Dimension		    1
     Simulink.ConfigSet {
-      $ObjectID		      17
+      $ObjectID		      19
       Version		      "20.0.1"
       DisabledProps	      []
       Description	      ""
@@ -340,7 +376,7 @@ Model {
 	Type			"Handle"
 	Dimension		10
 	Simulink.SolverCC {
-	  $ObjectID		  18
+	  $ObjectID		  20
 	  Version		  "20.0.1"
 	  DisabledProps		  []
 	  Description		  ""
@@ -363,7 +399,6 @@ Model {
 	  RelTol		  "1e-3"
 	  EnableMultiTasking	  off
 	  ConcurrentTasks	  off
-	  Solver		  "FixedStepAuto"
 	  SolverName		  "FixedStepAuto"
 	  SolverJacobianMethodControl "auto"
 	  ShapePreserveControl	  "DisableAll"
@@ -381,9 +416,10 @@ Model {
 	  DecoupledContinuousIntegration off
 	  MinimalZcImpactIntegration off
 	  ODENIntegrationMethod	  "ode3"
+	  Solver		  FixedStepAuto
 	}
 	Simulink.DataIOCC {
-	  $ObjectID		  19
+	  $ObjectID		  21
 	  Version		  "20.0.1"
 	  DisabledProps		  []
 	  Description		  ""
@@ -425,7 +461,7 @@ Model {
 	  LoggingIntervals	  "[-inf, inf]"
 	}
 	Simulink.OptimizationCC {
-	  $ObjectID		  20
+	  $ObjectID		  22
 	  Version		  "20.0.1"
 	  Array {
 	    Type		    "Cell"
@@ -499,7 +535,7 @@ Model {
 	  EfficientTunableParamExpr off
 	}
 	Simulink.DebuggingCC {
-	  $ObjectID		  21
+	  $ObjectID		  23
 	  Version		  "20.0.1"
 	  Array {
 	    Type		    "Cell"
@@ -620,7 +656,7 @@ Model {
 	  ArithmeticOperatorsInVariantConditions "error"
 	}
 	Simulink.HardwareCC {
-	  $ObjectID		  22
+	  $ObjectID		  24
 	  Version		  "20.0.1"
 	  DisabledProps		  []
 	  Description		  ""
@@ -670,7 +706,7 @@ Model {
 	  HardwareBoardFeatureSet "EmbeddedCoderHSP"
 	}
 	Simulink.ModelReferenceCC {
-	  $ObjectID		  23
+	  $ObjectID		  25
 	  Version		  "20.0.1"
 	  DisabledProps		  []
 	  Description		  ""
@@ -690,7 +726,7 @@ Model {
 	  SupportModelReferenceSimTargetCustomCode off
 	}
 	Simulink.SFSimCC {
-	  $ObjectID		  24
+	  $ObjectID		  26
 	  Version		  "20.0.1"
 	  DisabledProps		  []
 	  Description		  ""
@@ -712,7 +748,6 @@ Model {
 	  SimUseLocalCustomCode	  on
 	  SimParseCustomCode	  on
 	  SimAnalyzeCustomCode	  off
-	  SimBuildMode		  "sf_incremental_build"
 	  SimGenImportedTypeDefs  off
 	  ModelFunctionsGlobalVisibility "on"
 	  CompileTimeRecursionLimit 50
@@ -725,7 +760,7 @@ Model {
 	}
 	Simulink.RTWCC {
 	  $BackupClass		  "Simulink.RTWCC"
-	  $ObjectID		  25
+	  $ObjectID		  27
 	  Version		  "20.0.1"
 	  Array {
 	    Type		    "Cell"
@@ -814,7 +849,7 @@ Model {
 	    Type		    "Handle"
 	    Dimension		    2
 	    Simulink.CodeAppCC {
-	      $ObjectID		      26
+	      $ObjectID		      28
 	      Version		      "20.0.1"
 	      Array {
 		Type			"Cell"
@@ -904,7 +939,7 @@ Model {
 	    }
 	    Simulink.GRTTargetCC {
 	      $BackupClass	      "Simulink.TargetCC"
-	      $ObjectID		      27
+	      $ObjectID		      29
 	      Version		      "20.0.1"
 	      Array {
 		Type			"Cell"
@@ -958,7 +993,6 @@ Model {
 	      SupportAbsoluteTime     on
 	      LogVarNameModifier      "rt_"
 	      MatFileLogging	      on
-	      MultiInstanceERTCode    off
 	      CodeInterfacePackaging  "Nonreusable function"
 	      PurelyIntegerCode	      off
 	      SupportNonFinite	      on
@@ -1009,7 +1043,7 @@ Model {
 	  }
 	}
 	SlCovCC.ConfigComp {
-	  $ObjectID		  28
+	  $ObjectID		  30
 	  Version		  "20.0.1"
 	  DisabledProps		  []
 	  Description		  "Simulink Coverage Configuration Component"
@@ -1026,7 +1060,6 @@ Model {
 	  CovFilter		  ""
 	  CovHTMLOptions	  ""
 	  CovNameIncrementing	  off
-	  CovHtmlReporting	  off
 	  CovForceBlockReductionOff on
 	  CovEnableCumulative	  on
 	  CovSaveCumulativeToWorkspaceVar off
@@ -1036,7 +1069,6 @@ Model {
 	  CovSaveOutputData	  on
 	  CovOutputDir		  "slcov_output/$ModelName$"
 	  CovDataFileName	  "$ModelName$_cvdata"
-	  CovShowResultsExplorer  on
 	  CovReportOnPause	  on
 	  CovModelRefEnable	  "off"
 	  CovModelRefExcluded	  ""
@@ -1050,7 +1082,7 @@ Model {
 	  CovMcdcMode		  "Masking"
 	}
 	hdlcoderui.hdlcc {
-	  $ObjectID		  29
+	  $ObjectID		  31
 	  Version		  "20.0.1"
 	  DisabledProps		  []
 	  Description		  "HDL Coder custom configuration component"
@@ -1075,11 +1107,11 @@ Model {
   }
   Simulink.ConfigSet {
     $PropName		    "ActiveConfigurationSet"
-    $ObjectID		    17
+    $ObjectID		    19
   }
   Object {
     $PropName		    "DataTransfer"
-    $ObjectID		    30
+    $ObjectID		    32
     $ClassName		    "Simulink.GlobalDataTransfer"
     DefaultTransitionBetweenSyncTasks "Ensure deterministic transfer (maximum delay)"
     DefaultTransitionBetweenAsyncTasks "Ensure data integrity only"
@@ -1177,7 +1209,6 @@ Model {
       UseCircularBuffer	      off
       SampleTime	      "-1"
       StateMustResolveToSignalObject off
-      CodeGenStateStorageClass "Auto"
     }
     Block {
       BlockType		      Demux
@@ -1269,7 +1300,7 @@ Model {
       MaskHideContents	      off
       SFBlockType	      "NONE"
       Variant		      off
-      VariantControlMode      "Expression"
+      VariantControlMode      "expression"
       GeneratePreprocessorConditionals off
       AllowZeroVariantControls off
       PropagateVariantConditions off
@@ -1286,9 +1317,9 @@ Model {
     }
   }
   System {
-    Name		    "test_matlab_system"
-    Location		    [43, 34, 2332, 1321]
-    Open		    on
+    Name		    "test_matlab_system_2020a"
+    Location		    [45, 23, 1792, 1120]
+    Open		    off
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
     ExecutionDomainType	    "Deduce"
@@ -1302,16 +1333,16 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "175"
+    ZoomFactor		    "235"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "206"
+    SIDHighWatermark	    "212"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
       Name		      "Bus\nSelector"
       SID		      "153"
       Ports		      [1, 2]
-      Position		      [445, 99, 450, 141]
+      Position		      [390, 99, 395, 141]
       ZOrder		      1238
       BlockMirror	      on
       NameLocation	      "top"
@@ -1328,10 +1359,10 @@ Model {
     Block {
       BlockType		      BusSelector
       Name		      "Bus\nSelector1"
-      SID		      "204"
+      SID		      "199"
       Ports		      [1, 2]
-      Position		      [345, 326, 350, 364]
-      ZOrder		      1261
+      Position		      [340, 306, 345, 344]
+      ZOrder		      1255
       ShowName		      off
       OutputSignals	      "w_H_b,s"
       Port {
@@ -1344,29 +1375,63 @@ Model {
       }
     }
     Block {
+      BlockType		      Reference
+      Name		      "Configuration"
+      SID		      "206"
+      Ports		      []
+      Position		      [225, 0, 300, 30]
+      ZOrder		      1262
+      LibraryVersion	      "1.676"
+      SourceBlock	      "WBToolboxLibrary/Utilities/Configuration"
+      SourceType	      ""
+      SourceProductName	      "WholeBodyToolbox"
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      ContentPreviewEnabled   on
+      ConfigSource	      "Workspace"
+      ConfigObject	      "'WBTConfigRobotSim'"
+      RobotName		      "'icubSim'"
+      UrdfFile		      "'model.urdf'"
+      ControlledJoints	      "{'l_elbow','l_shoulder_pitch','torso_roll'}"
+      ControlBoardsNames      "{'left_arm','right_arm','torso'}"
+      LocalName		      "'WBT'"
+      GravityVector	      "[0,0,-9.81]"
+    }
+    Block {
       BlockType		      Constant
       Name		      "Constant"
       SID		      "154"
-      Position		      [405, 80, 470, 100]
+      Position		      [435, 80, 500, 100]
       ZOrder		      1239
       BlockMirror	      on
       NameLocation	      "top"
-      Value		      "Config.initialConditions.joints"
+      Value		      "robot_config.initialConditions.s"
     }
     Block {
       BlockType		      Constant
       Name		      "Constant1"
       SID		      "140"
-      Position		      [5, 315, 35, 345]
+      Position		      [0, 275, 30, 305]
       ZOrder		      1236
-      Value		      "zeros(Config.N_DOF + 6,1)"
+      Value		      "zeros(robot_config.N_DOF + 6,1)"
+    }
+    Block {
+      BlockType		      Constant
+      Name		      "Constant2"
+      SID		      "205"
+      Position		      [0, 310, 30, 340]
+      ZOrder		      1261
+      Value		      "zeros(robot_config.N_DOF,1)"
     }
     Block {
       BlockType		      Delay
       Name		      "Delay1"
-      SID		      "199"
+      SID		      "187"
       Ports		      [1, 1]
-      Position		      [55, 257, 90, 293]
+      Position		      [55, 244, 80, 266]
       ZOrder		      1250
       InputPortMap	      "u0"
       DelayLength	      "1"
@@ -1377,13 +1442,14 @@ Model {
       Name		      "MATLAB Function"
       SID		      "152"
       Ports		      [5, 1]
-      Position		      [55, 78, 350, 182]
+      Position		      [55, 78, 300, 182]
       ZOrder		      1237
       BlockMirror	      on
       NameLocation	      "top"
       ErrorFcn		      "Stateflow.Translate.translate"
       PermitHierarchicalResolution "ExplicitOnly"
       TreatAsAtomicUnit	      on
+      SystemSampleTime	      "Config.tStep"
       RequestExecContextInheritance off
       SFBlockType	      "MATLAB Function"
       ContentPreviewEnabled   on
@@ -1410,7 +1476,7 @@ Model {
 	TiledPageScale		1
 	ShowPageBoundaries	off
 	ZoomFactor		"100"
-	SIDHighWatermark	"34"
+	SIDHighWatermark	"37"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport
@@ -1454,24 +1520,24 @@ Model {
 	Block {
 	  BlockType		  Demux
 	  Name			  " Demux "
-	  SID			  "152::20"
+	  SID			  "152::36"
 	  Ports			  [1, 1]
 	  Position		  [270, 230, 320, 270]
-	  ZOrder		  11
+	  ZOrder		  27
 	  Outputs		  "1"
 	}
 	Block {
 	  BlockType		  S-Function
 	  Name			  " SFunction "
-	  SID			  "152::19"
+	  SID			  "152::35"
 	  Tag			  "Stateflow S-Function 5"
 	  Ports			  [5, 2]
-	  Position		  [180, 125, 230, 245]
-	  ZOrder		  10
+	  Position		  [180, 100, 230, 220]
+	  ZOrder		  26
 	  FunctionName		  "sf_sfun"
 	  PortCounts		  "[5 2]"
 	  SFunctionDeploymentMode off
-	  EnableBusSupport	  on
+	  EnableBusSupport	  off
 	  SFcnIsStateOwnerBlock	  off
 	  Port {
 	    PortNumber		    2
@@ -1481,9 +1547,9 @@ Model {
 	Block {
 	  BlockType		  Terminator
 	  Name			  " Terminator "
-	  SID			  "152::21"
+	  SID			  "152::37"
 	  Position		  [460, 241, 480, 259]
-	  ZOrder		  12
+	  ZOrder		  28
 	}
 	Block {
 	  BlockType		  Outport
@@ -1493,66 +1559,60 @@ Model {
 	  ZOrder		  -5
 	}
 	Line {
-	  ZOrder		  1
+	  ZOrder		  9
 	  SrcBlock		  "joint_pos_des"
 	  SrcPort		  1
 	  DstBlock		  " SFunction "
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  2
+	  ZOrder		  10
 	  SrcBlock		  "joint_pos"
 	  SrcPort		  1
-	  Points		  [78, 0; 0, 15]
 	  DstBlock		  " SFunction "
 	  DstPort		  2
 	}
 	Line {
-	  ZOrder		  3
+	  ZOrder		  11
 	  SrcBlock		  "joints_velocity"
 	  SrcPort		  1
-	  Points		  [62, 0; 0, 5]
 	  DstBlock		  " SFunction "
 	  DstPort		  3
 	}
 	Line {
-	  ZOrder		  4
+	  ZOrder		  12
 	  SrcBlock		  "wrench_LFoot"
 	  SrcPort		  1
-	  Points		  [61, 0; 0, -5]
 	  DstBlock		  " SFunction "
 	  DstPort		  4
 	}
 	Line {
-	  ZOrder		  5
+	  ZOrder		  13
 	  SrcBlock		  "wrench_RFoot"
 	  SrcPort		  1
-	  Points		  [79, 0; 0, -20]
 	  DstBlock		  " SFunction "
 	  DstPort		  5
 	}
 	Line {
 	  Name			  "torques"
-	  ZOrder		  6
+	  ZOrder		  14
 	  Labels		  [0, 0]
 	  SrcBlock		  " SFunction "
 	  SrcPort		  2
-	  Points		  [118, 0; 0, -105]
 	  DstBlock		  "torques"
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  7
+	  ZOrder		  15
 	  SrcBlock		  " Demux "
 	  SrcPort		  1
 	  DstBlock		  " Terminator "
 	  DstPort		  1
 	}
 	Line {
-	  ZOrder		  8
+	  ZOrder		  16
 	  SrcBlock		  " SFunction "
 	  SrcPort		  1
-	  Points		  [16, 0; 0, 95]
 	  DstBlock		  " Demux "
 	  DstPort		  1
 	}
@@ -1561,22 +1621,23 @@ Model {
     Block {
       BlockType		      SubSystem
       Name		      "Robot visualizer"
-      SID		      "200"
+      SID		      "133"
       Ports		      [1]
-      Position		      [500, 215, 580, 295]
+      Position		      [435, 210, 515, 290]
       ZOrder		      1251
       NameLocation	      "top"
+      TreatAsAtomicUnit	      on
       SystemSampleTime	      "confVisualizer.tStep"
       RequestExecContextInheritance off
       Object {
 	$PropName		"MaskObject"
-	$ObjectID		31
+	$ObjectID		33
 	$ClassName		"Simulink.Mask"
 	RunInitForIconRedraw	"off"
       }
       System {
 	Name			"Robot visualizer"
-	Location		[43, 34, 2332, 1321]
+	Location		[45, 23, 1792, 1120]
 	Open			off
 	PortBlocksUseCompactNotation off
 	SetExecutionDomain	off
@@ -1591,19 +1652,19 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"532"
+	ZoomFactor		"430"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport
 	  Name			  "State"
-	  SID			  "201"
+	  SID			  "134"
 	  Position		  [630, 218, 660, 232]
 	  ZOrder		  1129
 	}
 	Block {
 	  BlockType		  BusSelector
 	  Name			  "Bus\nSelector"
-	  SID			  "202"
+	  SID			  "135"
 	  Ports			  [1, 4]
 	  Position		  [695, 129, 700, 316]
 	  ZOrder		  1130
@@ -1628,7 +1689,7 @@ Model {
 	Block {
 	  BlockType		  MATLABSystem
 	  Name			  "MATLAB System"
-	  SID			  "203"
+	  SID			  "144"
 	  Ports			  [4]
 	  Position		  [845, 135, 960, 310]
 	  ZOrder		  1132
@@ -1687,41 +1748,39 @@ Model {
     Block {
       BlockType		      Reference
       Name		      "RobotDynWithContacts"
-      SID		      "198"
-      Ports		      [2, 4]
-      Position		      [105, 244, 300, 356]
-      ZOrder		      1240
-      LibraryVersion	      "1.17"
+      SID		      "197"
+      Ports		      [3, 4]
+      Position		      [105, 232, 300, 343]
+      ZOrder		      1252
+      ForegroundColor	      "red"
+      BackgroundColor	      "yellow"
+      LibraryVersion	      "1.0"
       SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
-      SourceType	      "SubSystem"
+      SourceType	      ""
       SourceProductName	      "RobotDynamicsWithContacts"
-      ShowPortLabels	      "FromPortIcon"
-      SystemSampleTime	      "-1"
       RTWMemSecFuncInitTerm   "Inherit from model"
       RTWMemSecFuncExecute    "Inherit from model"
       RTWMemSecDataConstants  "Inherit from model"
       RTWMemSecDataInternal   "Inherit from model"
       RTWMemSecDataParameters "Inherit from model"
-      GeneratePreprocessorConditionals off
-      AllowZeroVariantControls off
-      PropagateVariantConditions off
-      ContentPreviewEnabled   on
-      Latency		      "0"
-      AutoFrameSizeCalculation off
+      ContentPreviewEnabled   off
+      robot_config	      "robot_config"
+      contact_config	      "contact_config"
+      physics_config	      "physics_config"
     }
     Block {
       BlockType		      Terminator
       Name		      "Terminator"
-      SID		      "205"
-      Position		      [400, 325, 420, 345]
-      ZOrder		      1262
+      SID		      "203"
+      Position		      [385, 305, 405, 325]
+      ZOrder		      1259
     }
     Block {
       BlockType		      Terminator
       Name		      "Terminator1"
-      SID		      "206"
-      Position		      [400, 345, 420, 365]
-      ZOrder		      1263
+      SID		      "204"
+      Position		      [385, 325, 405, 345]
+      ZOrder		      1260
     }
     Line {
       ZOrder		      148
@@ -1749,34 +1808,34 @@ Model {
       DstPort		      3
     }
     Line {
-      ZOrder		      141
+      ZOrder		      147
       SrcBlock		      "RobotDynWithContacts"
       SrcPort		      1
-      Points		      [160, 0]
+      Points		      [105, 0]
       Branch {
-	ZOrder			146
+	ZOrder			139
 	DstBlock		"Robot visualizer"
 	DstPort			1
       }
       Branch {
-	ZOrder			145
+	ZOrder			138
 	DstBlock		"Bus\nSelector"
 	DstPort			1
       }
     }
     Line {
-      ZOrder		      142
+      ZOrder		      149
       SrcBlock		      "RobotDynWithContacts"
       SrcPort		      2
-      Points		      [69, 0; 0, -135]
+      Points		      [19, 0; 0, -125]
       DstBlock		      "MATLAB Function"
       DstPort		      4
     }
     Line {
-      ZOrder		      143
+      ZOrder		      150
       SrcBlock		      "RobotDynWithContacts"
       SrcPort		      3
-      Points		      [93, 0; 0, -145]
+      Points		      [39, 0; 0, -130]
       DstBlock		      "MATLAB Function"
       DstPort		      5
     }
@@ -1788,31 +1847,40 @@ Model {
       DstPort		      1
     }
     Line {
-      ZOrder		      147
+      ZOrder		      136
       Labels		      [0, 0]
       SrcBlock		      "MATLAB Function"
       SrcPort		      1
-      Points		      [-56, 0; 0, 145]
+      Points		      [-8, 0; 0, 125]
       DstBlock		      "Delay1"
       DstPort		      1
     }
     Line {
-      ZOrder		      137
+      ZOrder		      146
       SrcBlock		      "Delay1"
       SrcPort		      1
       DstBlock		      "RobotDynWithContacts"
       DstPort		      1
     }
     Line {
-      ZOrder		      144
+      ZOrder		      160
       SrcBlock		      "RobotDynWithContacts"
       SrcPort		      4
       DstBlock		      "Bus\nSelector1"
       DstPort		      1
     }
     Line {
+      Name		      "<s>"
+      ZOrder		      167
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector1"
+      SrcPort		      2
+      DstBlock		      "Terminator1"
+      DstPort		      1
+    }
+    Line {
       Name		      "<w_H_b>"
-      ZOrder		      139
+      ZOrder		      166
       Labels		      [0, 0]
       SrcBlock		      "Bus\nSelector1"
       SrcPort		      1
@@ -1820,25 +1888,23 @@ Model {
       DstPort		      1
     }
     Line {
-      Name		      "<s>"
-      ZOrder		      140
-      Labels		      [0, 0]
-      SrcBlock		      "Bus\nSelector1"
-      SrcPort		      2
-      DstBlock		      "Terminator1"
-      DstPort		      1
+      ZOrder		      169
+      SrcBlock		      "Constant2"
+      SrcPort		      1
+      DstBlock		      "RobotDynWithContacts"
+      DstPort		      3
     }
   }
 }
 #Finite State Machines
 #
-#   Stateflow 80000032
+#   Stateflow 80000036
 #
 #
 Stateflow {
   machine {
     id			    1
-    name		    "test_matlab_system"
+    name		    "test_matlab_system_2020a"
     sfVersion		    80000032
     firstTarget		    13
   }

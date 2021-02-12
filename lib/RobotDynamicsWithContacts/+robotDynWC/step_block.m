@@ -2,11 +2,8 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
     % step_block This block takes as input the joint torques and the
     % applied external forces and evolves the state of the robot
 
-    properties
-        robot_config = struct();
-    end
-    
     properties (Nontunable)
+        robot_config;
         contact_config;
         physics_config;
         OutputBusName = 'bus_name';
