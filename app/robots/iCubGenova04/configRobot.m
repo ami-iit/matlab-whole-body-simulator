@@ -32,8 +32,6 @@ end
 % 
 robot_config.jointOrder = WBTConfigRobotSim.ControlledJoints;
 robot_config.numOfJointsForEachControlboard = numOfJointsForEachControlboard;
-robot_config.meshFilePrefix = [icubModelsInstallPrefix '/share'];
-robot_config.modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
 robot_config.fileName = WBTConfigRobotSim.UrdfFile;
 robot_config.N_DOF = numel(WBTConfigRobotSim.ControlledJoints);
 robot_config.N_DOF_MATRIX = eye(robot_config.N_DOF);

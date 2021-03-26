@@ -2,6 +2,9 @@
 % variables.
 kinDynOut_bus = initKinDynOut_bus(robot_config);
 
+% Get the model path through the YARP resource finder
+[robot_config.modelPath,robot_config.meshFilePrefix] = wbs.getModelInfoFromRobotCfgAndYarpFinder(robot_config);
+
 %======== LOCAL FUNCTIONS ====================
 
 function kinDynOut_bus = initKinDynOut_bus(robot_config)

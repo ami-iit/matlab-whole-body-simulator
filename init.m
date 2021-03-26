@@ -17,12 +17,6 @@ clear functions
 close all
 clc
 
-% REMARK : If you have installed the URDF models by https://github.com/robotology/icub-models
-% You could fill the required variables as follows:
-% % Substitute in the following the location of the install prefix of icub-models
-% if installed with robotology superbuild you can directly use
-icubModelsInstallPrefix = getenv('ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX');
-
 %% GENERAL SIMULATION INFO
 % Simulation time and delta_t [s]
 Config.simulationTime = inf;

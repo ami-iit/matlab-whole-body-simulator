@@ -2,8 +2,7 @@
 
 confVisualizer.robotName = robotName;
 confVisualizer.fileName = robot_config.fileName;
-confVisualizer.meshFilePrefix = robot_config.meshFilePrefix;
-confVisualizer.modelPath = robot_config.modelPath;
+[confVisualizer.modelPath,confVisualizer.meshFilePrefix] = wbs.getModelInfoFromRobotCfgAndYarpFinder(robot_config);
 confVisualizer.jointOrder = robot_config.jointOrder;
 % initial infos specified in configRobot
 confVisualizer.joints_positions = robot_config.initialConditions.s;
