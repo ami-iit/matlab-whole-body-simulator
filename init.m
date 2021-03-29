@@ -35,12 +35,10 @@ Config.USE_QPOASES = true;
 confVisualizer.visualizeRobot = true;
 
 %% ADD CONFIGURATION FILES
-% Select the robot name from YARP_ROBOT_NAME
-robotName = getenv('YARP_ROBOT_NAME');
 
 % Run robot-specific and controller-specific configuration parameters
-run(strcat('app/robots/', robotName, '/configRobot.m'));
-run(strcat('app/robots/', robotName, '/initVisualizer.m'));
+run(strcat('app/robots/', getenv('YARP_ROBOT_NAME'), '/configRobot.m'));
+run(strcat('app/robots/', getenv('YARP_ROBOT_NAME'), '/initVisualizer.m'));
 
 %% Init simulator core physics paramaters
 physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
