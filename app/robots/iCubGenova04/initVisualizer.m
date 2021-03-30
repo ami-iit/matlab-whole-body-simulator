@@ -1,9 +1,8 @@
 %% configuration for the matlab iDyntree visualizer
 
-confVisualizer.robotName = robotName;
 confVisualizer.fileName = robot_config.fileName;
+confVisualizer.modelPath = wbs.getModelPathFromFileNameAndYarpFinder(confVisualizer.fileName);
 confVisualizer.meshFilePrefix = robot_config.meshFilePrefix;
-confVisualizer.modelPath = robot_config.modelPath;
 confVisualizer.jointOrder = robot_config.jointOrder;
 % initial infos specified in configRobot
 confVisualizer.joints_positions = robot_config.initialConditions.s;

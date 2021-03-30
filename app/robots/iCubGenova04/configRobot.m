@@ -32,8 +32,10 @@ end
 % 
 robot_config.jointOrder = WBTConfigRobotSim.ControlledJoints;
 robot_config.numOfJointsForEachControlboard = numOfJointsForEachControlboard;
-robot_config.meshFilePrefix = [icubModelsInstallPrefix '/share'];
-robot_config.modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
+% Note: Since iDynTree 3.0.0, if meshFilePrefix='', the standard iDynTree workflow of locating the
+% mesh via the ExternalMesh.getFileLocationOnLocalFileSystem method is used. The iCub model meshes
+% file tree is compatible with this workflow.
+robot_config.meshFilePrefix = '';
 robot_config.fileName = WBTConfigRobotSim.UrdfFile;
 robot_config.N_DOF = numel(WBTConfigRobotSim.ControlledJoints);
 robot_config.N_DOF_MATRIX = eye(robot_config.N_DOF);

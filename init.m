@@ -17,12 +17,6 @@ clear functions
 close all
 clc
 
-% REMARK : If you have installed the URDF models by https://github.com/robotology/icub-models
-% You could fill the required variables as follows:
-% % Substitute in the following the location of the install prefix of icub-models
-% if installed with robotology superbuild you can directly use
-icubModelsInstallPrefix = getenv('ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX');
-
 %% GENERAL SIMULATION INFO
 % Simulation time and delta_t [s]
 Config.simulationTime = inf;
@@ -41,12 +35,10 @@ Config.USE_QPOASES = true;
 confVisualizer.visualizeRobot = true;
 
 %% ADD CONFIGURATION FILES
-% Select the robot name from YARP_ROBOT_NAME
-robotName = getenv('YARP_ROBOT_NAME');
 
 % Run robot-specific and controller-specific configuration parameters
-run(strcat('app/robots/', robotName, '/configRobot.m'));
-run(strcat('app/robots/', robotName, '/initVisualizer.m'));
+run(strcat('app/robots/', getenv('YARP_ROBOT_NAME'), '/configRobot.m'));
+run(strcat('app/robots/', getenv('YARP_ROBOT_NAME'), '/initVisualizer.m'));
 
 %% Init simulator core physics paramaters
 physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
