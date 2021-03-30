@@ -6,40 +6,62 @@ In the simulator the ground is assumed to be flat and the contact forces are com
 ## :hammer: Dependencies
 
 - [Matlab/Simulink 2019b](https://it.mathworks.com/products/matlab.html)
-- [iDynTree](https://github.com/robotology/idyntree)
-- [OSQP](https://github.com/oxfordcontrol/osqp.git)
-- [osqp-matlab](https://github.com/oxfordcontrol/osqp-matlab) (the OSQP MATLAB bindings).
-- [qpOASES](https://github.com/robotology-dependencies/qpOASES)
-- [icub-models](https://github.com/robotology/icub-models) to access iCub models.
+- [YARP](https://github.com/robotology/yarp) & [yarp-matlab-bindings](https://github.com/robotology/yarp-matlab-bindings): Yarp Resource Finder.
+- [WBToolbox](https://github.com/robotology/wb-toolbox): WB-Toolbox library Simulink blocks.
+- [iDynTree](https://github.com/robotology/idyntree): Dynamic computations (through bindings) and WB-Toolbox library dependencies.
+- [qpOASES](https://github.com/robotology-dependencies/qpOASES): QP solver.
+- [icub-models](https://github.com/robotology/icub-models): access to the iCub models.
+- [Whole-Body-Controllers](https://github.com/robotology/whole-body-controllers): `+wbc` package helpers for kinematics & dynamics computations.
 
-It is recommended to install `iDynTree`, `icub-models`, `OSQP` and `qpOASES` using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild):
+It is recommended to install these dependencies using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild) resources:
+- Either installing the full superbuild from source.
+- Either installing the required binary packages derived from the above listed dependencies, using the conda package manager, from the robotology channel.
+
+## :floppy_disk: Installing the dependencies through the robotology superbuild source
+
+- Clone and build the robotology-superbuild following the steps in https://github.com/robotology/robotology-superbuild/blob/master/README.md.
 - `icub-models`: set the profile option `ROBOTOLOGY_ENABLE_CORE`.
-- `iDynTree` and `OSQP`: set the profile option `ROBOTOLOGY_ENABLE_DYNAMICS`.
+- `iDynTree`, `WBToolbox`, `Whole-Body-Controller`, `qpOASES` and `yarp-matlab-bindings`: set the profile option `ROBOTOLOGY_ENABLE_DYNAMICS` and `ROBOTOLOGY_USES_MATLAB`.
 
-## :floppy_disk: Installing the OSQP MATLAB bindings
+**Note 1:** In general, for selecting the profile CMake options according to the sub-projects to install, refer to the table in the section [Profile CMake Options](https://github.com/robotology/robotology-superbuild/blob/master/doc/profiles.md#profile-cmake-options).
+**Note 2:** By setting the profile `ROBOTOLOGY_ENABLE_DYNAMICS`in the superbuild cmake options. The `qpOASES` library will then be installed along with `iDynTree` as an external dependency.
+**Note 3:** Previously, two other optional QP solvers were available: OSQP and the native MATLAB solver `quadprog`. OSQP bindings and `quadprog` are not supported by the Simulink code generation build option in the `step_block` MATLAB System block. For this reason, the `step_block` MATLAB System block uses the qpOASES WBT block through a Simulink function call, and this choice is hardcoded in the class `Contacts`. As soon as the OSQP WBT block is created, it will replace the qpOASES Solver block.
 
-- `OSQP` library:<br/>
-    It is recommended to install the `OSQP` library through the [robotology-superbuild](https://github.com/robotology/robotology-superbuild), by setting the profile `ROBOTOLOGY_ENABLE_DYNAMICS`in the superbuild cmake options. The `OSQP` library will then be installed along with `iDynTree` as an external dependency.
+## :floppy_disk: Installing the dependencies from the conda robotology channel
 
-- `OSQP` MATLAB bindings (https://osqp.org/docs/get_started/matlab.html):<br/>
-    - Clone the repository [osqp-matlab](https://github.com/oxfordcontrol/osqp-matlab) (the OSQP MATLAB bindings) in the location of your choice.
+1. Install Mamba, create a new environment and install the robotology dependency binaries:
     ```
-    cd <some-path>
-    !git clone --recurse-submodules https://github.com/oxfordcontrol/osqp-matlab
-    cd osqp-matlab
-    make_osqp
+    $ conda install mamba
+    $ conda create -n robotologyenv
+    $ conda activate robotologyenv
+    $ mamba install -c robotology iDynTree qpOASES icub-models wb-toolbox whole-body-controllers
     ```
-    - Set accordingly the environment variable `OSQP_MATLAB_PATH` in the bash profile (on Linux: /home/<user>/.bashrc, on MacOS: /home/\<user\>/.bash_profile):
+5. Check the MATLABPATH environment variable. It should now have:
     ```
-    export OSQP_MATLAB_PATH=<some-path>/osqp-matlab
+    <user-home-dir>/miniforge3/envs/robotologyenv/mex: <user-home-dir>/miniforge3/envs/robotologyenv/share/WBToolbox: <user-home-dir>/miniforge3/envs/robotologyenv/share/WBToolbox/images
+    ``` 
+    Mex libraries:
     ```
-    - The option `Config.USE_OSQP` in the main [init](https://github.com/dic-iit/matlab-whole-body-simulators/blob/devel/init.m) is deprecated, as SWIG bindings, OSQP bindings and the native MATLAB solver `quadprog` are not supported by the Simulink code generation build option in the `step_block` MATLAB System block. For this reason, the `step_block` MATLAB System block uses the qpOASES WBT block through a Simulink function call, and this choice is hardcoded in the class `Contacts`. As soon as the OSQP WBT block is created, it will replace the qpOASES Solver block.
-    
-    For your information, you can find further information on the OSQP library setup and use of the MATLAB interface (bindings) in https://osqp.org/docs:
-    
-    https://osqp.org/docs/index.html<br/>
-    https://osqp.org/docs/get_started/matlab.html<br/>
-    https://osqp.org/docs/interfaces/matlab.html#matlab-interface
+    $ ls <user-home-dir>/miniforge3/envs/robotologyenv/mex/
+    ```
+    +iDynTree
+    +iDynTreeWrappers
+    +wbc
+    BlockFactory.mexmaci64
+    BlockFactory.tlc
+    SwigGet.m
+    SwigMem.m
+    SwigRef.m
+    iDynTreeMEX.mexmaci64
+    mesh2tri.m
+    ```
+6. Clone the repository  `matlab-whole-body-simulators`
+    ```
+    $ git clone https://github.com/dic-iit/matlab-whole-body-simulator.git
+    ```
+7. Run matlab in the same conda environment.
+8. Change working directory to the root path of repository `matlab-whole-body-simulators`
+9. Open and run the model `test_matlab_system_2020b.mdl`.
 
 ## :runner: How to use the simulator
 
