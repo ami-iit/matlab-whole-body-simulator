@@ -8,20 +8,20 @@ In the simulator the ground is assumed to be flat and the contact forces are com
 - [Matlab/Simulink 2019b](https://it.mathworks.com/products/matlab.html)
 - [YARP](https://github.com/robotology/yarp) & [yarp-matlab-bindings](https://github.com/robotology/yarp-matlab-bindings): Yarp Resource Finder.
 - [WBToolbox](https://github.com/robotology/wb-toolbox): WB-Toolbox library Simulink blocks.
-- [iDynTree](https://github.com/robotology/idyntree): Dynamic computations (through bindings) and WB-Toolbox library dependencies.
-- [qpOASES](https://github.com/robotology-dependencies/qpOASES): QP solver.
+- [iDynTree](https://github.com/robotology/idyntree): Dynamic computations (through bindings) and WB-Toolbox library dependency.
+- [qpOASES](https://github.com/robotology-dependencies/qpOASES): QP solver for estimating the contact wrenches.
 - [icub-models](https://github.com/robotology/icub-models): access to the iCub models.
 - [Whole-Body-Controllers](https://github.com/robotology/whole-body-controllers): `+wbc` package helpers for kinematics & dynamics computations.
 
 It is recommended to install these dependencies using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild) resources:
 - Either installing the full superbuild from source.
-- Either installing the required binary packages derived from the above listed dependencies, using the conda package manager, from the robotology channel.
+- Either installing the required binary packages derived from the above listed dependencies, using the [miniforge conda distribution](https://github.com/conda-forge/miniforge) package manager, from the robotology channel.
 
 ## :floppy_disk: Installing the dependencies through the robotology superbuild source
 
 - Clone and build the robotology-superbuild following the steps in https://github.com/robotology/robotology-superbuild/blob/master/README.md.
 - `icub-models`: set the profile option `ROBOTOLOGY_ENABLE_CORE`.
-- `iDynTree`, `WBToolbox`, `Whole-Body-Controller`, `qpOASES` and `yarp-matlab-bindings`: set the profile option `ROBOTOLOGY_ENABLE_DYNAMICS` and `ROBOTOLOGY_USES_MATLAB`.
+- `iDynTree`, `WBToolbox`, `Whole-Body-Controller`, `qpOASES` and `yarp-matlab-bindings`: set the profile option `ROBOTOLOGY_ENABLE_DYNAMICS` and CMake option  `ROBOTOLOGY_USES_MATLAB`.
 
 **Note 1:** In general, for selecting the profile CMake options according to the sub-projects to install, refer to the table in the section [Profile CMake Options](https://github.com/robotology/robotology-superbuild/blob/master/doc/profiles.md#profile-cmake-options).
 **Note 2:** By setting the profile `ROBOTOLOGY_ENABLE_DYNAMICS`in the superbuild cmake options. The `qpOASES` library will then be installed along with `iDynTree` as an external dependency.
@@ -29,21 +29,23 @@ It is recommended to install these dependencies using the [robotology-superbuild
 
 ## :floppy_disk: Installing the dependencies from the conda robotology channel
 
-1. Install Mamba, create a new environment and install the robotology dependency binaries:
+1. Install the conda miniforge distribution following https://github.com/robotology/robotology-superbuild/blob/master/doc/install-miniforge.md#linux. Remember to restart your shell session or run `source ~/.bashrc` (`~/.bash_profile` on MacOS) for the `conda init` command to take effect.
+2. Install Mamba, create a new environment and install the robotology dependency binaries:
     ```
     $ conda install mamba
     $ conda create -n robotologyenv
     $ conda activate robotologyenv
     $ mamba install -c robotology iDynTree qpOASES icub-models wb-toolbox whole-body-controllers
     ```
-5. Check the MATLABPATH environment variable. It should now have:
+    To read more about installing robotology-superbuild package binaries refer to https://github.com/robotology/robotology-superbuild/blob/master/doc/conda-forge.md#binary-installation.
+3. Check the MATLABPATH environment variable. It should now have:
     ```
     <user-home-dir>/miniforge3/envs/robotologyenv/mex: <user-home-dir>/miniforge3/envs/robotologyenv/share/WBToolbox: <user-home-dir>/miniforge3/envs/robotologyenv/share/WBToolbox/images
     ``` 
     Mex libraries:
     ```
     $ ls <user-home-dir>/miniforge3/envs/robotologyenv/mex/
-    ```
+    
     +iDynTree
     +iDynTreeWrappers
     +wbc
@@ -55,13 +57,13 @@ It is recommended to install these dependencies using the [robotology-superbuild
     iDynTreeMEX.mexmaci64
     mesh2tri.m
     ```
-6. Clone the repository  `matlab-whole-body-simulators`
+4. Clone the repository  `matlab-whole-body-simulators`
     ```
     $ git clone https://github.com/dic-iit/matlab-whole-body-simulator.git
     ```
-7. Run matlab in the same conda environment.
-8. Change working directory to the root path of repository `matlab-whole-body-simulators`
-9. Open and run the model `test_matlab_system_2020b.mdl`.
+5. Run matlab in the same conda environment.
+6. Change working directory to the root path of repository `matlab-whole-body-simulators`.
+7. Open and run the model `test_matlab_system_2020b.mdl`.
 
 ## :runner: How to use the simulator
 
