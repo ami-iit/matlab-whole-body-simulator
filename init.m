@@ -38,7 +38,6 @@ confVisualizer.visualizeRobot = true;
 
 % Run robot-specific and controller-specific configuration parameters
 run(strcat('app/robots/', getenv('YARP_ROBOT_NAME'), '/configRobot.m'));
-run(strcat('app/robots/', getenv('YARP_ROBOT_NAME'), '/initVisualizer.m'));
 
 %% Init simulator core physics paramaters
 physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;

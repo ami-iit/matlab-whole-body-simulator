@@ -1,5 +1,5 @@
 Model {
-  Name			  "test_matlab_system_19"
+  Name			  "test_matlab_system_2020b"
   Version		  10.2
   SavedCharacterEncoding  "UTF-8"
   ModelUUID		  "eb611cbc-fdf6-45c5-9284-1dda1e5934f7"
@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.111"
+    ComputedModelVersion    "1.112"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -23,13 +23,13 @@ Model {
     NumExternalFileReferences 2
     ExternalFileReference {
       Reference		      "WBToolboxLibrary/Utilities/Configuration"
-      Path		      "test_matlab_system_19/Configuration"
+      Path		      "test_matlab_system_2020b/Configuration"
       SID		      "206"
       Type		      "LIBRARY_BLOCK"
     }
     ExternalFileReference {
       Reference		      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
-      Path		      "test_matlab_system_19/RobotDynWithContacts"
+      Path		      "test_matlab_system_2020b/RobotDynWithContacts"
       SID		      "197"
       Type		      "LIBRARY_BLOCK"
     }
@@ -76,7 +76,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [45.0, 23.0, 1747.0, 1097.0]
+      Location		      [41.0, 23.0, 1751.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -103,10 +103,10 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1633.0, 868.0]
+	  Extents		  [1637.0, 868.0]
 	  ZoomFactor		  [2.3529411764705883]
-	  Offset		  [-89.512499999999989, -5.9499999999999886]
-	  SceneRectInView	  [-89.512499999999989, -5.9499999999999886, 694.025, 368.9]
+	  Offset		  [-90.362500000000011, -5.9499999999999886]
+	  SceneRectInView	  [-90.362500000000011, -5.9499999999999886, 695.725, 368.9]
 	}
 	Object {
 	  $ObjectID		  7
@@ -214,19 +214,6 @@ Model {
 	Dimension		2
 	Object {
 	  $ObjectID		  16
-	  Type			  "GLUE2:PropertyInspector"
-	  ID			  "Property Inspector"
-	  Visible		  [1]
-	  CreateCallback	  ""
-	  UserData		  ""
-	  Floating		  [0]
-	  DockPosition		  "Right"
-	  Width			  [640]
-	  Height		  [480]
-	  Minimized		  "On"
-	}
-	Object {
-	  $ObjectID		  17
 	  Type			  "Simulink:Editor:ReferencedFiles"
 	  ID			  "Referenced Files"
 	  Visible		  [0]
@@ -238,14 +225,27 @@ Model {
 	  Height		  [480]
 	  Minimized		  "Unset"
 	}
+	Object {
+	  $ObjectID		  17
+	  Type			  "GLUE2:PropertyInspector"
+	  ID			  "Property Inspector"
+	  Visible		  [1]
+	  CreateCallback	  ""
+	  UserData		  ""
+	  Floating		  [0]
+	  DockPosition		  "Right"
+	  Width			  [640]
+	  Height		  [480]
+	  Minimized		  "On"
+	}
 	PropName		"DockComponentsInfo"
       }
       WindowState	      "AAAA/wAAAAD9AAAAAgAAAAAAAADMAAADofwCAAAABPsAAAAWAEQAbwBjAGsAVwBpAGQAZwBlAHQAMwEAAAAxAAAB+AAAA"
       "AAAAAAA+wAAABYARABvAGMAawBXAGkAZABnAGUAdAA0AAAAAAD/////AAAAAAAAAAD7AAAAUgBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0Ac"
-      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAeQAAA6EAAABqAAf///sAAABgAFMAaQBtAHUAb"
+      "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAeQAAA6EAAABrAP////sAAABgAFMAaQBtAHUAb"
       "ABpAG4AawA6AEUAZABpAHQAbwByADoAUgBlAGYAZQByAGUAbgBjAGUAZABGAGkAbABlAHMALwBSAGUAZgBlAHIAZQBuAGMAZQBkACAARgBpAGwAZ"
-      "QBzAAAAAAD/////AAAAjgD///8AAAABAAAAAAAAAAD8AgAAAAH7AAAAVABHAEwAVQBFADIAOgBQAHIAbwBwAGUAcgB0AHkASQBuAHMAcABlAGMAd"
-      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGhwAAA6EAAAABAAAAAgAAAAEAAAAC/"
+      "QBzAAAAAAD/////AAAAjwD///8AAAABAAAAAAAAAAD8AgAAAAH7AAAAVABHAEwAVQBFADIAOgBQAHIAbwBwAGUAcgB0AHkASQBuAHMAcABlAGMAd"
+      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGiwAAA6EAAAABAAAAAgAAAAEAAAAC/"
       "AAAAAMAAAAAAAAAAQAAADYAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEwAZQBmAHQDAAAAAP////8AAAAAA"
       "AAAAAAAAAEAAAABAAAAOABjAG8AbABsAGEAcABzAGkAYgBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAUgBpAGcAaAB0AwAAAAD/////AAAAA"
       "AAAAAAAAAADAAAAAQAAADoAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEIAbwB0AHQAbwBtAAAAAAD/////A"
@@ -268,9 +268,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Feb 12 17:04:58 2021"
-  RTWModifiedTimeStamp	  534309826
-  ModelVersionFormat	  "1.%<AutoIncrement:111>"
+  LastModifiedDate	  "Wed Mar 31 21:04:38 2021"
+  RTWModifiedTimeStamp	  539125474
+  ModelVersionFormat	  "%<AutoIncrement:1.112>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -329,12 +329,12 @@ Model {
     $PropName		    "DataLoggingOverride"
     $ObjectID		    18
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
-    model_		    "test_matlab_system_19"
+    model_		    "test_matlab_system_2020b"
     overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
       Dimension		      1
-      Cell		      "test_matlab_system_19"
+      Cell		      "test_matlab_system_2020b"
       PropName		      "logAsSpecifiedByModels_"
     }
     Array {
@@ -1351,8 +1351,8 @@ Model {
     }
   }
   System {
-    Name		    "test_matlab_system_19"
-    Location		    [45, 23, 1792, 1120]
+    Name		    "test_matlab_system_2020b"
+    Location		    [41, 23, 1792, 1120]
     SystemRect		    [0.000000, 0.000000, 0.000000, 0.000000]
     Open		    on
     PortBlocksUseCompactNotation off
@@ -1416,7 +1416,7 @@ Model {
       Ports		      []
       Position		      [225, 0, 300, 30]
       ZOrder		      1262
-      LibraryVersion	      "1.676"
+      LibraryVersion	      "1.684"
       SourceBlock	      "WBToolboxLibrary/Utilities/Configuration"
       SourceType	      ""
       SourceProductName	      "WholeBodyToolbox"
@@ -1662,6 +1662,7 @@ Model {
       Position		      [435, 210, 515, 290]
       ZOrder		      1251
       NameLocation	      "top"
+      InitFcn		      "initVisualizer"
       TreatAsAtomicUnit	      on
       SystemSampleTime	      "confVisualizer.tStep"
       RequestExecContextInheritance off
@@ -1941,7 +1942,7 @@ Model {
 Stateflow {
   machine {
     id			    1
-    name		    "test_matlab_system_19"
+    name		    "test_matlab_system_2020b"
     sfVersion		    80000036
     firstTarget		    13
   }
