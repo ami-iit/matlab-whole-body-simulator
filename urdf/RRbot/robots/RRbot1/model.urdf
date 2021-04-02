@@ -2,7 +2,7 @@
 <!-- =================================================================================== -->
 <!-- |    This file was generated from rrbot_description (Gazebo RRBot full example)   | -->
 <!-- =================================================================================== -->
-<robot name="single_rrbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="RRbot" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <!-- Import your models -->
   <material name="RRBOT/black">
     <color rgba="0.0 0.0 0.0 1.0"/>
@@ -29,16 +29,22 @@
     <color rgba="1.0 1.0 1.0 1.0"/>
   </material>
   <!-- Build your comprehensive robot -->
-  <link name="world"/>
+  <link name="world">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="1000"/>
+      <inertia ixx="1000.0" ixy="0.0" ixz="0.0" iyy="1000.0" iyz="0.0" izz="1000.0"/>
+    </inertial>
+  </link>
   <gazebo reference="world">
     <static>true</static>
   </gazebo>
-  <joint name="single_rrbot_fixed" type="fixed">
+  <joint name="RRbot_fixed" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="world"/>
-    <child link="single_rrbot_link1"/>
+    <child link="RRbot_link1"/>
   </joint>
-  <link name="single_rrbot_link1">
+  <link name="RRbot_link1">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 1.0"/>
       <geometry>
@@ -58,14 +64,14 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
-  <joint name="single_rrbot_joint1" type="continuous">
-    <parent link="single_rrbot_link1"/>
-    <child link="single_rrbot_link2"/>
+  <joint name="RRbot_joint1" type="revolute">
+    <parent link="RRbot_link1"/>
+    <child link="RRbot_link2"/>
     <origin rpy="0 0 0" xyz="0 0.1 1.95"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
   </joint>
-  <link name="single_rrbot_link2">
+  <link name="RRbot_link2">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0.45"/>
       <geometry>
@@ -85,14 +91,14 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
-  <joint name="single_rrbot_joint2" type="continuous">
-    <parent link="single_rrbot_link2"/>
-    <child link="single_rrbot_link3"/>
+  <joint name="RRbot_joint2" type="revolute">
+    <parent link="RRbot_link2"/>
+    <child link="RRbot_link3"/>
     <origin rpy="0 0 0" xyz="0 0.1 0.9"/>
     <axis xyz="0 1 0"/>
     <dynamics damping="0.7"/>
   </joint>
-  <link name="single_rrbot_link3">
+  <link name="RRbot_link3">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0.45"/>
       <geometry>
@@ -112,13 +118,13 @@
       <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
     </inertial>
   </link>
-  <joint name="single_rrbot_hokuyo_joint" type="fixed">
+  <joint name="RRbot_hokuyo_joint" type="fixed">
     <axis xyz="0 1 0"/>
     <origin rpy="0 0 0" xyz="0 0 0.975"/>
-    <parent link="single_rrbot_link3"/>
-    <child link="single_rrbot_hokuyo_link"/>
+    <parent link="RRbot_link3"/>
+    <child link="RRbot_hokuyo_link"/>
   </joint>
-  <link name="single_rrbot_hokuyo_link">
+  <link name="RRbot_hokuyo_link">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
@@ -128,7 +134,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://rrbot_description/model/meshes/hokuyo.dae"/>
+        <box size="0.1 0.1 0.1"/>
       </geometry>
     </visual>
     <inertial>
@@ -137,13 +143,13 @@
       <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
     </inertial>
   </link>
-  <joint name="single_rrbot_camera_joint" type="fixed">
+  <joint name="RRbot_camera_joint" type="fixed">
     <axis xyz="0 1 0"/>
     <origin rpy="0 0 0" xyz="0.05 0 0.9"/>
-    <parent link="single_rrbot_link3"/>
-    <child link="single_rrbot_camera_link"/>
+    <parent link="RRbot_link3"/>
+    <child link="RRbot_camera_link"/>
   </joint>
-  <link name="single_rrbot_camera_link">
+  <link name="RRbot_camera_link">
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
@@ -163,50 +169,50 @@
       <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
     </inertial>
   </link>
-  <transmission name="single_rrbot_tran1">
+  <transmission name="RRbot_tran1">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="single_rrbot_joint1">
+    <joint name="RRbot_joint1">
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
-    <actuator name="single_rrbot_motor1">
+    <actuator name="RRbot_motor1">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="single_rrbot_tran2">
+  <transmission name="RRbot_tran2">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="single_rrbot_joint2">
+    <joint name="RRbot_joint2">
       <hardwareInterface>PositionJointInterface</hardwareInterface>
     </joint>
-    <actuator name="single_rrbot_motor2">
+    <actuator name="RRbot_motor2">
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
   <gazebo>
-    <plugin filename="librrbot_hw_sim_plugin.so" name="single_rrbot_hw_sim_plugin">
-      <robotNamespace>single_rrbot</robotNamespace>
+    <plugin filename="librrbot_hw_sim_plugin.so" name="RRbot_hw_sim_plugin">
+      <robotNamespace>RRbot</robotNamespace>
       <!-- add your custom sim behavior -->
       <robotSimType>rrbot_hw/DefaultRRBOTHWSim</robotSimType>
     </plugin>
   </gazebo>
-  <gazebo reference="single_rrbot_link1">
+  <gazebo reference="RRbot_link1">
     <material>Gazebo/Orange</material>
   </gazebo>
-  <gazebo reference="single_rrbot_link2">
+  <gazebo reference="RRbot_link2">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
     <material>Gazebo/Black</material>
   </gazebo>
-  <gazebo reference="single_rrbot_link3">
+  <gazebo reference="RRbot_link3">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
     <material>Gazebo/Orange</material>
   </gazebo>
-  <gazebo reference="single_rrbot_camera_link">
+  <gazebo reference="RRbot_camera_link">
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
     <material>Gazebo/Red</material>
   </gazebo>
-  <gazebo reference="single_rrbot_hokuyo_link">
+  <gazebo reference="RRbot_hokuyo_link">
     <sensor name="head_hokuyo_sensor" type="gpu_ray">
       <pose>0 0 0 0 0 0</pose>
       <visualize>false</visualize>
@@ -235,18 +241,18 @@
           <stddev>0.01</stddev>
         </noise>
       </ray>
-      <plugin filename="libgazebo_ros_gpu_laser.so" name="single_rrbot_gazebo_ros_head_hokuyo_controller">
+      <plugin filename="libgazebo_ros_gpu_laser.so" name="RRbot_gazebo_ros_head_hokuyo_controller">
         <!-- Publish within the robot namespace -->
-        <robotNamespace>single_rrbot</robotNamespace>
+        <robotNamespace>RRbot</robotNamespace>
         <topicName>laser/scan</topicName>
-        <frameName>single_rrbot_hokuyo_link</frameName>
+        <frameName>RRbot_hokuyo_link</frameName>
       </plugin>
     </sensor>
   </gazebo>
-  <gazebo reference="single_rrbot_camera_link">
+  <gazebo reference="RRbot_camera_link">
     <sensor name="camera1" type="camera">
       <update_rate>30.0</update_rate>
-      <camera name="single_rrbot_head">
+      <camera name="RRbot_head">
         <horizontal_fov>1.3962634</horizontal_fov>
         <image>
           <width>800</width>
@@ -259,21 +265,21 @@
         </clip>
         <noise>
           <type>gaussian</type>
-          <!-- Noise is sampled independently per pixel on each frame.  
+          <!-- Noise is sampled independently per pixel on each frame.
                  That pixel's noise value is added to each of its color
                  channels, which at that point lie in the range [0,1]. -->
           <mean>0.0</mean>
           <stddev>0.007</stddev>
         </noise>
       </camera>
-      <plugin filename="libgazebo_ros_camera.so" name="single_rrbot_camera_controller">
+      <plugin filename="libgazebo_ros_camera.so" name="RRbot_camera_controller">
         <alwaysOn>true</alwaysOn>
         <updateRate>0.0</updateRate>
-        <robotNamespace>single_rrbot</robotNamespace>
-        <cameraName>single_rrbot_camera1</cameraName>
+        <robotNamespace>RRbot</robotNamespace>
+        <cameraName>RRbot_camera1</cameraName>
         <imageTopicName>image_raw</imageTopicName>
         <cameraInfoTopicName>camera_info</cameraInfoTopicName>
-        <frameName>single_rrbot_camera_link</frameName>
+        <frameName>RRbot_camera_link</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
         <distortionK2>0.0</distortionK2>
@@ -284,4 +290,3 @@
     </sensor>
   </gazebo>
 </robot>
-
