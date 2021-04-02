@@ -40,8 +40,8 @@ robot_config.N_DOF_MATRIX = eye(robot_config.N_DOF);
 initialConditions.base_position = [0; 0; 0];
 initialConditions.orientation = eye(3);
 initialConditions.w_H_b = wbs.State.Rp2H(initialConditions.orientation, initialConditions.base_position);
-% joint (inital) position
-initialConditions.s = [0; 0];
+% joint inital position (radians)
+initialConditions.s = [0; 1]*pi/180;
 % velocty initial conditions
 initialConditions.base_linear_velocity = [0; 0; 0];
 initialConditions.base_angular_velocity = [0; 0; 0];
@@ -66,10 +66,10 @@ robot_config.robotFrames = Frames;
 
 % foot print of the feet (iCub)
 vertex = zeros(3, 4);
-vertex(:, 1) = [-10; 10; 0];
-vertex(:, 2) = [10; 10; 0];
-vertex(:, 3) = [10; -10; 0];
-vertex(:, 4) = [-10; -10; 0];
+vertex(:, 1) = [-2; 2; 0];
+vertex(:, 2) = [2; 2; 0];
+vertex(:, 3) = [2; -2; 0];
+vertex(:, 4) = [-2; -2; 0];
 
 contact_config.foot_print = vertex;
 contact_config.total_num_vertices = size(vertex,2)*2;
