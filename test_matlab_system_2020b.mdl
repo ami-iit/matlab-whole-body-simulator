@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.112"
+    ComputedModelVersion    "1.113"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -104,9 +104,9 @@ Model {
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
 	  Extents		  [1637.0, 868.0]
-	  ZoomFactor		  [2.3529411764705883]
-	  Offset		  [-90.362500000000011, -5.9499999999999886]
-	  SceneRectInView	  [-90.362500000000011, -5.9499999999999886, 695.725, 368.9]
+	  ZoomFactor		  [2.41726618705036]
+	  Offset		  [-81.105654761904759, -5.7916666666666572]
+	  SceneRectInView	  [-81.105654761904759, -5.7916666666666572, 677.21130952380952, 359.08333333333331]
 	}
 	Object {
 	  $ObjectID		  7
@@ -268,9 +268,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Wed Mar 31 21:04:38 2021"
-  RTWModifiedTimeStamp	  539125474
-  ModelVersionFormat	  "%<AutoIncrement:1.112>"
+  LastModifiedDate	  "Thu Apr 01 14:34:36 2021"
+  RTWModifiedTimeStamp	  539188428
+  ModelVersionFormat	  "%<AutoIncrement:1.113>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1368,7 +1368,7 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "235"
+    ZoomFactor		    "242"
     ReportName		    "simulink-default.rpt"
     SIDHighWatermark	    "212"
     SimulinkSubDomain	    "Simulink"
@@ -1428,12 +1428,6 @@ Model {
       ContentPreviewEnabled   on
       ConfigSource	      "Workspace"
       ConfigObject	      "'WBTConfigRobotSim'"
-      RobotName		      "'icubSim'"
-      UrdfFile		      "'model.urdf'"
-      ControlledJoints	      "{'l_elbow','l_shoulder_pitch','torso_roll'}"
-      ControlBoardsNames      "{'left_arm','right_arm','torso'}"
-      LocalName		      "'WBT'"
-      GravityVector	      "[0,0,-9.81]"
     }
     Block {
       BlockType		      Constant
@@ -1470,7 +1464,7 @@ Model {
       ZOrder		      1250
       InputPortMap	      "u0"
       DelayLength	      "1"
-      InitialCondition	      "zeros(23,1)"
+      InitialCondition	      "zeros(robot_config.N_DOF,1)"
     }
     Block {
       BlockType		      SubSystem
@@ -1573,7 +1567,7 @@ Model {
 	  FunctionName		  "sf_sfun"
 	  PortCounts		  "[5 2]"
 	  SFunctionDeploymentMode off
-	  EnableBusSupport	  off
+	  EnableBusSupport	  on
 	  SFcnIsStateOwnerBlock	  off
 	  Port {
 	    PortNumber		    2
@@ -1955,6 +1949,9 @@ Stateflow {
     screen		    [1 1 3600 1200 1.180555555555556]
     treeNode		    [0 3 0 0]
     viewObj		    2
+    visible		    1
+    subviewS {
+    }
     ssIdHighWaterMark	    17
     decomposition	    CLUSTER_CHART
     type		    EML_CHART

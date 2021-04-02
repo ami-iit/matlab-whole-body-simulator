@@ -50,7 +50,7 @@ classdef Visualizer < matlab.System
             % prepareRobot Prepares the visualization loading the information
             % Main variable of iDyntreeWrappers used for many things including updating
             % robot position and getting world to frame transforms
-            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, 'root_link', ...
+            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, obj.config.robotFrames.BASE, ...
                 obj.config.modelPath, obj.config.fileName, false);
 
             % Set initial position of the robot
