@@ -10,7 +10,7 @@ confVisualizer.joints_positions = robot_config.initialConditions.s;
 confVisualizer.world_H_base = robot_config.initialConditions.w_H_b;
 
 % size of the square you see around the robot
-confVisualizer.aroundRobot = 1; % mt
+confVisualizer.aroundRobot = visualizerAroundRobot;
 
 % refresh rate of the picure
 confVisualizer.tStep = 0.040; % here equal to the time step used in the simulink model

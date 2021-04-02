@@ -77,4 +77,7 @@ contact_config.total_num_vertices = size(vertex,2)*2;
 % friction coefficient for the feet
 contact_config.friction_coefficient = 10;
 
+% size of the square you see around the robot
+visualizerAroundRobot = [-2 2; -2 2; -0.1 4]; % mt
+
 clear Frames initialConditions vertex
