@@ -1,3 +1,7 @@
+%% Set the YARP Robot Name
+
+setenv('YARP_ROBOT_NAME','iCubGenova04');
+
 %% create dev folder
 mkdir '/MATLAB Drive/dev'
 
@@ -31,7 +35,7 @@ system('mamba install -y git');
 % Using the `conda create/activate/deactivate` commands requires to run `conda init` and source the
 % bashrc, which won't have any effect on MATLAB online. For that reason we have to install the conda
 % binaries from the robotology channel on the **base** environment.
-system('mamba install -y -c robotology iDynTree qpOASES icub-models wb-toolbox whole-body-controllers');
+system('mamba install -y -c robotology iDynTree qpOASES icub-models wb-toolbox whole-body-controllers yarp-matlab-bindings');
 addpath('~/miniforge3/mex');
 addpath('~/miniforge3/share/WBToolbox');
 addpath('~/miniforge3/share/WBToolbox/images');
