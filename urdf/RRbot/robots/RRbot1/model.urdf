@@ -134,7 +134,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <box size="0.1 0.1 0.1"/>
+        <mesh filename="package://RRbot/meshes/hokuyo.stl"/>
       </geometry>
     </visual>
     <inertial>
