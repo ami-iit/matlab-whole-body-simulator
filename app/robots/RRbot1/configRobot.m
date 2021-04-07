@@ -31,7 +31,7 @@ robot_config.numOfJointsForEachControlboard = numOfJointsForEachControlboard;
 % Note: Since iDynTree 3.0.0, if meshFilePrefix='', the standard iDynTree workflow of locating the
 % mesh via the ExternalMesh.getFileLocationOnLocalFileSystem method is used. The iCub model meshes
 % file tree is compatible with this workflow.
-robot_config.meshFilePrefix = [fileparts(wbs.getModelPathFromFileNameAndYarpFinder(WBTConfigRobotSim.UrdfFile)),'/../../..'];
+robot_config.meshFilePrefix = '';
 robot_config.fileName = WBTConfigRobotSim.UrdfFile;
 robot_config.N_DOF = numel(WBTConfigRobotSim.ControlledJoints);
 robot_config.N_DOF_MATRIX = eye(robot_config.N_DOF);
