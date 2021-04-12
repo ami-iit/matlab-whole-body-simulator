@@ -67,8 +67,14 @@ It is recommended to install these dependencies using the [robotology-superbuild
 
 ## :runner: How to use the simulator
 
-Just connect your controller to the robot block. This block takes as imput the **joints torque** and the (possible) **generalized external forces** and outputs the **robot state** and **contact wrenches** in the left and right sole frames (in order to simulate a sensor on the feet).
-
-![image](https://user-images.githubusercontent.com/29798643/92244565-617f7d80-eec3-11ea-95d0-2a15f1bdb54f.png)
+1. Connect your controller to the robot block. This block takes as imput the **joints torque**, **motor inertia** and an eventual **generalized external wrench**. It outputs the robot **state**, the contact wrenches **wrench_LFoot** and **wrench_RFoot**, respectively applied to the left and right foot (sole frames), and **kinDynOut**, an output bus exposing all the computed dynamics quantities relevant for debugging or the extension of dynamics computations in external blocks (emulation of an IMU sensor, of pressure sensors on the feet, etc).
+2. Select the robot model by setting the environment variable `YARP_ROBOT_NAME` (e.g. `setenv('YARP_ROBOT_NAME','iCubGenova04')`). The available models are:
+    | Model description | iCub robot (iCubGenova04) | RRBot from Gazebo |
+    | --- | --- | --- |
+    | Preview | <img width="982" alt="iCubGenova04" src="https://user-images.githubusercontent.com/6848872/114422028-31652f00-9bb6-11eb-987b-62e9b5b38811.png"> | <img width="930" alt="RRbot1" src="https://user-images.githubusercontent.com/6848872/114421414-910f0a80-9bb5-11eb-8256-a1f8678fec5a.png"> |
+    | $YARP_ROBOT_NAME | `'iCubGenova04'` | `'RRbot1'` |
+    
+3. Set the configuration parameters `robot_config`, `contact_config` and `physics_config`.
+<img width="1105" alt="RobotDynWithContacts" src="https://user-images.githubusercontent.com/6848872/114416537-13e19680-9bb1-11eb-8948-9fd7c9f8079b.png">
 
 To run and example open and launch `test_matlab_system.mdl`. It also contains a callback to the `init` file that retrieves the needed information.
