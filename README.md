@@ -67,8 +67,34 @@ It is recommended to install these dependencies using the [robotology-superbuild
 
 ## :runner: How to use the simulator
 
-Just connect your controller to the robot block. This block takes as imput the **joints torque** and the (possible) **generalized external forces** and outputs the **robot state** and **contact wrenches** in the left and right sole frames (in order to simulate a sensor on the feet).
+1. Connect your controller to the robot block. This block takes as imput the **joints torque**, **motor inertia** and an eventual **generalized external wrench**. It outputs the robot **state**, the contact wrenches **wrench_LFoot** and **wrench_RFoot**, respectively applied to the left and right foot (sole frames), and **kinDynOut**, an output bus exposing all the computed dynamics quantities relevant for debugging or the extension of dynamics computations in external blocks (emulation of an IMU sensor, of pressure sensors on the feet, etc).
+2. Select the robot model by setting the environment variable `YARP_ROBOT_NAME` (e.g. `setenv('YARP_ROBOT_NAME','iCubGenova04')`). The available models are:
+    | Model description | iCub robot (iCubGenova04) | RRBot from Gazebo |
+    | --- | --- | --- |
+    | Preview | <img width="982" alt="iCubGenova04" src="https://user-images.githubusercontent.com/6848872/114422028-31652f00-9bb6-11eb-987b-62e9b5b38811.png"> | <img width="930" alt="RRbot1" src="https://user-images.githubusercontent.com/6848872/114421414-910f0a80-9bb5-11eb-8256-a1f8678fec5a.png"> |
+    | $YARP_ROBOT_NAME | `'iCubGenova04'` | `'RRbot1'` |
+    
+3. Set the configuration parameters `robot_config`, `contact_config` and `physics_config`.
+<img width="1105" alt="RobotDynWithContacts" src="https://user-images.githubusercontent.com/6848872/114416537-13e19680-9bb1-11eb-8948-9fd7c9f8079b.png">
 
-![image](https://user-images.githubusercontent.com/29798643/92244565-617f7d80-eec3-11ea-95d0-2a15f1bdb54f.png)
+   **Details:**
+|| Structure | Field name | Size/Type | Description |
+| --- | --- | --- | --- | --- |
+|<td rowspan="8">robot_config</td>| jointOrder | {1×N_DOF cell} | List of N_DOF "controlled" joints (matches dimension of joint torques input) |
+|                                 |                  meshFilePrefix  | '' | Prefix to be concatenated to the mesh file path specified in the URDF model file (*) |
+|                                 |                        fileName  | 'model.urdf' | File name of the URDF model |
+|                                 |                           N_DOF  | double | - |
+|                                 |                    N_DOF_MATRIX  | [23×23 double] | - |
+|                                 |               initialConditions  | [1×1 struct] | Base pose and velocity. Joint positions and velocities |
+|                                 | SIMULATE_MOTOR_REFLECTED_INERTIA | 1 logical | Activate motor reflected inertia emulation |
+|                                 |                     robotFrames  | [1×1 struct] | Selected reference frames (base, left/right sole) |
+|<td rowspan="3">contact_config</td>|                     foot_print | [3×4 double] | 4 Contact points on one of the feet soles |
+|                                   |             total_num_vertices | Nv | Total number of contact points (Nv=8) |
+|                                   |           friction_coefficient | 1 double | Ground/feet Coulomb friction coefficient $\mu _{xy}$ (F _{\bot} = \mu _{xy} N) |
+|<td rowspan="3">physics_config</td>|                    GRAVITY_ACC | [1x3 double] | Gravity vector (gz = -9.81) |
+|                                   |                      TIME_STEP | 1 double | Simulator sampling time (recommended 1e-03) |
+
+### Notes
+(*) Since iDynTree 3.0.0, if meshFilePrefix='', the standard iDynTree workflow of locating the mesh via the `ExternalMesh.getFileLocationOnLocalFileSystem` method is used. The iCub model meshes file tree is compatible with this workflow.
 
 To run and example open and launch `test_matlab_system.mdl`. It also contains a callback to the `init` file that retrieves the needed information.
