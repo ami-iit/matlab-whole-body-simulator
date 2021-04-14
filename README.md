@@ -65,6 +65,32 @@ It is recommended to install these dependencies using the [robotology-superbuild
 6. Change working directory to the root path of repository `matlab-whole-body-simulators`.
 7. Open and run the model `test_matlab_system_2020b.mdl`.
 
+## :floppy_disk: Installing the framework in MATLAB Online environment
+
+This use case is very convenient if a local host with installed MATLAB application and license is not available, or simply if the user wishes to leave his usual working environment unchanged by the package dependencies of this simulator framework.
+
+With a MATLAB account, one can sign in and access to [MATLAB online](https://www.mathworks.com/products/matlab-online.html#connect-to-the-cloud), an online workspace that provides MATLAB and Simulink from any standard web browser. The GUI is practically identical to the one provided by the desktop application.
+
+Once connected, the goal is to follow a procedure similar to the one from [the previous section](https://github.com/dic-iit/matlab-whole-body-simulator/tree/devel#floppy_disk-installing-the-dependencies-from-the-conda-robotology-channel) extensively using the [Robotology](https://anaconda.org/robotology) and the [conda-forge](https://anaconda.org/conda-forge) conda channels.
+
+The steps will slightly differ from the ones in the referenced procedure because of the limitations of the bash provided by the MATLAB online session, as listed below:
+- The session `~/.bashrc` cannot be sourced (or sourcing it won't have any effect), so the **PATH** environment variable shall be set directly.
+- No **Git** tool is available by default, so it has to be installed through **mamba**.
+- any command run on terminal in the original procedure shall be run through the `system` instruction (refer to https://github.com/robotology/robotology-superbuild/pull/652#issuecomment-794027294).
+- Any prompt resulting from those commands is not accessible from MATLAB, so we have to use the automatic "yes" user input (command option `-y`).
+
+The required commands have been sequenced in a MATLAB script, `app/tools/matlabOnlineInstaller.m`. Follow the below steps once logged in the MATLAB Online session.
+1. Download and run the installer:
+  ```
+  system('curl -LO https://raw.githubusercontent.com/dic-iit/matlab-whole-body-simulator/featue/install-matlab-online/app/tools/matlabOnlineInstaller.m');
+  run matlabOnlineInstaller.
+  ```
+2. After step 1, you find the `matlab-whole-body-simulator` repository has been downloaded to `/MATLAB Drive/dev/matlab-whole-body-simulator`, further designated as <MATLAB_WB_SIM_SRC>, and its dependencies installed in `$HOME/miniforge3`. Select the robot model among the available ones in `<MATLAB_WB_SIM_SRC>/app/robots` and as described in the next section. For instance, selecting `iCubGenova04` would be done as follows:
+  ```
+  setenv('YARP_ROBOT_NAME','iCubGenova04');
+  ```
+3. Open the test model `<MATLAB_WB_SIM_SRC>/test_matlab_system_2020b.mdl`, and run it. After the compilation is complete, a figure will appear, displaying the robot performing the task driven by the controller used in the test model.
+
 ## :runner: How to use the simulator
 
 1. Connect your controller to the robot block. This block takes as imput the **joints torque**, **motor inertia** and an eventual **generalized external wrench**. It outputs the robot **state**, the contact wrenches **wrench_LFoot** and **wrench_RFoot**, respectively applied to the left and right foot (sole frames), and **kinDynOut**, an output bus exposing all the computed dynamics quantities relevant for debugging or the extension of dynamics computations in external blocks (emulation of an IMU sensor, of pressure sensors on the feet, etc).
