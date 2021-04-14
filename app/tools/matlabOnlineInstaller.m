@@ -1,16 +1,12 @@
-%% Set the YARP Robot Name and Home path
+%% Set the Home path and create dev folder
 
-setenv('YARP_ROBOT_NAME','iCubGenova04');
 homeDir = getenv('HOME');
-
-
-%% create dev folder
-
-mkdir '/MATLAB Drive/dev'
+codeDir = '/MATLAB Drive/dev';
+mkdir(codeDir);
 
 %% Install the tools in that folder
 
-cd '/MATLAB Drive/dev'
+cd(codeDir);
 
 % If the miniforge3 tool is not yet installed, do it
 if ~exist([getenv('HOME'),'/miniforge3'],'dir')
@@ -39,19 +35,19 @@ system('mamba install -y git');
 % bashrc, which won't have any effect on MATLAB online. For that reason we have to install the conda
 % binaries from the robotology channel on the **base** environment.
 system('mamba install -y -c robotology iDynTree qpOASES icub-models wb-toolbox whole-body-controllers yarp-matlab-bindings');
-addpath(homeDir,'/miniforge3/mex');
-addpath(homeDir,'/miniforge3/share/WBToolbox');
-addpath(homeDir,'/miniforge3/share/WBToolbox/images');
+addpath([homeDir,'/miniforge3/mex']);
+addpath([homeDir,'/miniforge3/share/WBToolbox']);
+addpath([homeDir,'/miniforge3/share/WBToolbox/images']);
 
 %% Missing environment variables
-setenv('YARP_DATA_DIRS',[':',homeDir,'/miniforge3/share/yarp:~/miniforge3/share/iCub',getenv('YARP_DATA_DIRS')]);
+setenv('YARP_DATA_DIRS',[':',homeDir,'/miniforge3/share/yarp:',homeDir,'/miniforge3/share/iCub',getenv('YARP_DATA_DIRS')]);
 setenv('LD_LIBRARY_PATH',[':',homeDir,'/miniforge3/lib',getenv('LD_LIBRARY_PATH')]);
 setenv('ROS_PACKAGE_PATH',[':',homeDir,'/miniforge3/share',getenv('ROS_PACKAGE_PATH')]);
 setenv('BLOCKFACTORY_PLUGIN_PATH',[getenv('BLOCKFACTORY_PLUGIN_PATH'),':',homeDir,'/miniforge3/lib/blockfactory']);
 
 %% Get the repo files
 
-cd '/MATLAB Drive/dev'
+cd(codeDir);
 
 % Clone the repository: shallow clone with a single branch 'devel' and latest commit on that branch
 if ~exist('matlab-whole-body-simulator','dir')
@@ -62,3 +58,7 @@ else
     system('git checkout devel');
     system('git pull origin devel');
 end
+
+% Update path for finding the robot models
+setenv('YARP_DATA_DIRS',[':',codeDir,'/matlab-whole-body-simulator/urdf/RRbot',getenv('YARP_DATA_DIRS')]);
+setenv('ROS_PACKAGE_PATH',[':',codeDir,'/matlab-whole-body-simulator/urdf',getenv('ROS_PACKAGE_PATH')]);
