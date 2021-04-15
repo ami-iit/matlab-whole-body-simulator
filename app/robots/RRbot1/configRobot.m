@@ -39,7 +39,7 @@ robot_config.N_DOF_MATRIX = eye(robot_config.N_DOF);
 % Initial condition of iCub and for the integrators.
 initialConditions.base_position = [0; 0; 0];
 initialConditions.orientation = eye(3);
-initialConditions.w_H_b = wbs.State.Rp2H(initialConditions.orientation, initialConditions.base_position);
+initialConditions.w_H_b = mwbs.State.Rp2H(initialConditions.orientation, initialConditions.base_position);
 % joint inital position (radians)
 initialConditions.s = [0; 1]*pi/180;
 % velocty initial conditions
