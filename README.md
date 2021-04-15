@@ -20,7 +20,7 @@ It is recommended to install these dependencies using the [robotology-superbuild
 ## :floppy_disk: Installing the dependencies through the robotology superbuild source
 
 - Clone and build the robotology-superbuild following the steps in https://github.com/robotology/robotology-superbuild/blob/master/README.md.
-- `icub-models`: set the profile option `ROBOTOLOGY_ENABLE_CORE`.
+- `icub-models`, `YARP`: set the profile option `ROBOTOLOGY_ENABLE_CORE`.
 - `iDynTree`, `WBToolbox`, `Whole-Body-Controller`, `qpOASES` and `yarp-matlab-bindings`: set the profile option `ROBOTOLOGY_ENABLE_DYNAMICS` and CMake option  `ROBOTOLOGY_USES_MATLAB`.
 
 **Note 1:** In general, for selecting the profile CMake options according to the sub-projects to install, refer to the table in the section [Profile CMake Options](https://github.com/robotology/robotology-superbuild/blob/master/doc/profiles.md#profile-cmake-options).
@@ -35,17 +35,17 @@ It is recommended to install these dependencies using the [robotology-superbuild
     $ conda install mamba
     $ conda create -n robotologyenv
     $ conda activate robotologyenv
-    $ mamba install -c robotology iDynTree qpOASES icub-models wb-toolbox whole-body-controllers
+    $ mamba install -c robotology YARP yarp-matlab-bindings iDynTree qpOASES icub-models wb-toolbox whole-body-controllers
     ```
     To read more about installing robotology-superbuild package binaries refer to https://github.com/robotology/robotology-superbuild/blob/master/doc/conda-forge.md#binary-installation.
 3. Check the MATLABPATH environment variable. It should now have:
     ```
     <user-home-dir>/miniforge3/envs/robotologyenv/mex: <user-home-dir>/miniforge3/envs/robotologyenv/share/WBToolbox: <user-home-dir>/miniforge3/envs/robotologyenv/share/WBToolbox/images
-    ``` 
+    ```
     Mex libraries:
     ```
     $ ls <user-home-dir>/miniforge3/envs/robotologyenv/mex/
-    
+
     +iDynTree
     +iDynTreeWrappers
     +wbc
@@ -99,7 +99,7 @@ The required commands have been sequenced in a MATLAB script, `app/tools/matlabO
     | --- | --- | --- |
     | Preview | <img width="982" alt="iCubGenova04" src="https://user-images.githubusercontent.com/6848872/114422028-31652f00-9bb6-11eb-987b-62e9b5b38811.png"> | <img width="930" alt="RRbot1" src="https://user-images.githubusercontent.com/6848872/114421414-910f0a80-9bb5-11eb-8256-a1f8678fec5a.png"> |
     | $YARP_ROBOT_NAME | `'iCubGenova04'` | `'RRbot1'` |
-    
+
 3. Set the configuration parameters `robot_config`, `contact_config` and `physics_config`.
 <img width="1105" alt="RobotDynWithContacts" src="https://user-images.githubusercontent.com/6848872/114416537-13e19680-9bb1-11eb-8948-9fd7c9f8079b.png">
 

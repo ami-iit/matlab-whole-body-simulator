@@ -1,6 +1,36 @@
-*.slxc
-slprj/
-*.m~
-*.autosave
+# OS X Finder files
 .DS_Store
 
+## Matlab/Simulink: ------------------------------------------
+##
+## Ignore autosave and other temporary files
+##---------------------------------------------------
+
+# Windows default autosave extension
+*.asv
+
+# Simulink autosave
+*.autosave
+
+# OSX / *nix default autosave extension
+*.m~
+
+# Compiled MEX binaries (all platforms)
+*.mex*
+
+# Simulink Code Generation
+slprj/
+
+# Simulink slxc
+*.slxc
+
+# Matlab binary .mat files
+*.mat
+
+## Sublime Text: ------------------------------------
+##
+## Ignore projects and workspaces.
+## url: https://www.sublimetext.com
+##---------------------------------------------------
+*.sublime-project
+*.sublime-workspace
