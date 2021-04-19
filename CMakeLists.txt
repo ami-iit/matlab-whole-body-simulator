@@ -2,7 +2,7 @@
 # This software may be modified and distributed under the terms of the Apache-2.0 license
 
 cmake_minimum_required(VERSION 3.5)
-project(matlab-whole-body-simulator VERSION 2.0.0-alpha)
+project(matlab-whole-body-simulator)
 
 # There is nothing to build, only the a few MATLAB files to copy to the install folder:
 # - the package 'lib/+mwbs' into the '<install prefix>/mex' folder.
@@ -27,21 +27,26 @@ set(URDF_FILES_DIR ${matlab-whole-body-simulator_SOURCE_DIR}/urdf/RRbot)
 install(
   DIRECTORY ${M_FILES_DIR}
   DESTINATION ${MATLAB_WHOLE_BODY_SIMULATOR_INSTALL_MATLAB_FILESDIR}
-  FILES_MATCHING PATTERN "*.m"
-  USE_SOURCE_PERMISSIONS)
+  USE_SOURCE_PERMISSIONS
+  FILES_MATCHING PATTERN "*.m")
 
 # Copy Simulink slx library files
 install(
   DIRECTORY ${SIMLIB_FILES_DIR}
   DESTINATION ${MATLAB_WHOLE_BODY_SIMULATOR_INSTALL_MATLAB_FILESDIR}/+mwbs
-  FILES_MATCHING PATTERN "*.m" "*.slx"
-  USE_SOURCE_PERMISSIONS)
+  USE_SOURCE_PERMISSIONS
+  FILES_MATCHING
+  PATTERN "*.m"
+  PATTERN "*.slx")
 
 # Copy robot models
 install(
   DIRECTORY ${URDF_FILES_DIR}
   DESTINATION ${MATLAB_WHOLE_BODY_SIMULATOR_INSTALL_URDF_FILESDIR}
-  FILES_MATCHING PATTERN "*.dae" "*.stl" "*.urdf"
-  USE_SOURCE_PERMISSIONS)
+  USE_SOURCE_PERMISSIONS
+  FILES_MATCHING
+  PATTERN "*.dae"
+  PATTERN "*.stl"
+  PATTERN "*.urdf")
 
 include(AddUninstallTarget)
