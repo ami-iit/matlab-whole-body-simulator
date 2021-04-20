@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.115"
+    ComputedModelVersion    "1.117"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -53,8 +53,7 @@ Model {
       PropName		      "mdlProps"
     }
   }
-  PostLoadFcn		  "% Set path to the utility functions and to WBC library\nimport wbc.*\naddpath(genpath('./src'));\nad"
-  "dpath('./lib/+mwbs/RobotDynamicsWithContacts');"
+  PostLoadFcn		  "postLoadFcn"
   EnableAccessToBaseWorkspace on
   ScopeRefreshTime	  0.035000
   OverrideScopeRefreshTime on
@@ -65,7 +64,7 @@ Model {
   MinMaxOverflowArchiveMode "Overwrite"
   FPTRunName		  "Run 1"
   MaxMDLFileLineLength	  120
-  InitFcn		  "init"
+  InitFcn		  "initFcn"
   LastSavedArchitecture	  "maci64"
   Object {
     $PropName		    "BdWindowsInfo"
@@ -214,19 +213,6 @@ Model {
 	Dimension		2
 	Object {
 	  $ObjectID		  16
-	  Type			  "GLUE2:PropertyInspector"
-	  ID			  "Property Inspector"
-	  Visible		  [1]
-	  CreateCallback	  ""
-	  UserData		  ""
-	  Floating		  [0]
-	  DockPosition		  "Right"
-	  Width			  [640]
-	  Height		  [480]
-	  Minimized		  "On"
-	}
-	Object {
-	  $ObjectID		  17
 	  Type			  "Simulink:Editor:ReferencedFiles"
 	  ID			  "Referenced Files"
 	  Visible		  [0]
@@ -237,6 +223,19 @@ Model {
 	  Width			  [640]
 	  Height		  [480]
 	  Minimized		  "Unset"
+	}
+	Object {
+	  $ObjectID		  17
+	  Type			  "GLUE2:PropertyInspector"
+	  ID			  "Property Inspector"
+	  Visible		  [1]
+	  CreateCallback	  ""
+	  UserData		  ""
+	  Floating		  [0]
+	  DockPosition		  "Right"
+	  Width			  [640]
+	  Height		  [480]
+	  Minimized		  "On"
 	}
 	PropName		"DockComponentsInfo"
       }
@@ -268,9 +267,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Apr 20 03:39:00 2021"
-  RTWModifiedTimeStamp	  540789033
-  ModelVersionFormat	  "%<AutoIncrement:1.115>"
+  LastModifiedDate	  "Tue Apr 20 03:54:18 2021"
+  RTWModifiedTimeStamp	  540791560
+  ModelVersionFormat	  "%<AutoIncrement:1.117>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
