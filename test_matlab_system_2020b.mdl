@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.113"
+    ComputedModelVersion    "1.115"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -54,7 +54,7 @@ Model {
     }
   }
   PostLoadFcn		  "% Set path to the utility functions and to WBC library\nimport wbc.*\naddpath(genpath('./src'));\nad"
-  "dpath('./lib/RobotDynamicsWithContacts');"
+  "dpath('./lib/+mwbs/RobotDynamicsWithContacts');"
   EnableAccessToBaseWorkspace on
   ScopeRefreshTime	  0.035000
   OverrideScopeRefreshTime on
@@ -76,7 +76,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [41.0, 23.0, 1751.0, 1097.0]
+      Location		      [40.0, 23.0, 1752.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -103,10 +103,10 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1637.0, 868.0]
+	  Extents		  [1638.0, 868.0]
 	  ZoomFactor		  [2.41726618705036]
-	  Offset		  [-81.105654761904759, -5.7916666666666572]
-	  SceneRectInView	  [-81.105654761904759, -5.7916666666666572, 677.21130952380952, 359.08333333333331]
+	  Offset		  [-81.3125, -5.7916666666666572]
+	  SceneRectInView	  [-81.3125, -5.7916666666666572, 677.625, 359.08333333333331]
 	}
 	Object {
 	  $ObjectID		  7
@@ -214,19 +214,6 @@ Model {
 	Dimension		2
 	Object {
 	  $ObjectID		  16
-	  Type			  "Simulink:Editor:ReferencedFiles"
-	  ID			  "Referenced Files"
-	  Visible		  [0]
-	  CreateCallback	  ""
-	  UserData		  "{\"filterShowRefModels\":\"true\",\"filterShowRefSubs\":\"true\",\"filterShowOnlyDirtyFiles\":\"false\"}\n"
-	  Floating		  [0]
-	  DockPosition		  "Left"
-	  Width			  [640]
-	  Height		  [480]
-	  Minimized		  "Unset"
-	}
-	Object {
-	  $ObjectID		  17
 	  Type			  "GLUE2:PropertyInspector"
 	  ID			  "Property Inspector"
 	  Visible		  [1]
@@ -238,6 +225,19 @@ Model {
 	  Height		  [480]
 	  Minimized		  "On"
 	}
+	Object {
+	  $ObjectID		  17
+	  Type			  "Simulink:Editor:ReferencedFiles"
+	  ID			  "Referenced Files"
+	  Visible		  [0]
+	  CreateCallback	  ""
+	  UserData		  "{\"filterShowRefModels\":\"true\",\"filterShowRefSubs\":\"true\",\"filterShowOnlyDirtyFiles\":\"false\"}\n"
+	  Floating		  [0]
+	  DockPosition		  "Left"
+	  Width			  [640]
+	  Height		  [480]
+	  Minimized		  "Unset"
+	}
 	PropName		"DockComponentsInfo"
       }
       WindowState	      "AAAA/wAAAAD9AAAAAgAAAAAAAADMAAADofwCAAAABPsAAAAWAEQAbwBjAGsAVwBpAGQAZwBlAHQAMwEAAAAxAAAB+AAAA"
@@ -245,7 +245,7 @@ Model {
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAeQAAA6EAAABrAP////sAAABgAFMAaQBtAHUAb"
       "ABpAG4AawA6AEUAZABpAHQAbwByADoAUgBlAGYAZQByAGUAbgBjAGUAZABGAGkAbABlAHMALwBSAGUAZgBlAHIAZQBuAGMAZQBkACAARgBpAGwAZ"
       "QBzAAAAAAD/////AAAAjwD///8AAAABAAAAAAAAAAD8AgAAAAH7AAAAVABHAEwAVQBFADIAOgBQAHIAbwBwAGUAcgB0AHkASQBuAHMAcABlAGMAd"
-      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGiwAAA6EAAAABAAAAAgAAAAEAAAAC/"
+      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGjAAAA6EAAAABAAAAAgAAAAEAAAAC/"
       "AAAAAMAAAAAAAAAAQAAADYAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEwAZQBmAHQDAAAAAP////8AAAAAA"
       "AAAAAAAAAEAAAABAAAAOABjAG8AbABsAGEAcABzAGkAYgBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAUgBpAGcAaAB0AwAAAAD/////AAAAA"
       "AAAAAAAAAADAAAAAQAAADoAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEIAbwB0AHQAbwBtAAAAAAD/////A"
@@ -268,9 +268,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Apr 01 14:34:36 2021"
-  RTWModifiedTimeStamp	  539188428
-  ModelVersionFormat	  "%<AutoIncrement:1.113>"
+  LastModifiedDate	  "Tue Apr 20 03:39:00 2021"
+  RTWModifiedTimeStamp	  540789033
+  ModelVersionFormat	  "%<AutoIncrement:1.115>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1352,7 +1352,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system_2020b"
-    Location		    [41, 23, 1792, 1120]
+    Location		    [40, 23, 1792, 1120]
     SystemRect		    [0.000000, 0.000000, 0.000000, 0.000000]
     Open		    on
     PortBlocksUseCompactNotation off
@@ -1786,7 +1786,7 @@ Model {
       ZOrder		      1252
       ForegroundColor	      "red"
       BackgroundColor	      "yellow"
-      LibraryVersion	      "1.0"
+      LibraryVersion	      "3.1"
       SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
       SourceType	      ""
       SourceProductName	      "RobotDynamicsWithContacts"
@@ -1949,9 +1949,6 @@ Stateflow {
     screen		    [1 1 3600 1200 1.180555555555556]
     treeNode		    [0 3 0 0]
     viewObj		    2
-    visible		    1
-    subviewS {
-    }
     ssIdHighWaterMark	    17
     decomposition	    CLUSTER_CHART
     type		    EML_CHART
