@@ -20,20 +20,12 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/ycm-0.12)
 
 # Common source files
 set(M_FILES_DIR ${matlab-whole-body-simulator_SOURCE_DIR}/lib/+mwbs)
-set(SIMLIB_FILES_DIR ${matlab-whole-body-simulator_SOURCE_DIR}/lib/RobotDynamicsWithContacts)
 set(URDF_FILES_DIR ${matlab-whole-body-simulator_SOURCE_DIR}/urdf/RRbot)
 
-# Copy classes
+# Copy the classes and Simulink slx library files
 install(
   DIRECTORY ${M_FILES_DIR}
   DESTINATION ${MATLAB_WHOLE_BODY_SIMULATOR_INSTALL_MATLAB_FILESDIR}
-  USE_SOURCE_PERMISSIONS
-  FILES_MATCHING PATTERN "*.m")
-
-# Copy Simulink slx library files
-install(
-  DIRECTORY ${SIMLIB_FILES_DIR}
-  DESTINATION ${MATLAB_WHOLE_BODY_SIMULATOR_INSTALL_MATLAB_FILESDIR}/+mwbs
   USE_SOURCE_PERMISSIONS
   FILES_MATCHING
   PATTERN "*.m"

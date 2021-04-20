@@ -35,7 +35,7 @@ It is recommended to install these dependencies using the [robotology-superbuild
     $ conda install mamba
     $ conda create -n robotologyenv
     $ conda activate robotologyenv
-    $ mamba install -c robotology YARP yarp-matlab-bindings iDynTree qpOASES icub-models wb-toolbox whole-body-controllers
+    $ mamba install -c robotology yarp yarp-matlab-bindings idyntree qpoases icub-models wb-toolbox whole-body-controllers
     ```
     To read more about installing robotology-superbuild package binaries refer to https://github.com/robotology/robotology-superbuild/blob/master/doc/conda-forge.md#binary-installation.
 3. Check the MATLABPATH environment variable. It should now have:
