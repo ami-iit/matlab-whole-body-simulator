@@ -19,7 +19,7 @@ set(MATLAB_WHOLE_BODY_SIMULATOR_INSTALL_URDF_FILESDIR "share" CACHE
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/ycm-0.12)
 
 # Common source files
-set(M_FILES_DIR ${matlab-whole-body-simulator_SOURCE_DIR}/lib/+mwbs)
+set(M_FILES_DIR ${matlab-whole-body-simulator_SOURCE_DIR}/lib/)
 set(URDF_FILES_DIR ${matlab-whole-body-simulator_SOURCE_DIR}/urdf/RRbot)
 
 # Copy the classes and Simulink slx library files
