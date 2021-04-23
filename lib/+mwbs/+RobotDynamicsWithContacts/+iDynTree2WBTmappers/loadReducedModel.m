@@ -38,7 +38,7 @@ function KinDynModel = loadReducedModel(jointList,baseLinkName,modelPath,modelNa
     
     % initialize the iDyntree KinDynComputation class, that will be used for
     % computing the floating base system state, dynamics, and kinematics
-    KinDynModel.kinDynComp = iDynTree2WBTmappers.KinDynComputations();
+    KinDynModel.kinDynComp = mwbs.RobotDynamicsWithContacts.iDynTree2WBTmappers.KinDynComputations();
     
     disp(['[loadReducedModel]: loaded model: ',[modelPath,modelName],', number of joints: ',num2str(KinDynModel.NDOF)]);
 end
