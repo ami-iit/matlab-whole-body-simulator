@@ -30,7 +30,7 @@ classdef Robot < handle
         function obj = Robot(config,gravityAcc)
             % ROBOT Sets up the object. Takes as input a config file
             % loading the model
-            obj.KinDynModel = iDynTree2WBTmappers.loadReducedModel(config.jointOrder, config.robotFrames.BASE, ...
+            obj.KinDynModel = mwbs.RobotDynamicsWithContacts.iDynTree2WBTmappers.loadReducedModel(config.jointOrder, config.robotFrames.BASE, ...
                 config.modelPath, config.fileName, false);
 
             %initialize robot state

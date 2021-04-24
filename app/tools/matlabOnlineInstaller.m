@@ -34,7 +34,7 @@ system('mamba install -y git');
 % Using the `conda create/activate/deactivate` commands requires to run `conda init` and source the
 % bashrc, which won't have any effect on MATLAB online. For that reason we have to install the conda
 % binaries from the robotology channel on the **base** environment.
-system('mamba install -y -c robotology iDynTree qpOASES icub-models wb-toolbox whole-body-controllers yarp-matlab-bindings');
+system('mamba install -y -c robotology idyntree icub-models wb-toolbox whole-body-controllers yarp-matlab-bindings');
 addpath([homeDir,'/miniforge3/mex']);
 addpath([homeDir,'/miniforge3/share/WBToolbox']);
 addpath([homeDir,'/miniforge3/share/WBToolbox/images']);
