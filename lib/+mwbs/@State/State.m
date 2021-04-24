@@ -88,23 +88,23 @@ classdef State < handle
             % omega_dot = base_pose_ddot(4:6);
 
             [~, y] = ode45(@(t, y) p_dot, [0 obj.dt], p);
-            p = y(end, :)';
+            p = y(end, 1:3)';
 
             % Compute the rotation matrix using the exponential map
             [~, y] = ode45(@(t, y) omega, [0 obj.dt], zeros(3, 1));
-            theta = y(end, :)';
+            theta = y(end, 1:end)';
             angle2R = obj.exponential_map(theta);
             R = angle2R * R;
 
             w_H_b = obj.Rp2H(R, p);
             [~, y] = ode45(@(t, y) obj.s_dot, [0 obj.dt], obj.s);
-            s = y(end, :)';
+            s = y(end, 1:numel(obj.s))';
 
             [~, y] = ode45(@(t, y) base_pose_ddot, [0 obj.dt], obj.base_pose_dot);
-            base_pose_dot = y(end, :)';
+            base_pose_dot = y(end, 1:numel(obj.base_pose_dot))';
 
             [~, y] = ode45(@(t, y) s_ddot, [0 obj.dt], obj.s_dot);
-            s_dot = y(end, :)';
+            s_dot = y(end, 1:numel(obj.s_dot))';
 
             obj.set(w_H_b, s, base_pose_dot, s_dot);
         end
@@ -133,9 +133,19 @@ classdef State < handle
         end
 
         function H = Rp2H(R, p)
-            % Rp2H Returns the homogenous matrix H from the Rotation matrix R and the position vector p
-            H = [R, p; ...
-                    0, 0, 0, 1];
+            % Rp2H Returns the homogenous matrix H from the Rotation matrix R and the position
+            % vector p.
+            
+            % check if det(R) = 1, if not use the SVD to correct the rotation matrix
+            % if abs(det(R) - 1) > 0.05
+            if norm(R' * R - eye(3)) > 5e-3
+                %     error('The rotation matrix is not a anymore a rotation matrix');
+                disp('Making the matrix a rotation one using SVD');
+                [U, ~, V] = svd(R);
+                R = U * V';
+            end
+            
+            H = [R, p; 0, 0, 0, 1];
         end
 
     end

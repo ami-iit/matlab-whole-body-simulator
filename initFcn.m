@@ -13,36 +13,32 @@
 %  */
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear variables
+clear functions
 close all
 clc
 
-% Set path to the utility functions and to WBC library
-import wbc.*
-addpath(genpath('./src/'));
-
-% REMARK : If you have installed the URDF models by https://github.com/robotology/icub-models
-% You could fill the required variables as follows:
-% % Substitute in the following the location of the install prefix of icub-models
-% if installed with robotology superbuild you can directly use
-icubModelsInstallPrefix = getenv('ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX');
-
-meshFilePrefix = [icubModelsInstallPrefix '/share'];
-% Select the robot using the folder name
-% Example
-robotName = 'iCubGenova04';
-modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
-fileName = 'model.urdf';
 %% GENERAL SIMULATION INFO
 % Simulation time and delta_t [s]
 Config.simulationTime = inf;
+Config.GRAVITY_ACC = [0,0,-9.81];
 Config.tStep = 0.001;
+
+% Since we cannot assume that the optimization toolbox license is available, we use another QP
+% solver in place of the MATLAB native solver 'quadprog'.
+% The alternate optional solver was the OSQP, but after the changes to support the code generation in
+% the Matlab System block 'step_block', only the QPOASES solver (Simulink block) is supported.
+% So the option below is DEPRECATED.
+Config.USE_OSQP = false;
+Config.USE_QPOASES = true;
 
 % Do you want to enable the Visualizer?
 confVisualizer.visualizeRobot = true;
 
 %% ADD CONFIGURATION FILES
+
 % Run robot-specific and controller-specific configuration parameters
-Config.modelPath = modelPath;
-Config.fileName = fileName;
-run(strcat('app/robots/', robotName, '/configRobot.m'));
-run(strcat('app/robots/', robotName, '/initVisualizer.m'));
+run(strcat('app/robots/', getenv('YARP_ROBOT_NAME'), '/configRobot.m'));
+
+%% Init simulator core physics paramaters
+physics_config.GRAVITY_ACC = Config.GRAVITY_ACC;
+physics_config.TIME_STEP = Config.tStep;

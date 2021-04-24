@@ -50,7 +50,7 @@ classdef Visualizer < matlab.System
             % prepareRobot Prepares the visualization loading the information
             % Main variable of iDyntreeWrappers used for many things including updating
             % robot position and getting world to frame transforms
-            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, 'root_link', ...
+            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, obj.config.robotFrames.BASE, ...
                 obj.config.modelPath, obj.config.fileName, false);
 
             % Set initial position of the robot
@@ -70,14 +70,21 @@ classdef Visualizer < matlab.System
             width = 1300;
             height = 1300;
             set(gcf, 'position', [x0, y0, width, height])
+            
+            % Window around the robot. If config.aroundRobot is a scalar, transform it to a 3x2
+            % matrix with x, y, z min/max limits.
+            if (numel(obj.config.aroundRobot) == 1)
+                wSize = obj.config.aroundRobot;
+                obj.config.aroundRobot = repmat([-wSize wSize],[3 1]);
+            end
         end
 
         function followTheRobot(obj)
             % moves the window around the robot
             comPosition = toMatlab(obj.KinDynModel.kinDynComp.getCenterOfMassPosition());
-            xlim([comPosition(1) - obj.config.aroundRobot, comPosition(1) + obj.config.aroundRobot]);
-            ylim([comPosition(2) - obj.config.aroundRobot, comPosition(2) + obj.config.aroundRobot]);
-            zlim([comPosition(3) - obj.config.aroundRobot, comPosition(3) + obj.config.aroundRobot]);
+            xlim(comPosition(1) + obj.config.aroundRobot(1,:));
+            ylim(comPosition(2) + obj.config.aroundRobot(2,:));
+            zlim(comPosition(3) + obj.config.aroundRobot(3,:));
         end
 
     end
