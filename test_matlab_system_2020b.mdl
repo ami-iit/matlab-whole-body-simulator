@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.117"
+    ComputedModelVersion    "1.123"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -20,7 +20,7 @@ Model {
     IsArchitectureModel	    0
     IsAUTOSARArchitectureModel 0
     NumParameterArguments   0
-    NumExternalFileReferences 2
+    NumExternalFileReferences 3
     ExternalFileReference {
       Reference		      "WBToolboxLibrary/Utilities/Configuration"
       Path		      "test_matlab_system_2020b/Configuration"
@@ -28,7 +28,13 @@ Model {
       Type		      "LIBRARY_BLOCK"
     }
     ExternalFileReference {
-      Reference		      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
+      Reference		      "mwbs_visualizers_lib/RobotVisualizer"
+      Path		      "test_matlab_system_2020b/Robot visualizer/RobotVisualizer"
+      SID		      "213"
+      Type		      "LIBRARY_BLOCK"
+    }
+    ExternalFileReference {
+      Reference		      "mwbs_robotDynamicsWithContacts_lib/RobotDynWithContacts"
       Path		      "test_matlab_system_2020b/RobotDynWithContacts"
       SID		      "197"
       Type		      "LIBRARY_BLOCK"
@@ -75,7 +81,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [40.0, 23.0, 1752.0, 1097.0]
+      Location		      [41.0, 23.0, 1751.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -102,32 +108,32 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1638.0, 868.0]
-	  ZoomFactor		  [2.41726618705036]
-	  Offset		  [-81.3125, -5.7916666666666572]
-	  SceneRectInView	  [-81.3125, -5.7916666666666572, 677.625, 359.08333333333331]
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [2.3529411764705883]
+	  Offset		  [-90.362500000000011, -5.9499999999999886]
+	  SceneRectInView	  [-90.362500000000011, -5.9499999999999886, 695.725, 368.9]
 	}
 	Object {
 	  $ObjectID		  7
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "197"
-	  Extents		  [1633.0, 868.0]
-	  ZoomFactor		  [1.1290322580645162]
-	  Offset		  [34.3377232142858, -192.39999999999998]
-	  SceneRectInView	  [34.3377232142858, -192.39999999999998, 1446.3714285714284, 768.8]
+	  LoadSaveID		  "133"
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [3.7858823529411763]
+	  Offset		  [626.30205096333123, 107.86357986326911]
+	  SceneRectInView	  [626.30205096333123, 107.86357986326911, 432.39589807333749, 229.27284027346178]
 	}
 	Object {
 	  $ObjectID		  8
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "133"
-	  Extents		  [1633.0, 868.0]
-	  ZoomFactor		  [4.2997931164190337]
-	  Offset		  [605.10714285714289, 125.56491120636866]
-	  SceneRectInView	  [605.10714285714289, 125.56491120636866, 379.78571428571422, 201.87017758726267]
+	  LoadSaveID		  "197"
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [1.1290322580645162]
+	  Offset		  [32.5662946428572, -192.39999999999998]
+	  SceneRectInView	  [32.5662946428572, -192.39999999999998, 1449.9142857142856, 768.8]
 	}
 	Object {
 	  $ObjectID		  9
@@ -244,7 +250,7 @@ Model {
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAeQAAA6EAAABrAP////sAAABgAFMAaQBtAHUAb"
       "ABpAG4AawA6AEUAZABpAHQAbwByADoAUgBlAGYAZQByAGUAbgBjAGUAZABGAGkAbABlAHMALwBSAGUAZgBlAHIAZQBuAGMAZQBkACAARgBpAGwAZ"
       "QBzAAAAAAD/////AAAAjwD///8AAAABAAAAAAAAAAD8AgAAAAH7AAAAVABHAEwAVQBFADIAOgBQAHIAbwBwAGUAcgB0AHkASQBuAHMAcABlAGMAd"
-      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGjAAAA6EAAAABAAAAAgAAAAEAAAAC/"
+      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGiwAAA6EAAAABAAAAAgAAAAEAAAAC/"
       "AAAAAMAAAAAAAAAAQAAADYAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEwAZQBmAHQDAAAAAP////8AAAAAA"
       "AAAAAAAAAEAAAABAAAAOABjAG8AbABsAGEAcABzAGkAYgBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAUgBpAGcAaAB0AwAAAAD/////AAAAA"
       "AAAAAAAAAADAAAAAQAAADoAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEIAbwB0AHQAbwBtAAAAAAD/////A"
@@ -267,9 +273,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Apr 20 03:54:18 2021"
-  RTWModifiedTimeStamp	  540791560
-  ModelVersionFormat	  "%<AutoIncrement:1.117>"
+  LastModifiedDate	  "Mon Apr 26 22:08:37 2021"
+  RTWModifiedTimeStamp	  541373560
+  ModelVersionFormat	  "%<AutoIncrement:1.123>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1270,10 +1276,6 @@ Model {
       Interpolate	      on
     }
     Block {
-      BlockType		      MATLABSystem
-      System		      "<Enter System Class Name>"
-    }
-    Block {
       BlockType		      Outport
       Port		      "1"
       IconDisplay	      "Port number"
@@ -1351,7 +1353,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system_2020b"
-    Location		    [40, 23, 1792, 1120]
+    Location		    [41, 23, 1792, 1120]
     SystemRect		    [0.000000, 0.000000, 0.000000, 0.000000]
     Open		    on
     PortBlocksUseCompactNotation off
@@ -1367,9 +1369,9 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "242"
+    ZoomFactor		    "235"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "212"
+    SIDHighWatermark	    "213"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1667,7 +1669,7 @@ Model {
       }
       System {
 	Name			"Robot visualizer"
-	Location		[45, 23, 1792, 1120]
+	Location		[41, 23, 1792, 1120]
 	SystemRect		[0.000000, 0.000000, 0.000000, 0.000000]
 	Open			off
 	PortBlocksUseCompactNotation off
@@ -1683,7 +1685,7 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"430"
+	ZoomFactor		"379"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport
@@ -1718,16 +1720,16 @@ Model {
 	  }
 	}
 	Block {
-	  BlockType		  MATLABSystem
-	  Name			  "MATLAB System"
-	  SID			  "144"
+	  BlockType		  Reference
+	  Name			  "RobotVisualizer"
+	  SID			  "213"
 	  Ports			  [4]
-	  Position		  [845, 135, 960, 310]
-	  ZOrder		  1132
-	  System		  "Visualizer"
-	  MaskType		  "Visualizer"
-	  MaskDisplay		  "disp(['Robot' char(10) 'Visualizer']);\nport_label('input',1,'world_H_base');\nport_label('input',2"
-	  ",'base_velocity');\nport_label('input',3,'joints_positions');\nport_label('input',4,'joints_velocity');\n"
+	  Position		  [850, 127, 1055, 318]
+	  ZOrder		  1134
+	  LibraryVersion	  "1.4"
+	  SourceBlock		  "mwbs_visualizers_lib/RobotVisualizer"
+	  SourceType		  "mwbs.Visualizers.robotVisualizer.RobotVisualizer"
+	  SourceProductName	  "Matlab Whole-body Simulator"
 	  config		  "confVisualizer"
 	  SimulateUsing		  "Interpreted execution"
 	}
@@ -1740,38 +1742,38 @@ Model {
 	}
 	Line {
 	  Name			  "<w_H_b>"
-	  ZOrder		  2
+	  ZOrder		  7
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  1
-	  DstBlock		  "MATLAB System"
+	  DstBlock		  "RobotVisualizer"
 	  DstPort		  1
 	}
 	Line {
 	  Name			  "<joints_position>"
-	  ZOrder		  3
+	  ZOrder		  8
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  3
-	  DstBlock		  "MATLAB System"
+	  DstBlock		  "RobotVisualizer"
 	  DstPort		  3
 	}
 	Line {
 	  Name			  "<basePose_dot>"
-	  ZOrder		  4
+	  ZOrder		  6
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  2
-	  DstBlock		  "MATLAB System"
+	  DstBlock		  "RobotVisualizer"
 	  DstPort		  2
 	}
 	Line {
 	  Name			  "<joints_velocity>"
-	  ZOrder		  5
+	  ZOrder		  9
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  4
-	  DstBlock		  "MATLAB System"
+	  DstBlock		  "RobotVisualizer"
 	  DstPort		  4
 	}
       }
@@ -1785,10 +1787,10 @@ Model {
       ZOrder		      1252
       ForegroundColor	      "red"
       BackgroundColor	      "yellow"
-      LibraryVersion	      "3.1"
-      SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
+      LibraryVersion	      "3.3"
+      SourceBlock	      "mwbs_robotDynamicsWithContacts_lib/RobotDynWithContacts"
       SourceType	      ""
-      SourceProductName	      "RobotDynamicsWithContacts"
+      SourceProductName	      "Matlab Whole-body Simulator"
       RTWMemSecFuncInitTerm   "Inherit from model"
       RTWMemSecFuncExecute    "Inherit from model"
       RTWMemSecDataConstants  "Inherit from model"

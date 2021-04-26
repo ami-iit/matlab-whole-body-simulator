@@ -1,6 +1,6 @@
-classdef Visualizer < matlab.System
-    % Visualizer matlab.System handling the robot visualization.
-    % go in app/robots/iCub*/initVisualizer.m to change the setup config
+classdef RobotVisualizer < matlab.System
+    % RobotVisualizer matlab.System handling the robot visualization.
+    % go in app/robots/iCub*/initRobotVisualizer.m to change the setup config
 
     properties (Nontunable)
         config
