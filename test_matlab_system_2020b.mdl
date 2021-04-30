@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.141"
+    ComputedModelVersion    "1.142"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -116,8 +116,8 @@ Model {
 	  LoadSaveID		  "0"
 	  Extents		  [1635.0, 868.0]
 	  ZoomFactor		  [2.0338983050847457]
-	  Offset		  [-41.651785714285722, -6.8833333333333542]
-	  SceneRectInView	  [-41.651785714285722, -6.8833333333333542, 803.875, 426.76666666666671]
+	  Offset		  [-41.691666666666663, -6.8833333333333542]
+	  SceneRectInView	  [-41.691666666666663, -6.8833333333333542, 803.875, 426.76666666666671]
 	}
 	Object {
 	  $ObjectID		  7
@@ -301,9 +301,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Apr 30 03:23:50 2021"
-  RTWModifiedTimeStamp	  541652059
-  ModelVersionFormat	  "%<AutoIncrement:1.141>"
+  LastModifiedDate	  "Fri Apr 30 05:51:30 2021"
+  RTWModifiedTimeStamp	  541656573
+  ModelVersionFormat	  "%<AutoIncrement:1.142>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1514,9 +1514,9 @@ Model {
       Ports		      [4, 1]
       Position		      [435, 297, 655, 413]
       ZOrder		      1281
-      LibraryVersion	      "1.10"
+      LibraryVersion	      "1.13"
       SourceBlock	      "mwbs_robotSensors_lib/IMUsensor"
-      SourceType	      ""
+      SourceType	      "IMUsensor"
       SourceProductName	      "Matlab Whole-body Simulator"
       RTWMemSecFuncInitTerm   "Inherit from model"
       RTWMemSecFuncExecute    "Inherit from model"
@@ -1870,36 +1870,38 @@ Model {
       ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
       "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
       "ources','WiredSimulink',true),extmgr.Configuration('Visuals','Time Domain',true,'SerializedDisplays',{struct('Mi"
-      "nYLimReal','-890229035387402920292333333978804246879720000074971879295428459820298603413247304462648940226963873"
-      "822928942348118104967326578630003242850896036837211530324070127457984283214521856960476811265095994452213760.000"
-      "00','MaxYLimReal','432250602220442657102844616485015057893223393413830967908973297528582663291223965624550982649"
-      "9269511127266313181167360989646673190352028056283442675415723253896544198095186962836671580993236496535238968606"
-      "72.00000','YLabelReal','','MinYLimMag','                                                                        "
+      "nYLimReal','-263546203860941156735747252177591358660027512848746796349381289953934335772151036798658612526252226"
+      "290470437065709634193194099697390717011280813521019522701496246092290977927006373865401323606590615940235264.000"
+      "00','MaxYLimReal','248210034493233589787984808355055882196027764852322449509332113144597494937822867784853128480"
+      "9295198701813718227128779241013428827937425871750473171315563882427334675272251111471641289861184266785074131763"
+      "20.00000','YLabelReal','','MinYLimMag','                                                                        "
       "                                                                                                                "
-      "                     0.00000','MaxYLimMag','89022903538740292029233333397880424687972000007497187929542845982029"
-      "8603413247304462648940226963873822928942348118104967326578630003242850896036837211530324070127457984283214521856"
-      "960476811265095994452213760.00000','LegendVisibility','off','XGrid',true,'YGrid',true,'PlotMagPhase',false,'Axes"
-      "Color',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.06666"
-      "66666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.8313"
-      "72549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686"
-      " 0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{}},'UserDefinedChannelNames',{{}},'NumLines"
-      "',12,'LineNames',{{'IMUsensor:1','IMUsensor:2','IMUsensor:3','IMUsensor:4','IMUsensor:5','IMUsensor:6','IMUsenso"
-      "r:7','IMUsensor:8','IMUsensor:9','IMUsensor:10','IMUsensor:11','IMUsensor:12'}},'ShowContent',true,'Placement',1"
-      ")},'DisplayPropertyDefaults',struct('MinYLimReal','-890229035387402920292333333978804246879720000074971879295428"
-      "4598202986034132473044626489402269638738229289423481181049673265786300032428508960368372115303240701274579842832"
-      "14521856960476811265095994452213760.00000','MaxYLimReal','432250602220442657102844616485015057893223393413830967"
-      "9089732975285826632912239656245509826499269511127266313181167360989646673190352028056283442675415723253896544198"
-      "09518696283667158099323649653523896860672.00000','YLabelReal','','MinYLimMag','                                 "
+      "                     0.00000','MaxYLimMag','26354620386094115673574725217759135866002751284874679634938128995393"
+      "4335772151036798658612526252226290470437065709634193194099697390717011280813521019522701496246092290977927006373"
+      "865401323606590615940235264.00000','LegendVisibility','On','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesC"
+      "olor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.066666"
+      "6666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.83137"
+      "2549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 "
+      "0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{struct('Visible','off'),struct('Visible','of"
+      "f'),struct('Visible','off'),struct('Visible','off'),struct('Visible','off'),struct('Visible','off'),struct('Visi"
+      "ble','off'),struct('Visible','off'),struct('Visible','off'),struct('Visible','on'),struct('Visible','on'),struct"
+      "('Visible','on')}},'UserDefinedChannelNames',{{}},'NumLines',12,'LineNames',{{'IMUsensor:1','IMUsensor:2','IMUse"
+      "nsor:3','IMUsensor:4','IMUsensor:5','IMUsensor:6','IMUsensor:7','IMUsensor:8','IMUsensor:9','IMUsensor:10','IMUs"
+      "ensor:11','IMUsensor:12'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','-2"
+      "6354620386094115673574725217759135866002751284874679634938128995393433577215103679865861252625222629047043706570"
+      "9634193194099697390717011280813521019522701496246092290977927006373865401323606590615940235264.00000','MaxYLimRe"
+      "al','24821003449323358978798480835505588219602776485232244950933211314459749493782286778485312848092951987018137"
+      "1822712877924101342882793742587175047317131556388242733467527225111147164128986118426678507413176320.00000','YLa"
+      "belReal','','MinYLimMag','                                                                                      "
       "                                                                                                                "
-      "                                                            0.00000','MaxYLimMag','89022903538740292029233333397"
-      "8804246879720000074971879295428459820298603413247304462648940226963873822928942348118104967326578630003242850896"
-      "036837211530324070127457984283214521856960476811265095994452213760.00000','LegendVisibility','off','XGrid',true,"
-      "'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686"
-      "274509803922],'ColorOrder',[0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;1 1 0.06"
-      "66666666666667;0.717647058823529 0.274509803921569 1;0.392156862745098 0.831372549019608 0.0745098039215686;0.05"
-      "88235294117647 1 1;1 0.0745098039215686 0.650980392156863])),extmgr.Configuration('Tools','Plot Navigation',true"
-      ",'PreviousAutoscale','XY'),extmgr.Configuration('Tools','Measurements',true,'Version','2020b')),'Version','2020b"
-      "','Position',[45 1 1748 1024])"
+      "       0.00000','MaxYLimMag','2635462038609411567357472521775913586600275128487467963493812899539343357721510367"
+      "9865861252625222629047043706570963419319409969739071701128081352101952270149624609229097792700637386540132360659"
+      "0615940235264.00000','LegendVisibility','On','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],"
+      "'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.62352"
+      "9411764706 1;1 0.411764705882353 0.16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0"
+      ".392156862745098 0.831372549019608 0.0745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156"
+      "863])),extmgr.Configuration('Tools','Plot Navigation',true,'PreviousAutoscale','XY'),extmgr.Configuration('Tools"
+      "','Measurements',true,'Version','2020b')),'Version','2020b','Position',[45 1 1748 1024])"
       NumInputPorts	      "1"
       Floating		      off
     }
