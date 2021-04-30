@@ -29,16 +29,16 @@ classdef IMUsensorProc < matlab.System
             % Perform one-time calculations, such as computing constants
         end
 
-        function [imuOut,w_omega,w_linAcc,w_rollPitchYaw] = stepImpl(obj,w_J_imu,w_H_imu,nu,nudot)
+        function [imuOut,w_omega,w_linAcc,w_rollPitchYaw] = stepImpl(obj,Jimu,dotJimuNu,w_H_imu,nu,nudot)
             % Implement algorithm. Calculate y as a function of inputs and discrete states.
             
             % Gyroscope measurements
-            w_imuVel = w_J_imu*nu;
-            w_omega = w_imuVel(1:3);
+            w_imuVel = Jimu*nu;
+            w_omega = w_imuVel(4:6);
             
             % Accelerometer measurements
-            w_imuAcc = w_J_imu*nudot;
-            w_linAcc = w_imuAcc(4:6);
+            w_imuAcc = Jimu*nudot + dotJimuNu;
+            w_linAcc = w_imuAcc(1:3);
             
             % Euler angles estimation
             R = mwbs.State.H2Rp(w_H_imu);
