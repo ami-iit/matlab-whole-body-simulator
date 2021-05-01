@@ -27,11 +27,11 @@ classdef IMUsensorProc < matlab.System
     %   [roll,pitch,yaw,accx,accy,accz,omegax,omegay,omegaz,0,0,0]'.
     %   
     % Parameters:
-    %   - Frame name: the name of the IMU frame. It should be specified in the URDF model.
+    %   - GRAVITY_VECTOR: [3x1] [m/s^2] gravity vector retrieved from the closest ConfigIm block.
 
     % Public, tunable properties
-    properties
-
+    properties (Nontunable)
+        GRAVITY_VECTOR;
     end
 
     properties(DiscreteState)
@@ -51,16 +51,18 @@ classdef IMUsensorProc < matlab.System
         function [imuOut,w_omega,w_linAcc,w_rollPitchYaw] = stepImpl(obj,Jimu,JimuDotNu,w_H_imu,nu,nudot)
             % Implement algorithm. Calculate y as a function of inputs and discrete states.
             
+            % Sensor frame orientation
+            R = mwbs.State.H2Rp(w_H_imu);
+            
             % Gyroscope measurements
             w_imuVel = Jimu*nu;
-            w_omega = w_imuVel(4:6);
+            w_omega = R'*w_imuVel(4:6);
             
             % Accelerometer measurements
             w_imuAcc = Jimu*nudot + JimuDotNu;
-            w_linAcc = w_imuAcc(1:3);
+            w_linAcc = R'*(w_imuAcc(1:3)-obj.GRAVITY_VECTOR);
             
             % Euler angles estimation
-            R = mwbs.State.H2Rp(w_H_imu);
             w_rollPitchYaw = wbc.rollPitchYawFromRotation(R);
             
             % composite sensor output
