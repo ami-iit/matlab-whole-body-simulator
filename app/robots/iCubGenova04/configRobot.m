@@ -63,6 +63,7 @@ robot_config.SIMULATE_MOTOR_REFLECTED_INERTIA = true;
 
 % Robot frames list
 Frames.BASE = 'root_link';
+Frames.IMU = 'imu_frame';
 Frames.COM = 'com';
 Frames.LEFT_FOOT = 'l_sole';
 Frames.RIGHT_FOOT = 'r_sole';

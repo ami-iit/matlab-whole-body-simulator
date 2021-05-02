@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.117"
+    ComputedModelVersion    "1.142"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -20,7 +20,7 @@ Model {
     IsArchitectureModel	    0
     IsAUTOSARArchitectureModel 0
     NumParameterArguments   0
-    NumExternalFileReferences 2
+    NumExternalFileReferences 4
     ExternalFileReference {
       Reference		      "WBToolboxLibrary/Utilities/Configuration"
       Path		      "test_matlab_system_2020b/Configuration"
@@ -28,7 +28,19 @@ Model {
       Type		      "LIBRARY_BLOCK"
     }
     ExternalFileReference {
-      Reference		      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
+      Reference		      "mwbs_robotSensors_lib/IMUsensor"
+      Path		      "test_matlab_system_2020b/IMUsensor"
+      SID		      "238"
+      Type		      "LIBRARY_BLOCK"
+    }
+    ExternalFileReference {
+      Reference		      "mwbs_visualizers_lib/RobotVisualizer"
+      Path		      "test_matlab_system_2020b/Robot visualizer/RobotVisualizer"
+      SID		      "213"
+      Type		      "LIBRARY_BLOCK"
+    }
+    ExternalFileReference {
+      Reference		      "mwbs_robotDynamicsWithContacts_lib/RobotDynWithContacts"
       Path		      "test_matlab_system_2020b/RobotDynWithContacts"
       SID		      "197"
       Type		      "LIBRARY_BLOCK"
@@ -75,7 +87,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [40.0, 23.0, 1752.0, 1097.0]
+      Location		      [43.0, 23.0, 1749.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -95,42 +107,64 @@ Model {
       }
       Array {
 	Type			"Simulink.EditorInfo"
-	Dimension		10
+	Dimension		12
 	Object {
 	  $ObjectID		  6
 	  IsActive		  [1]
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1638.0, 868.0]
-	  ZoomFactor		  [2.41726618705036]
-	  Offset		  [-81.3125, -5.7916666666666572]
-	  SceneRectInView	  [-81.3125, -5.7916666666666572, 677.625, 359.08333333333331]
+	  Extents		  [1635.0, 868.0]
+	  ZoomFactor		  [2.0338983050847457]
+	  Offset		  [-41.691666666666663, -6.8833333333333542]
+	  SceneRectInView	  [-41.691666666666663, -6.8833333333333542, 803.875, 426.76666666666671]
 	}
 	Object {
 	  $ObjectID		  7
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "197"
-	  Extents		  [1633.0, 868.0]
-	  ZoomFactor		  [1.1290322580645162]
-	  Offset		  [34.3377232142858, -192.39999999999998]
-	  SceneRectInView	  [34.3377232142858, -192.39999999999998, 1446.3714285714284, 768.8]
+	  LoadSaveID		  "238"
+	  Extents		  [1635.0, 868.0]
+	  ZoomFactor		  [2.1756642409883229]
+	  Offset		  [-327.97387892812696, -202.97930927193528]
+	  SceneRectInView	  [-327.97387892812696, -202.97930927193528, 751.49463285625393, 398.95861854387056]
 	}
 	Object {
 	  $ObjectID		  8
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "133"
-	  Extents		  [1633.0, 868.0]
-	  ZoomFactor		  [4.2997931164190337]
-	  Offset		  [605.10714285714289, 125.56491120636866]
-	  SceneRectInView	  [605.10714285714289, 125.56491120636866, 379.78571428571422, 201.87017758726267]
+	  LoadSaveID		  "218"
+	  Extents		  [1634.0, 868.0]
+	  ZoomFactor		  [2.4384133611691023]
+	  Offset		  [-247.28050085616439, -126.48458904109589]
+	  SceneRectInView	  [-247.28050085616439, -126.48458904109589, 670.10787671232879, 355.96917808219177]
 	}
 	Object {
 	  $ObjectID		  9
+	  IsActive		  [0]
+	  IsTabbed		  [0]
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "197"
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [1.1290322580645162]
+	  Offset		  [32.5662946428572, -192.39999999999998]
+	  SceneRectInView	  [32.5662946428572, -192.39999999999998, 1449.9142857142856, 768.8]
+	}
+	Object {
+	  $ObjectID		  10
+	  IsActive		  [0]
+	  IsTabbed		  [0]
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "133"
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [3.7858823529411763]
+	  Offset		  [626.30205096333123, 107.86357986326911]
+	  SceneRectInView	  [626.30205096333123, 107.86357986326911, 432.39589807333749, 229.27284027346178]
+	}
+	Object {
+	  $ObjectID		  11
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -141,7 +175,7 @@ Model {
 	  SceneRectInView	  [415.74422807835822, -287.83517957089555, 683.55841884328356, 362.67035914179104]
 	}
 	Object {
-	  $ObjectID		  10
+	  $ObjectID		  12
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -152,7 +186,7 @@ Model {
 	  SceneRectInView	  [-679.26190732758619, -350.29141246684355, 2417.0, 1174.0]
 	}
 	Object {
-	  $ObjectID		  11
+	  $ObjectID		  13
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -163,7 +197,7 @@ Model {
 	  SceneRectInView	  [-875.24486488374964, -1180.5000000000002, 4028.3333333333335, 1956.6666666666667]
 	}
 	Object {
-	  $ObjectID		  12
+	  $ObjectID		  14
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -174,7 +208,7 @@ Model {
 	  SceneRectInView	  [212.06699685013245, -273.33879724801062, 1103.8681821949604, 536.17759449602124]
 	}
 	Object {
-	  $ObjectID		  13
+	  $ObjectID		  15
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -185,7 +219,7 @@ Model {
 	  SceneRectInView	  [-228.72071607519595, -136.92917420132613, 662.28571428571433, 670.85714285714289]
 	}
 	Object {
-	  $ObjectID		  14
+	  $ObjectID		  16
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -196,7 +230,7 @@ Model {
 	  SceneRectInView	  [-601.546875, -273.5, 2417.0, 1174.0]
 	}
 	Object {
-	  $ObjectID		  15
+	  $ObjectID		  17
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -212,7 +246,7 @@ Model {
 	Type			"Simulink.DockComponentInfo"
 	Dimension		2
 	Object {
-	  $ObjectID		  16
+	  $ObjectID		  18
 	  Type			  "Simulink:Editor:ReferencedFiles"
 	  ID			  "Referenced Files"
 	  Visible		  [0]
@@ -225,7 +259,7 @@ Model {
 	  Minimized		  "Unset"
 	}
 	Object {
-	  $ObjectID		  17
+	  $ObjectID		  19
 	  Type			  "GLUE2:PropertyInspector"
 	  ID			  "Property Inspector"
 	  Visible		  [1]
@@ -244,7 +278,7 @@ Model {
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAeQAAA6EAAABrAP////sAAABgAFMAaQBtAHUAb"
       "ABpAG4AawA6AEUAZABpAHQAbwByADoAUgBlAGYAZQByAGUAbgBjAGUAZABGAGkAbABlAHMALwBSAGUAZgBlAHIAZQBuAGMAZQBkACAARgBpAGwAZ"
       "QBzAAAAAAD/////AAAAjwD///8AAAABAAAAAAAAAAD8AgAAAAH7AAAAVABHAEwAVQBFADIAOgBQAHIAbwBwAGUAcgB0AHkASQBuAHMAcABlAGMAd"
-      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGjAAAA6EAAAABAAAAAgAAAAEAAAAC/"
+      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGiQAAA6EAAAABAAAAAgAAAAEAAAAC/"
       "AAAAAMAAAAAAAAAAQAAADYAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEwAZQBmAHQDAAAAAP////8AAAAAA"
       "AAAAAAAAAEAAAABAAAAOABjAG8AbABsAGEAcABzAGkAYgBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAUgBpAGcAaAB0AwAAAAD/////AAAAA"
       "AAAAAAAAAADAAAAAQAAADoAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEIAbwB0AHQAbwBtAAAAAAD/////A"
@@ -267,14 +301,14 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Tue Apr 20 03:54:18 2021"
-  RTWModifiedTimeStamp	  540791560
-  ModelVersionFormat	  "%<AutoIncrement:1.117>"
+  LastModifiedDate	  "Fri Apr 30 05:51:30 2021"
+  RTWModifiedTimeStamp	  541656573
+  ModelVersionFormat	  "%<AutoIncrement:1.142>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
   WideLines		  off
-  ShowLineDimensions	  off
+  ShowLineDimensions	  on
   ShowPortDataTypes	  off
   ShowAllPropagatedSignalLabels	off
   PortDataTypeDisplayFormat "AliasTypeOnly"
@@ -326,7 +360,7 @@ Model {
   TryForcingSFcnDF	  off
   Object {
     $PropName		    "DataLoggingOverride"
-    $ObjectID		    18
+    $ObjectID		    20
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
     model_		    "test_matlab_system_2020b"
     overrideMode_	    [0.0]
@@ -373,7 +407,7 @@ Model {
     Type		    "Handle"
     Dimension		    1
     Simulink.ConfigSet {
-      $ObjectID		      19
+      $ObjectID		      21
       Version		      "20.1.0"
       DisabledProps	      []
       Description	      ""
@@ -381,7 +415,7 @@ Model {
 	Type			"Handle"
 	Dimension		10
 	Simulink.SolverCC {
-	  $ObjectID		  20
+	  $ObjectID		  22
 	  Version		  "20.1.0"
 	  DisabledProps		  []
 	  Description		  ""
@@ -423,7 +457,7 @@ Model {
 	  ODENIntegrationMethod	  "ode3"
 	}
 	Simulink.DataIOCC {
-	  $ObjectID		  21
+	  $ObjectID		  23
 	  Version		  "20.1.0"
 	  DisabledProps		  []
 	  Description		  ""
@@ -465,7 +499,7 @@ Model {
 	  LoggingIntervals	  "[-inf, inf]"
 	}
 	Simulink.OptimizationCC {
-	  $ObjectID		  22
+	  $ObjectID		  24
 	  Version		  "20.1.0"
 	  Array {
 	    Type		    "Cell"
@@ -539,7 +573,7 @@ Model {
 	  EfficientTunableParamExpr off
 	}
 	Simulink.DebuggingCC {
-	  $ObjectID		  23
+	  $ObjectID		  25
 	  Version		  "20.1.0"
 	  Array {
 	    Type		    "Cell"
@@ -662,7 +696,7 @@ Model {
 	  VariantConditionMismatch "none"
 	}
 	Simulink.HardwareCC {
-	  $ObjectID		  24
+	  $ObjectID		  26
 	  Version		  "20.1.0"
 	  DisabledProps		  []
 	  Description		  ""
@@ -712,7 +746,7 @@ Model {
 	  HardwareBoardFeatureSet "EmbeddedCoderHSP"
 	}
 	Simulink.ModelReferenceCC {
-	  $ObjectID		  25
+	  $ObjectID		  27
 	  Version		  "20.1.0"
 	  DisabledProps		  []
 	  Description		  ""
@@ -732,7 +766,7 @@ Model {
 	  SupportModelReferenceSimTargetCustomCode off
 	}
 	Simulink.SFSimCC {
-	  $ObjectID		  26
+	  $ObjectID		  28
 	  Version		  "20.1.0"
 	  DisabledProps		  []
 	  Description		  ""
@@ -776,7 +810,7 @@ Model {
 	}
 	Simulink.RTWCC {
 	  $BackupClass		  "Simulink.RTWCC"
-	  $ObjectID		  27
+	  $ObjectID		  29
 	  Version		  "20.1.0"
 	  Array {
 	    Type		    "Cell"
@@ -882,7 +916,7 @@ Model {
 	    Type		    "Handle"
 	    Dimension		    2
 	    Simulink.CodeAppCC {
-	      $ObjectID		      28
+	      $ObjectID		      30
 	      Version		      "20.1.0"
 	      Array {
 		Type			"Cell"
@@ -972,7 +1006,7 @@ Model {
 	    }
 	    Simulink.GRTTargetCC {
 	      $BackupClass	      "Simulink.TargetCC"
-	      $ObjectID		      29
+	      $ObjectID		      31
 	      Version		      "20.1.0"
 	      Array {
 		Type			"Cell"
@@ -1076,7 +1110,7 @@ Model {
 	  }
 	}
 	SlCovCC.ConfigComp {
-	  $ObjectID		  30
+	  $ObjectID		  32
 	  Version		  "20.1.0"
 	  DisabledProps		  []
 	  Description		  "Simulink Coverage Configuration Component"
@@ -1115,7 +1149,7 @@ Model {
 	  CovMcdcMode		  "Masking"
 	}
 	hdlcoderui.hdlcc {
-	  $ObjectID		  31
+	  $ObjectID		  33
 	  Version		  "20.1.0"
 	  DisabledProps		  []
 	  Description		  "HDL Coder custom configuration component"
@@ -1140,11 +1174,11 @@ Model {
   }
   Simulink.ConfigSet {
     $PropName		    "ActiveConfigurationSet"
-    $ObjectID		    19
+    $ObjectID		    21
   }
   Object {
     $PropName		    "DataTransfer"
-    $ObjectID		    32
+    $ObjectID		    34
     $ClassName		    "Simulink.GlobalDataTransfer"
     DefaultTransitionBetweenSyncTasks "Ensure deterministic transfer (maximum delay)"
     DefaultTransitionBetweenAsyncTasks "Ensure data integrity only"
@@ -1270,10 +1304,6 @@ Model {
       Interpolate	      on
     }
     Block {
-      BlockType		      MATLABSystem
-      System		      "<Enter System Class Name>"
-    }
-    Block {
       BlockType		      Outport
       Port		      "1"
       IconDisplay	      "Port number"
@@ -1303,6 +1333,10 @@ Model {
       SFunctionModules	      "''"
       PortCounts	      "[]"
       MultiThreadCoSim	      "auto"
+    }
+    Block {
+      BlockType		      Scope
+      DefaultConfigurationName "Simulink.scopes.TimeScopeBlockCfg"
     }
     Block {
       BlockType		      SubSystem
@@ -1351,7 +1385,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system_2020b"
-    Location		    [40, 23, 1792, 1120]
+    Location		    [43, 23, 1792, 1120]
     SystemRect		    [0.000000, 0.000000, 0.000000, 0.000000]
     Open		    on
     PortBlocksUseCompactNotation off
@@ -1367,9 +1401,9 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "242"
+    ZoomFactor		    "203"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "212"
+    SIDHighWatermark	    "238"
     SimulinkSubDomain	    "Simulink"
     Block {
       BlockType		      BusSelector
@@ -1394,11 +1428,11 @@ Model {
       BlockType		      BusSelector
       Name		      "Bus\nSelector1"
       SID		      "199"
-      Ports		      [1, 2]
-      Position		      [340, 306, 345, 344]
+      Ports		      [1, 4]
+      Position		      [365, 298, 370, 412]
       ZOrder		      1255
       ShowName		      off
-      OutputSignals	      "w_H_b,s"
+      OutputSignals	      "w_H_b,s,nu,nuDot"
       Port {
 	PortNumber		1
 	Name			"<w_H_b>"
@@ -1406,6 +1440,14 @@ Model {
       Port {
 	PortNumber		2
 	Name			"<s>"
+      }
+      Port {
+	PortNumber		3
+	Name			"<nu>"
+      }
+      Port {
+	PortNumber		4
+	Name			"<nuDot>"
       }
     }
     Block {
@@ -1464,6 +1506,25 @@ Model {
       InputPortMap	      "u0"
       DelayLength	      "1"
       InitialCondition	      "zeros(robot_config.N_DOF,1)"
+    }
+    Block {
+      BlockType		      Reference
+      Name		      "IMUsensor"
+      SID		      "238"
+      Ports		      [4, 1]
+      Position		      [435, 297, 655, 413]
+      ZOrder		      1281
+      LibraryVersion	      "1.13"
+      SourceBlock	      "mwbs_robotSensors_lib/IMUsensor"
+      SourceType	      "IMUsensor"
+      SourceProductName	      "Matlab Whole-body Simulator"
+      RTWMemSecFuncInitTerm   "Inherit from model"
+      RTWMemSecFuncExecute    "Inherit from model"
+      RTWMemSecDataConstants  "Inherit from model"
+      RTWMemSecDataInternal   "Inherit from model"
+      RTWMemSecDataParameters "Inherit from model"
+      ContentPreviewEnabled   on
+      frameName		      "robot_config.robotFrames.IMU"
     }
     Block {
       BlockType		      SubSystem
@@ -1661,13 +1722,13 @@ Model {
       RequestExecContextInheritance off
       Object {
 	$PropName		"MaskObject"
-	$ObjectID		33
+	$ObjectID		35
 	$ClassName		"Simulink.Mask"
 	RunInitForIconRedraw	"off"
       }
       System {
 	Name			"Robot visualizer"
-	Location		[45, 23, 1792, 1120]
+	Location		[41, 23, 1792, 1120]
 	SystemRect		[0.000000, 0.000000, 0.000000, 0.000000]
 	Open			off
 	PortBlocksUseCompactNotation off
@@ -1683,7 +1744,7 @@ Model {
 	TiledPaperMargins	[0.500000, 0.500000, 0.500000, 0.500000]
 	TiledPageScale		1
 	ShowPageBoundaries	off
-	ZoomFactor		"430"
+	ZoomFactor		"379"
 	SimulinkSubDomain	"Simulink"
 	Block {
 	  BlockType		  Inport
@@ -1718,16 +1779,16 @@ Model {
 	  }
 	}
 	Block {
-	  BlockType		  MATLABSystem
-	  Name			  "MATLAB System"
-	  SID			  "144"
+	  BlockType		  Reference
+	  Name			  "RobotVisualizer"
+	  SID			  "213"
 	  Ports			  [4]
-	  Position		  [845, 135, 960, 310]
-	  ZOrder		  1132
-	  System		  "Visualizer"
-	  MaskType		  "Visualizer"
-	  MaskDisplay		  "disp(['Robot' char(10) 'Visualizer']);\nport_label('input',1,'world_H_base');\nport_label('input',2"
-	  ",'base_velocity');\nport_label('input',3,'joints_positions');\nport_label('input',4,'joints_velocity');\n"
+	  Position		  [850, 127, 1055, 318]
+	  ZOrder		  1134
+	  LibraryVersion	  "1.4"
+	  SourceBlock		  "mwbs_visualizers_lib/RobotVisualizer"
+	  SourceType		  "mwbs.Visualizers.robotVisualizer.RobotVisualizer"
+	  SourceProductName	  "Matlab Whole-body Simulator"
 	  config		  "confVisualizer"
 	  SimulateUsing		  "Interpreted execution"
 	}
@@ -1740,38 +1801,38 @@ Model {
 	}
 	Line {
 	  Name			  "<w_H_b>"
-	  ZOrder		  2
+	  ZOrder		  7
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  1
-	  DstBlock		  "MATLAB System"
+	  DstBlock		  "RobotVisualizer"
 	  DstPort		  1
 	}
 	Line {
 	  Name			  "<joints_position>"
-	  ZOrder		  3
+	  ZOrder		  8
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  3
-	  DstBlock		  "MATLAB System"
+	  DstBlock		  "RobotVisualizer"
 	  DstPort		  3
 	}
 	Line {
 	  Name			  "<basePose_dot>"
-	  ZOrder		  4
+	  ZOrder		  6
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  2
-	  DstBlock		  "MATLAB System"
+	  DstBlock		  "RobotVisualizer"
 	  DstPort		  2
 	}
 	Line {
 	  Name			  "<joints_velocity>"
-	  ZOrder		  5
+	  ZOrder		  9
 	  Labels		  [0, 0]
 	  SrcBlock		  "Bus\nSelector"
 	  SrcPort		  4
-	  DstBlock		  "MATLAB System"
+	  DstBlock		  "RobotVisualizer"
 	  DstPort		  4
 	}
       }
@@ -1785,10 +1846,10 @@ Model {
       ZOrder		      1252
       ForegroundColor	      "red"
       BackgroundColor	      "yellow"
-      LibraryVersion	      "3.1"
-      SourceBlock	      "robotDynamicsWithContacts_lib/RobotDynWithContacts"
+      LibraryVersion	      "3.3"
+      SourceBlock	      "mwbs_robotDynamicsWithContacts_lib/RobotDynWithContacts"
       SourceType	      ""
-      SourceProductName	      "RobotDynamicsWithContacts"
+      SourceProductName	      "Matlab Whole-body Simulator"
       RTWMemSecFuncInitTerm   "Inherit from model"
       RTWMemSecFuncExecute    "Inherit from model"
       RTWMemSecDataConstants  "Inherit from model"
@@ -1800,18 +1861,49 @@ Model {
       physics_config	      "physics_config"
     }
     Block {
-      BlockType		      Terminator
-      Name		      "Terminator"
-      SID		      "203"
-      Position		      [385, 305, 405, 325]
-      ZOrder		      1259
-    }
-    Block {
-      BlockType		      Terminator
-      Name		      "Terminator1"
-      SID		      "204"
-      Position		      [385, 325, 405, 345]
-      ZOrder		      1260
+      BlockType		      Scope
+      Name		      "Scope"
+      SID		      "235"
+      Ports		      [1]
+      Position		      [690, 339, 720, 371]
+      ZOrder		      1280
+      ScopeSpecificationString "Simulink.scopes.TimeScopeBlockCfg('CurrentConfiguration', extmgr.ConfigurationSet(extm"
+      "gr.Configuration('Core','General UI',true),extmgr.Configuration('Core','Source UI',true),extmgr.Configuration('S"
+      "ources','WiredSimulink',true),extmgr.Configuration('Visuals','Time Domain',true,'SerializedDisplays',{struct('Mi"
+      "nYLimReal','-263546203860941156735747252177591358660027512848746796349381289953934335772151036798658612526252226"
+      "290470437065709634193194099697390717011280813521019522701496246092290977927006373865401323606590615940235264.000"
+      "00','MaxYLimReal','248210034493233589787984808355055882196027764852322449509332113144597494937822867784853128480"
+      "9295198701813718227128779241013428827937425871750473171315563882427334675272251111471641289861184266785074131763"
+      "20.00000','YLabelReal','','MinYLimMag','                                                                        "
+      "                                                                                                                "
+      "                     0.00000','MaxYLimMag','26354620386094115673574725217759135866002751284874679634938128995393"
+      "4335772151036798658612526252226290470437065709634193194099697390717011280813521019522701496246092290977927006373"
+      "865401323606590615940235264.00000','LegendVisibility','On','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesC"
+      "olor',[0 0 0],'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[1 1 0.066666"
+      "6666666667;0.0745098039215686 0.623529411764706 1;1 0.411764705882353 0.16078431372549;0.392156862745098 0.83137"
+      "2549019608 0.0745098039215686;0.717647058823529 0.274509803921569 1;0.0588235294117647 1 1;1 0.0745098039215686 "
+      "0.650980392156863],'Title','%<SignalLabel>','LinePropertiesCache',{{struct('Visible','off'),struct('Visible','of"
+      "f'),struct('Visible','off'),struct('Visible','off'),struct('Visible','off'),struct('Visible','off'),struct('Visi"
+      "ble','off'),struct('Visible','off'),struct('Visible','off'),struct('Visible','on'),struct('Visible','on'),struct"
+      "('Visible','on')}},'UserDefinedChannelNames',{{}},'NumLines',12,'LineNames',{{'IMUsensor:1','IMUsensor:2','IMUse"
+      "nsor:3','IMUsensor:4','IMUsensor:5','IMUsensor:6','IMUsensor:7','IMUsensor:8','IMUsensor:9','IMUsensor:10','IMUs"
+      "ensor:11','IMUsensor:12'}},'ShowContent',true,'Placement',1)},'DisplayPropertyDefaults',struct('MinYLimReal','-2"
+      "6354620386094115673574725217759135866002751284874679634938128995393433577215103679865861252625222629047043706570"
+      "9634193194099697390717011280813521019522701496246092290977927006373865401323606590615940235264.00000','MaxYLimRe"
+      "al','24821003449323358978798480835505588219602776485232244950933211314459749493782286778485312848092951987018137"
+      "1822712877924101342882793742587175047317131556388242733467527225111147164128986118426678507413176320.00000','YLa"
+      "belReal','','MinYLimMag','                                                                                      "
+      "                                                                                                                "
+      "       0.00000','MaxYLimMag','2635462038609411567357472521775913586600275128487467963493812899539343357721510367"
+      "9865861252625222629047043706570963419319409969739071701128081352101952270149624609229097792700637386540132360659"
+      "0615940235264.00000','LegendVisibility','On','XGrid',true,'YGrid',true,'PlotMagPhase',false,'AxesColor',[0 0 0],"
+      "'AxesTickColor',[0.686274509803922 0.686274509803922 0.686274509803922],'ColorOrder',[0.0745098039215686 0.62352"
+      "9411764706 1;1 0.411764705882353 0.16078431372549;1 1 0.0666666666666667;0.717647058823529 0.274509803921569 1;0"
+      ".392156862745098 0.831372549019608 0.0745098039215686;0.0588235294117647 1 1;1 0.0745098039215686 0.650980392156"
+      "863])),extmgr.Configuration('Tools','Plot Navigation',true,'PreviousAutoscale','XY'),extmgr.Configuration('Tools"
+      "','Measurements',true,'Version','2020b')),'Version','2020b','Position',[45 1 1748 1024])"
+      NumInputPorts	      "1"
+      Floating		      off
     }
     Line {
       ZOrder		      148
@@ -1897,25 +1989,8 @@ Model {
       ZOrder		      160
       SrcBlock		      "RobotDynWithContacts"
       SrcPort		      4
+      Points		      [28, 0; 0, 30]
       DstBlock		      "Bus\nSelector1"
-      DstPort		      1
-    }
-    Line {
-      Name		      "<s>"
-      ZOrder		      167
-      Labels		      [0, 0]
-      SrcBlock		      "Bus\nSelector1"
-      SrcPort		      2
-      DstBlock		      "Terminator1"
-      DstPort		      1
-    }
-    Line {
-      Name		      "<w_H_b>"
-      ZOrder		      166
-      Labels		      [0, 0]
-      SrcBlock		      "Bus\nSelector1"
-      SrcPort		      1
-      DstBlock		      "Terminator"
       DstPort		      1
     }
     Line {
@@ -1924,6 +1999,49 @@ Model {
       SrcPort		      1
       DstBlock		      "RobotDynWithContacts"
       DstPort		      3
+    }
+    Line {
+      Name		      "<w_H_b>"
+      ZOrder		      190
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector1"
+      SrcPort		      1
+      DstBlock		      "IMUsensor"
+      DstPort		      1
+    }
+    Line {
+      Name		      "<nu>"
+      ZOrder		      189
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector1"
+      SrcPort		      3
+      DstBlock		      "IMUsensor"
+      DstPort		      3
+    }
+    Line {
+      Name		      "<nuDot>"
+      ZOrder		      186
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector1"
+      SrcPort		      4
+      DstBlock		      "IMUsensor"
+      DstPort		      4
+    }
+    Line {
+      Name		      "<s>"
+      ZOrder		      188
+      Labels		      [0, 0]
+      SrcBlock		      "Bus\nSelector1"
+      SrcPort		      2
+      DstBlock		      "IMUsensor"
+      DstPort		      2
+    }
+    Line {
+      ZOrder		      187
+      SrcBlock		      "IMUsensor"
+      SrcPort		      1
+      DstBlock		      "Scope"
+      DstPort		      1
     }
   }
 }
