@@ -6,7 +6,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
         robot_config;
         contact_config;
         physics_config;
-        motorReflectedInertiaFormat = 'vector';
+        motorReflectedInertiaFormat;
         OutputBusName = 'bus_name';
     end
 

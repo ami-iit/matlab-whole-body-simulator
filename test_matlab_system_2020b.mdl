@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.145"
+    ComputedModelVersion    "1.154"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -112,23 +112,23 @@ Model {
 	  $ObjectID		  6
 	  IsActive		  [1]
 	  IsTabbed		  [1]
-	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "197"
+	  ViewObjType		  "SimulinkTopLevel"
+	  LoadSaveID		  "0"
 	  Extents		  [1638.0, 868.0]
-	  ZoomFactor		  [1.1290322580645162]
-	  Offset		  [32.123437500000023, -192.39999999999998]
-	  SceneRectInView	  [32.123437500000023, -192.39999999999998, 1450.8, 768.8]
+	  ZoomFactor		  [1.9041986989946778]
+	  Offset		  [-132.35217391304349, -21.417391304347831]
+	  SceneRectInView	  [-132.35217391304349, -21.417391304347831, 860.204347826087, 455.83478260869566]
 	}
 	Object {
 	  $ObjectID		  7
 	  IsActive		  [0]
 	  IsTabbed		  [0]
-	  ViewObjType		  "SimulinkTopLevel"
-	  LoadSaveID		  "0"
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "197"
 	  Extents		  [1638.0, 868.0]
-	  ZoomFactor		  [1.904141813914048]
-	  Offset		  [-132.3523935547754, -21.424200198037624]
-	  SceneRectInView	  [-132.3523935547754, -21.424200198037624, 860.23004590872267, 455.84840039607525]
+	  ZoomFactor		  [1.1290322580645162]
+	  Offset		  [115.39687500000002, -192.39999999999998]
+	  SceneRectInView	  [115.39687500000002, -192.39999999999998, 1450.8, 768.8]
 	}
 	Object {
 	  $ObjectID		  8
@@ -247,19 +247,6 @@ Model {
 	Dimension		2
 	Object {
 	  $ObjectID		  18
-	  Type			  "GLUE2:PropertyInspector"
-	  ID			  "Property Inspector"
-	  Visible		  [1]
-	  CreateCallback	  ""
-	  UserData		  ""
-	  Floating		  [0]
-	  DockPosition		  "Right"
-	  Width			  [640]
-	  Height		  [480]
-	  Minimized		  "On"
-	}
-	Object {
-	  $ObjectID		  19
 	  Type			  "Simulink:Editor:ReferencedFiles"
 	  ID			  "Referenced Files"
 	  Visible		  [0]
@@ -270,6 +257,19 @@ Model {
 	  Width			  [640]
 	  Height		  [480]
 	  Minimized		  "Unset"
+	}
+	Object {
+	  $ObjectID		  19
+	  Type			  "GLUE2:PropertyInspector"
+	  ID			  "Property Inspector"
+	  Visible		  [1]
+	  CreateCallback	  ""
+	  UserData		  ""
+	  Floating		  [0]
+	  DockPosition		  "Right"
+	  Width			  [640]
+	  Height		  [480]
+	  Minimized		  "On"
 	}
 	PropName		"DockComponentsInfo"
       }
@@ -301,9 +301,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri May 07 03:53:57 2021"
-  RTWModifiedTimeStamp	  542257495
-  ModelVersionFormat	  "%<AutoIncrement:1.145>"
+  LastModifiedDate	  "Fri May 07 10:00:40 2021"
+  RTWModifiedTimeStamp	  542282437
+  ModelVersionFormat	  "%<AutoIncrement:1.154>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1387,7 +1387,7 @@ Model {
     Name		    "test_matlab_system_2020b"
     Location		    [40, 23, 1792, 1120]
     SystemRect		    [0.000000, 0.000000, 0.000000, 0.000000]
-    Open		    off
+    Open		    on
     PortBlocksUseCompactNotation off
     SetExecutionDomain	    off
     ExecutionDomainType	    "Deduce"
@@ -1495,6 +1495,7 @@ Model {
       Position		      [-125, 314, 30, 336]
       ZOrder		      1261
       Value		      "zeros(robot_config.N_DOF,1)"
+      VectorParams1D	      off
     }
     Block {
       BlockType		      Delay
@@ -1846,7 +1847,7 @@ Model {
       ZOrder		      1252
       ForegroundColor	      "red"
       BackgroundColor	      "yellow"
-      LibraryVersion	      "3.13"
+      LibraryVersion	      "3.20"
       SourceBlock	      "mwbs_robotDynamicsWithContacts_lib/RobotDynWithContacts"
       SourceType	      ""
       SourceProductName	      "Matlab Whole-body Simulator"
