@@ -93,7 +93,7 @@ The required commands have been sequenced in a MATLAB script, `app/tools/matlabO
 
 ## :runner: How to use the simulator
 
-1. Connect your controller to the robot block. This block takes as imput the **joints torque**, **motor inertia** and an eventual **generalized external wrench**. It outputs the robot **state**, the contact wrenches **wrench_LFoot** and **wrench_RFoot**, respectively applied to the left and right foot (sole frames), and **kinDynOut**, an output bus exposing all the computed dynamics quantities relevant for debugging or the extension of dynamics computations in external blocks (emulation of an IMU sensor, of pressure sensors on the feet, etc).
+1. Connect your controller to the **RobotDynWithContacts** block. This block takes as imput the **joints torque**, **motor inertia** and an eventual **generalized external wrench**. It outputs the robot **state**, the contact wrenches **wrench_LFoot** and **wrench_RFoot**, respectively applied to the left and right foot (sole frames), and **kinDynOut**, an output bus exposing all the computed dynamics quantities relevant for debugging or the extension of dynamics computations in external blocks (emulation of an IMU sensor, of pressure sensors on the feet, etc).
 2. Select the robot model by setting the environment variable `YARP_ROBOT_NAME` (e.g. `setenv('YARP_ROBOT_NAME','iCubGenova04')`). The available models are:
     | Model description | iCub robot (iCubGenova04) | RRBot from Gazebo |
     | --- | --- | --- |
@@ -101,26 +101,38 @@ The required commands have been sequenced in a MATLAB script, `app/tools/matlabO
     | $YARP_ROBOT_NAME | `'iCubGenova04'` | `'RRbot1'` |
 
 3. Set the configuration parameters `robot_config`, `contact_config` and `physics_config`.
-<img width="1105" alt="RobotDynWithContacts" src="https://user-images.githubusercontent.com/6848872/114416537-13e19680-9bb1-11eb-8948-9fd7c9f8079b.png">
+<img width="1035" alt="image" src="https://user-images.githubusercontent.com/6848872/117595197-742c0f80-b140-11eb-8b7c-85f3274760d9.png">
 
    **Details:**
 || Structure | Field name | Size/Type | Description |
 | --- | --- | --- | --- | --- |
-|<td rowspan="8">robot_config</td>| jointOrder | {1×N_DOF cell} | List of N_DOF "controlled" joints (matches dimension of joint torques input) |
-|                                 |                  meshFilePrefix  | '' | Prefix to be concatenated to the mesh file path specified in the URDF model file (*) |
-|                                 |                        fileName  | 'model.urdf' | File name of the URDF model |
-|                                 |                           N_DOF  | double | - |
-|                                 |                    N_DOF_MATRIX  | [23×23 double] | - |
-|                                 |               initialConditions  | [1×1 struct] | Base pose and velocity. Joint positions and velocities |
-|                                 | SIMULATE_MOTOR_REFLECTED_INERTIA | 1 logical | Activate motor reflected inertia emulation |
-|                                 |                     robotFrames  | [1×1 struct] | Selected reference frames (base, left/right sole) |
-|<td rowspan="3">contact_config</td>|                     foot_print | [3×4 double] | 4 Contact points on one of the feet soles |
-|                                   |             total_num_vertices | Nv | Total number of contact points (Nv=8) |
-|                                   |           friction_coefficient | 1 double | Ground/feet Coulomb friction coefficient $\mu _{xy}$ (F _{\bot} = \mu _{xy} N) |
-|<td rowspan="3">physics_config</td>|                    GRAVITY_ACC | [1x3 double] | Gravity vector (gz = -9.81) |
-|                                   |                      TIME_STEP | 1 double | Simulator sampling time (recommended 1e-03) |
+|<td rowspan="8">robot_config</td>| jointOrder | [1×N_DOF] / cell | List of N_DOF "controlled" joints (matches dimension of joint torques input) |
+|                                 |                  meshFilePrefix  | char | Prefix to be concatenated to the mesh file path specified in the URDF model file (*) |
+|                                 |                        fileName  | char | File name of the URDF model (typically: model.urdf) |
+|                                 |                           N_DOF  | [1x1] double | Robot degrees of freedom |
+|                                 |                    N_DOF_MATRIX  | [23×23] double] | `eye(robot_config.N_DOF)` |
+|                                 |               initialConditions  | [1×1] struct | Base pose and velocity. Joint positions and velocities |
+|                                 | SIMULATE_MOTOR_REFLECTED_INERTIA | [1x1] logical | Activate motor reflected inertia emulation |
+|                                 |                     robotFrames  | [1×1] struct | Selected reference frames (base, left/right sole) |
+|<td rowspan="3">contact_config</td>|                     foot_print | [3×4] double | 4 Contact points on one of the feet soles |
+|                                   |             total_num_vertices | [1x1] double | Total number of contact points (Nv=8) |
+|                                   |           friction_coefficient | [1x1] double | Ground/feet Coulomb friction coefficient $\mu _{xy}$ (F _{\bot} = \mu _{xy} N) |
+|<td rowspan="3">physics_config</td>|                    GRAVITY_ACC | [1x3] double | Gravity vector (gz = -9.81) |
+|                                   |                      TIME_STEP | [1x1] double | Simulator sampling time (recommended 1e-03) |
 
 ### Notes
 (*) Since iDynTree 3.0.0, if meshFilePrefix='', the standard iDynTree workflow of locating the mesh via the `ExternalMesh.getFileLocationOnLocalFileSystem` method is used. The iCub model meshes file tree is compatible with this workflow.
 
-To run and example open and launch `test_matlab_system.mdl`. It also contains a callback to the `init` file that retrieves the needed information.
+4. Set to `vector` or `matrix` the parameter "input motor reflected inertia format" from the pop-up pick-list. The selected format should match the format of the input signal `motorInertias` and respective definition as follows:
+
+<img width="470" alt="image" src="https://user-images.githubusercontent.com/6848872/117595272-adfd1600-b140-11eb-8481-698f7b1773d9.png">
+
+| parameter value | `motorInertias` format | represented quantity |
+| --- | --- | --- |
+| vector | [NDOFx1] | Column vector composed of the diagonal terms of $\Gamma^{-\top} G^{-1} I _m G^{-1} \Gamma^{-1}$ |
+| matrix | [NDOFxNDOF] | Matrix defined by $\Gamma^{-\top} G^{-1} I _m G^{-1} \Gamma^{-1}$ |
+
+The motor inertia reflected on the mass matrix of the articulated system is given by $\Gamma^{-\top} G^{-1} I _m G^{-1} \Gamma^{-1}$, which results in a diagonal matrix in the case of a robot without coupled joints. In such case, we only need to pass to **RobotDynWithContacts** the diagonall terms as a [NDOFx1] column vector. Otherwise, in presence of coupled joints (as in the case of iCub), the coupling matrix $\Gamma$ is not diagonal (the gearbox ratio matrix $G$ is though). The same applies to the term $\Gamma^{-\top} G^{-1} I _m G^{-1} \Gamma^{-1}$, which now does not have only diagonal terms and has to be passed to the block **RobotDynWithContacts** in its full matrix form of dimension [N_DOFxN_DOF].
+
+
+5. To run and example open and launch `test_matlab_system.mdl`. It also contains a callback to the `init` file that retrieves the needed information.
