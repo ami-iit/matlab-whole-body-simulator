@@ -101,7 +101,7 @@ The required commands have been sequenced in a MATLAB script, `app/tools/matlabO
     | $YARP_ROBOT_NAME | `'iCubGenova04'` | `'RRbot1'` |
 
 3. Set the configuration parameters `robot_config`, `contact_config` and `physics_config`.
-<img width="1105" alt="RobotDynWithContacts" src="https://user-images.githubusercontent.com/6848872/114416537-13e19680-9bb1-11eb-8948-9fd7c9f8079b.png">
+<img width="1035" alt="image" src="https://user-images.githubusercontent.com/6848872/117595197-742c0f80-b140-11eb-8b7c-85f3274760d9.png">
 
    **Details:**
 || Structure | Field name | Size/Type | Description |
@@ -124,6 +124,8 @@ The required commands have been sequenced in a MATLAB script, `app/tools/matlabO
 (*) Since iDynTree 3.0.0, if meshFilePrefix='', the standard iDynTree workflow of locating the mesh via the `ExternalMesh.getFileLocationOnLocalFileSystem` method is used. The iCub model meshes file tree is compatible with this workflow.
 
 4. Set to `vector` or `matrix` the parameter "input motor reflected inertia format" from the pop-up pick-list. The selected format should match the format of the input signal `motorInertias` and respective definition as follows:
+
+<img width="470" alt="image" src="https://user-images.githubusercontent.com/6848872/117595272-adfd1600-b140-11eb-8481-698f7b1773d9.png">
 
 | parameter value | `motorInertias` format | represented quantity |
 | --- | --- | --- |
