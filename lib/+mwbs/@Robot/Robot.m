@@ -55,7 +55,7 @@ classdef Robot < handle
             obj.KinDynModel.kinDynComp = obj.KinDynModel.kinDynComp.setRobotState(w_H_b, s, base_pose_dot, s_dot);
         end
 
-        function M = get_mass_matrix(obj,motorInertias)
+        function M = get_mass_matrix(obj,motorInertias,obj_step_block)
             % get_mass_matrix Returns the mass matrix
             % OUTPUT: - M: mass matrix
             [ack,M] = obj.KinDynModel.kinDynComp.getFreeFloatingMassMatrix();
@@ -65,7 +65,7 @@ classdef Robot < handle
 
             % Add the reflected inertia if the feature is activated
             if obj.useMotorReflectedInertias
-                M = M + diag([zeros(6,1);motorInertias]);
+                M = obj_step_block.getFormattedReflectedInertia(M,motorInertias);
             end
         end
 
@@ -109,14 +109,14 @@ classdef Robot < handle
             H_RFOOT = obj.KinDynModel.kinDynComp.getWorldTransformLRfoot('RFoot');
         end
 
-        function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench,motorInertias)
+        function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench,motorInertias,obj_step_block)
             % forward_dynamics Compute forward dynamics
             % \dot{v} = inv{M}(S*tau + generalized_external_forces - h)
             % INPUT: - torque: the joints torque
             %        - generalized_total_wrench: the sum of the external wrenches in the configuration space
             % OUTPUT: - base_pose_ddot: the linear and angular acceleration of the base
             %         - s_ddot: the joints acceleration
-            M = obj.get_mass_matrix(motorInertias);
+            M = obj.get_mass_matrix(motorInertias,obj_step_block);
             h = obj.get_bias_forces();
             ddot = M \ (obj.S * torque + generalized_total_wrench - h);
             base_pose_ddot = ddot(1:6);

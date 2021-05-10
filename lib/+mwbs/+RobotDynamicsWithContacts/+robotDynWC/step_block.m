@@ -6,6 +6,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
         robot_config;
         contact_config;
         physics_config;
+        motorReflectedInertiaFormat;
         OutputBusName = 'bus_name';
     end
 
@@ -33,11 +34,11 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
 
             % computes the contact quantites and the velocity after a possible impact
             [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot);
+                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot,obj);
             % sets the velocity in the state
             obj.state.set_velocity(base_pose_dot, s_dot);
             % compute the robot acceleration
-            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench,motorInertias);
+            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench,motorInertias,obj);
             % integrate the dynamics
             [w_H_b, s, base_pose_dot, s_dot] = obj.state.ode_step(base_pose_ddot, s_ddot);
             % update the robot state
@@ -52,7 +53,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             [kinDynOut.w_H_l_sole    , kinDynOut.w_H_r_sole    ] = obj.robot.get_feet_H();
             [kinDynOut.J_l_sole      , kinDynOut.J_r_sole      ] = obj.robot.get_feet_jacobians();
             [kinDynOut.JDot_l_sole_nu, kinDynOut.JDot_r_sole_nu] = obj.robot.get_feet_JDot_nu();
-            kinDynOut.M = obj.robot.get_mass_matrix(motorInertias);
+            kinDynOut.M = obj.robot.get_mass_matrix(motorInertias,obj);
             kinDynOut.h = obj.robot.get_bias_forces();
             kinDynOut.motorGrpI = zeros(size(s));
             kinDynOut.fc = [wrench_left_foot;wrench_right_foot];
@@ -120,7 +121,19 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
                 'simFunc_getWorldTransformRFoot', ...
                 'simFunc_qpOASES'};
         end
+    end
 
+    methods (Access = ?mwbs.Robot)
+        function Mout = getFormattedReflectedInertia(obj,M,motorInertias)
+            switch obj.motorReflectedInertiaFormat
+                case 'matrix'
+                    Mout = M + blkdiag(zeros(6),motorInertias);
+                case 'vector'
+                    Mout = M + diag([zeros(6,1);motorInertias]);
+                otherwise
+                    Mout = M;
+            end
+        end
     end
 
 end

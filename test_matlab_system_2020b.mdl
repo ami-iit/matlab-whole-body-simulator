@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.142"
+    ComputedModelVersion    "1.154"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -87,7 +87,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [43.0, 23.0, 1749.0, 1097.0]
+      Location		      [40.0, 23.0, 1752.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -114,13 +114,24 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1635.0, 868.0]
-	  ZoomFactor		  [2.0338983050847457]
-	  Offset		  [-41.691666666666663, -6.8833333333333542]
-	  SceneRectInView	  [-41.691666666666663, -6.8833333333333542, 803.875, 426.76666666666671]
+	  Extents		  [1638.0, 868.0]
+	  ZoomFactor		  [1.9041986989946778]
+	  Offset		  [-132.35217391304349, -21.417391304347831]
+	  SceneRectInView	  [-132.35217391304349, -21.417391304347831, 860.204347826087, 455.83478260869566]
 	}
 	Object {
 	  $ObjectID		  7
+	  IsActive		  [0]
+	  IsTabbed		  [0]
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "197"
+	  Extents		  [1638.0, 868.0]
+	  ZoomFactor		  [1.1290322580645162]
+	  Offset		  [115.39687500000002, -192.39999999999998]
+	  SceneRectInView	  [115.39687500000002, -192.39999999999998, 1450.8, 768.8]
+	}
+	Object {
+	  $ObjectID		  8
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -131,7 +142,7 @@ Model {
 	  SceneRectInView	  [-327.97387892812696, -202.97930927193528, 751.49463285625393, 398.95861854387056]
 	}
 	Object {
-	  $ObjectID		  8
+	  $ObjectID		  9
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -140,17 +151,6 @@ Model {
 	  ZoomFactor		  [2.4384133611691023]
 	  Offset		  [-247.28050085616439, -126.48458904109589]
 	  SceneRectInView	  [-247.28050085616439, -126.48458904109589, 670.10787671232879, 355.96917808219177]
-	}
-	Object {
-	  $ObjectID		  9
-	  IsActive		  [0]
-	  IsTabbed		  [0]
-	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "197"
-	  Extents		  [1637.0, 868.0]
-	  ZoomFactor		  [1.1290322580645162]
-	  Offset		  [32.5662946428572, -192.39999999999998]
-	  SceneRectInView	  [32.5662946428572, -192.39999999999998, 1449.9142857142856, 768.8]
 	}
 	Object {
 	  $ObjectID		  10
@@ -278,7 +278,7 @@ Model {
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAeQAAA6EAAABrAP////sAAABgAFMAaQBtAHUAb"
       "ABpAG4AawA6AEUAZABpAHQAbwByADoAUgBlAGYAZQByAGUAbgBjAGUAZABGAGkAbABlAHMALwBSAGUAZgBlAHIAZQBuAGMAZQBkACAARgBpAGwAZ"
       "QBzAAAAAAD/////AAAAjwD///8AAAABAAAAAAAAAAD8AgAAAAH7AAAAVABHAEwAVQBFADIAOgBQAHIAbwBwAGUAcgB0AHkASQBuAHMAcABlAGMAd"
-      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGiQAAA6EAAAABAAAAAgAAAAEAAAAC/"
+      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGjAAAA6EAAAABAAAAAgAAAAEAAAAC/"
       "AAAAAMAAAAAAAAAAQAAADYAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEwAZQBmAHQDAAAAAP////8AAAAAA"
       "AAAAAAAAAEAAAABAAAAOABjAG8AbABsAGEAcABzAGkAYgBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAUgBpAGcAaAB0AwAAAAD/////AAAAA"
       "AAAAAAAAAADAAAAAQAAADoAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEIAbwB0AHQAbwBtAAAAAAD/////A"
@@ -301,9 +301,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri Apr 30 05:51:30 2021"
-  RTWModifiedTimeStamp	  541656573
-  ModelVersionFormat	  "%<AutoIncrement:1.142>"
+  LastModifiedDate	  "Fri May 07 10:00:40 2021"
+  RTWModifiedTimeStamp	  542282437
+  ModelVersionFormat	  "%<AutoIncrement:1.154>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1385,7 +1385,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system_2020b"
-    Location		    [43, 23, 1792, 1120]
+    Location		    [40, 23, 1792, 1120]
     SystemRect		    [0.000000, 0.000000, 0.000000, 0.000000]
     Open		    on
     PortBlocksUseCompactNotation off
@@ -1401,7 +1401,7 @@ Model {
     TiledPaperMargins	    [0.500000, 0.500000, 0.500000, 0.500000]
     TiledPageScale	    1
     ShowPageBoundaries	    off
-    ZoomFactor		    "203"
+    ZoomFactor		    "190"
     ReportName		    "simulink-default.rpt"
     SIDHighWatermark	    "238"
     SimulinkSubDomain	    "Simulink"
@@ -1484,7 +1484,7 @@ Model {
       BlockType		      Constant
       Name		      "Constant1"
       SID		      "140"
-      Position		      [0, 275, 30, 305]
+      Position		      [-125, 279, 30, 301]
       ZOrder		      1236
       Value		      "zeros(robot_config.N_DOF + 6,1)"
     }
@@ -1492,9 +1492,10 @@ Model {
       BlockType		      Constant
       Name		      "Constant2"
       SID		      "205"
-      Position		      [0, 310, 30, 340]
+      Position		      [-125, 314, 30, 336]
       ZOrder		      1261
       Value		      "zeros(robot_config.N_DOF,1)"
+      VectorParams1D	      off
     }
     Block {
       BlockType		      Delay
@@ -1514,7 +1515,7 @@ Model {
       Ports		      [4, 1]
       Position		      [435, 297, 655, 413]
       ZOrder		      1281
-      LibraryVersion	      "1.13"
+      LibraryVersion	      "1.17"
       SourceBlock	      "mwbs_robotSensors_lib/IMUsensor"
       SourceType	      "IMUsensor"
       SourceProductName	      "Matlab Whole-body Simulator"
@@ -1846,7 +1847,7 @@ Model {
       ZOrder		      1252
       ForegroundColor	      "red"
       BackgroundColor	      "yellow"
-      LibraryVersion	      "3.3"
+      LibraryVersion	      "3.20"
       SourceBlock	      "mwbs_robotDynamicsWithContacts_lib/RobotDynWithContacts"
       SourceType	      ""
       SourceProductName	      "Matlab Whole-body Simulator"
@@ -1859,6 +1860,7 @@ Model {
       robot_config	      "robot_config"
       contact_config	      "contact_config"
       physics_config	      "physics_config"
+      motorReflectedInertiaFormat "vector"
     }
     Block {
       BlockType		      Scope
