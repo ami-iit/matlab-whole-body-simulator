@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2021-05-12
+### Added
+
+- Added an alternative repository installation method, implementing fixes for allowing an easier installation of the dependencies from superbuild conda binaries (#20).
+- Add double pendulum model to the simulation framework (#22).
+- Add an installer script for running the simulator in a MATLAB online session (#26).
+- Added another alternative installation method, Making a CMake build system out of this repository (#36), thus enabling its installation with the **robotology-superbuild**.
+- Add visualizers (Robot Visualizer) and sensors libraries (IMUsensor) and integrate them in the test model (#41).
+
+### Changed
+
+- Make a library out of the "Robot" simulator sub-system (#3).
+- Add bus output "KynDynOut" to the simulator block "Robot" interface for exporting the kinematic & dynamic variables (#6).
+- Further refactored the interface and made it more generic with respect to the robot model (#8). This allowed to use the simulator with models other than iCub.
+- Allowed the use of the standard iDynTree workflow for locating the mesh via the `ExternalMesh.getFileLocationOnLocalFileSystem` method (#22), dismissing its definition in the input parameters.
+- Changed the simulator implementation and interface by adding the motors reflected inertia (#9).
+- Add optional format alternative to motor reflected inertia (#44).
+- Replaced the Matlab native QP (quadratic programming) solver `quadprog` by the open source solver qpOASES in the contacts computation (#10 and #15).
+- Replaced the bindings by WBT blocks through Simulink function calls (#15). this allowed to improve significantly the execution speed of the simulator.
+- Improved the documentation (#33).
+
+
 ## [1.0.0] - 2020-09-11
 ### Added
 - This is the first release of the matlab-whole-body-simulators project. A changelog has just been introduced in this release.
