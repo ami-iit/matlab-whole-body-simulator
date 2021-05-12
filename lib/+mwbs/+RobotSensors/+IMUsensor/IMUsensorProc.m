@@ -52,7 +52,7 @@ classdef IMUsensorProc < matlab.System
             % Implement algorithm. Calculate y as a function of inputs and discrete states.
             
             % Sensor frame orientation
-            R = mwbs.State.H2Rp(w_H_imu);
+            R = mwbs.Utils.H2Rp(w_H_imu);
             
             % Gyroscope measurements
             w_imuVel = Jimu*nu;
