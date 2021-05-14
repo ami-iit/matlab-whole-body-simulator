@@ -63,7 +63,7 @@ classdef IMUsensorProc < matlab.System
             w_linAcc = R'*(w_imuAcc(1:3)-obj.GRAVITY_VECTOR);
             
             % Euler angles estimation
-            w_rollPitchYaw = wbc.rollPitchYawFromRotation(R);
+            w_rollPitchYaw = mwbs.Utils.rollPitchYawFromRotation(R);
             
             % composite sensor output
             imuOut = [w_rollPitchYaw; w_linAcc; w_omega; zeros(3,1)];

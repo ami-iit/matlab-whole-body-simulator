@@ -1,4 +1,3 @@
-% Set path to the utility functions and to WBC library
-import wbc.*
-addpath(genpath('./src'));
+% Set path to the libraries sources (in order to be able to open and modify the 'mwbs' libraries
+% source files directly)
 addpath('./lib');

@@ -9,6 +9,6 @@ if n < 1e-6
 end
 
 theta_norm = theta / n;
-angle2R = eye(3) + sin(n) * wbc.skew(theta_norm) + (1 - cos(n)) * wbc.skew(theta_norm) * wbc.skew(theta_norm);
+angle2R = eye(3) + sin(n) * mwbs.Utils.skew(theta_norm) + (1 - cos(n)) * mwbs.Utils.skew(theta_norm) * mwbs.Utils.skew(theta_norm);
 
 end
