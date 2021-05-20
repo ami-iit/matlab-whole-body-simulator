@@ -55,7 +55,7 @@ classdef State < handle
             %         - s: the joints position
             %         - base_pose_ddot: the base pose velocity
             %         - s_ddot: the joints velocity
-            [R, p] = obj.H2Rp(obj.w_H_b);
+            [R, p] = mwbs.Utils.H2Rp(obj.w_H_b);
             p_dot = obj.base_pose_dot(1:3);
             omega = obj.base_pose_dot(4:6);
             p_ddot = base_pose_ddot(1:3);
@@ -63,9 +63,9 @@ classdef State < handle
             p = p + p_dot * obj.dt + p_ddot * obj.dt^2/2;
             % Compute the rotation matrix using the exponential map
             theta = omega * obj.dt + omega_dot * obj.dt^2/2;
-            angle2R = obj.exponential_map(theta);
+            angle2R = mwbs.Utils.exponentialMap(theta);
             R = angle2R * R;
-            w_H_b = obj.Rp2H(R, p);
+            w_H_b = mwbs.Utils.Rp2H(R, p);
             s = obj.s + obj.s_dot * obj.dt + s_ddot * obj.dt^2/2;
             base_pose_dot = obj.base_pose_dot + base_pose_ddot * obj.dt;
             s_dot = obj.s_dot + s_ddot * obj.dt;
@@ -80,7 +80,7 @@ classdef State < handle
             %         - s: the joints position
             %         - base_pose_dot: the base pose velocity
             %         - s_ddot: the joints velocity
-            [R, p] = obj.H2Rp(obj.w_H_b);
+            [R, p] = mwbs.Utils.H2Rp(obj.w_H_b);
             p_dot = obj.base_pose_dot(1:3);
             omega = obj.base_pose_dot(4:6);
             % not useful for now...
@@ -93,10 +93,10 @@ classdef State < handle
             % Compute the rotation matrix using the exponential map
             [~, y] = ode45(@(t, y) omega, [0 obj.dt], zeros(3, 1));
             theta = y(end, 1:end)';
-            angle2R = obj.exponential_map(theta);
+            angle2R = mwbs.Utils.exponentialMap(theta);
             R = angle2R * R;
 
-            w_H_b = obj.Rp2H(R, p);
+            w_H_b = mwbs.Utils.Rp2H(R, p);
             [~, y] = ode45(@(t, y) obj.s_dot, [0 obj.dt], obj.s);
             s = y(end, 1:numel(obj.s))';
 
@@ -110,44 +110,4 @@ classdef State < handle
         end
 
     end
-
-    methods (Static)
-
-        function angle2R = exponential_map(theta)
-            % exponential_map Returns the rotation matrix given the angle theta
-            n = norm(theta);
-
-            if n < 1e-6
-                angle2R = eye(3);
-                return
-            end
-
-            theta_norm = theta / n;
-            angle2R = eye(3) + sin(n) * wbc.skew(theta_norm) + (1 - cos(n)) * wbc.skew(theta_norm) * wbc.skew(theta_norm);
-        end
-
-        function [R, p] = H2Rp(H)
-            % H2Rp Returns the Rotation matrix R and the position vector p from the Homogenous matrix H
-            R = H(1:3, 1:3);
-            p = H(1:3, 4);
-        end
-
-        function H = Rp2H(R, p)
-            % Rp2H Returns the homogenous matrix H from the Rotation matrix R and the position
-            % vector p.
-            
-            % check if det(R) = 1, if not use the SVD to correct the rotation matrix
-            % if abs(det(R) - 1) > 0.05
-            if norm(R' * R - eye(3)) > 5e-3
-                %     error('The rotation matrix is not a anymore a rotation matrix');
-                disp('Making the matrix a rotation one using SVD');
-                [U, ~, V] = svd(R);
-                R = U * V';
-            end
-            
-            H = [R, p; 0, 0, 0, 1];
-        end
-
-    end
-
 end

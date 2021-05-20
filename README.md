@@ -6,90 +6,98 @@ In the simulator the ground is assumed to be flat and the contact forces are com
 ## :hammer: Dependencies
 
 - [Matlab/Simulink 2019b](https://it.mathworks.com/products/matlab.html)
-- [YARP](https://github.com/robotology/yarp) & [yarp-matlab-bindings](https://github.com/robotology/yarp-matlab-bindings): Yarp Resource Finder.
+- [yarp-matlab-bindings](https://github.com/robotology/yarp-matlab-bindings): Yarp Resource Finder.
 - [WBToolbox](https://github.com/robotology/wb-toolbox): WB-Toolbox library Simulink blocks.
 - [iDynTree](https://github.com/robotology/idyntree): Dynamic computations (through bindings) and WB-Toolbox library dependency.
 - [qpOASES](https://github.com/robotology-dependencies/qpOASES): QP solver for estimating the contact wrenches.
 - [icub-models](https://github.com/robotology/icub-models): access to the iCub models.
-- [Whole-Body-Controllers](https://github.com/robotology/whole-body-controllers): `+wbc` package helpers for kinematics & dynamics computations.
 
-It is recommended to install these dependencies using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild) resources:
-- Either installing the full superbuild from source.
-- Either installing the required binary packages derived from the above listed dependencies, using the [miniforge conda distribution](https://github.com/conda-forge/miniforge) package manager, from the robotology channel.
+## :floppy_disk: Binary Installation
 
-## :floppy_disk: Installing the dependencies through the robotology superbuild source
+This section is for users wishing to run an example showcase of the library or integrate the library in a wider Simulink model they are implementing., it is recommended to:
+- either use the [Conda package manager](https://anaconda.org) for installing directly the `conda` package [`matlab-whole-body-simulator`](https://anaconda.org/robotology/matlab-whole-body-simulator), available since the `conda` build number 8 of the `conda` binaries hosted in the [robotology conda channel](https://anaconda.org/robotology),
+- either use a [one line installer](https://github.com/robotology/robotology-superbuild/blob/master/doc/matlab-one-line-install.md#one-line-installation-of-robotology-matlabsimulink-packages), meant for users not familiar with the `conda` package manager nor [Git](https://git-scm.com/).
 
-- Clone and build the robotology-superbuild following the steps in https://github.com/robotology/robotology-superbuild/blob/master/README.md.
-- `icub-models`, `YARP`: set the profile option `ROBOTOLOGY_ENABLE_CORE`.
-- `iDynTree`, `WBToolbox`, `Whole-Body-Controller`, `qpOASES` and `yarp-matlab-bindings`: set the profile option `ROBOTOLOGY_ENABLE_DYNAMICS` and CMake option  `ROBOTOLOGY_USES_MATLAB`.
+### One Line Installation
 
-**Note 1:** In general, for selecting the profile CMake options according to the sub-projects to install, refer to the table in the section [Profile CMake Options](https://github.com/robotology/robotology-superbuild/blob/master/doc/profiles.md#profile-cmake-options).
-**Note 2:** By setting the profile `ROBOTOLOGY_ENABLE_DYNAMICS`in the superbuild cmake options. The `qpOASES` library will then be installed along with `iDynTree` as an external dependency.
-**Note 3:** Previously, two other optional QP solvers were available: OSQP and the native MATLAB solver `quadprog`. OSQP bindings and `quadprog` are not supported by the Simulink code generation build option in the `step_block` MATLAB System block. For this reason, the `step_block` MATLAB System block uses the qpOASES WBT block through a Simulink function call, and this choice is hardcoded in the class `Contacts`. As soon as the OSQP WBT block is created, it will replace the qpOASES Solver block.
+For users not familiar with the `conda` package manager nor Git version control system, a one line installer is available, that can be downloaded and run from the Matlab command line, without any access to a terminal:
+1. Run Matlab.
+1. In the Matlab command line change the current folder to a directory where you wish to download the one installer script and install all the packages.
+1. Run the following commands:
+```
+websave('install_robotology_packages.m', 'https://raw.githubusercontent.com/robotology/robotology-superbuild/master/scripts/install_robotology_packages.m')
+install_robotology_packages
+robotology_setup
+```
 
-## :floppy_disk: Installing the dependencies from the conda robotology channel
+For testing the installation, run the example as described in [this section](#eyes-checking-the-installation).
 
-1. Install the conda miniforge distribution following https://github.com/robotology/robotology-superbuild/blob/master/doc/install-miniforge.md#linux. Remember to restart your shell session or run `source ~/.bashrc` (`~/.bash_profile` on MacOS) for the `conda init` command to take effect.
+### Binary Installation from the Conda Robotology Channel
+
+If you're familiar with running shell commands in a terminal, handling environment variables, and have a home directory where you can freely install a package manager, you can run the following steps:
+1. If you are not already using the `conda` package manager, install the `conda` miniforge distribution following https://github.com/robotology/robotology-superbuild/blob/master/doc/install-miniforge.md#linux. Remember to restart your shell session or run `source ~/.bashrc` (`~/.bash_profile` on MacOS) for the `conda init` command to take effect.
 2. Install Mamba, create a new environment and install the robotology dependency binaries:
     ```
-    $ conda install mamba
-    $ conda create -n robotologyenv
-    $ conda activate robotologyenv
-    $ mamba install -c robotology yarp yarp-matlab-bindings idyntree qpoases icub-models wb-toolbox whole-body-controllers
+    conda install mamba
+    conda create -n robotologyenv
+    conda activate robotologyenv
+    mamba install -c robotology matlab-whole-body-simulator
     ```
-    To read more about installing robotology-superbuild package binaries refer to https://github.com/robotology/robotology-superbuild/blob/master/doc/conda-forge.md#binary-installation.
-3. Check the MATLABPATH environment variable. It should now have:
+    To read more about installing `robotology` package binaries refer to https://github.com/robotology/robotology-superbuild/blob/master/doc/conda-forge.md#binary-installation.
+3. Check the MATLABPATH environment variable. It should now have...
     ```
     <user-home-dir>/miniforge3/envs/robotologyenv/mex: <user-home-dir>/miniforge3/envs/robotologyenv/share/WBToolbox: <user-home-dir>/miniforge3/envs/robotologyenv/share/WBToolbox/images
     ```
-    Mex libraries:
+    Check the mex and Simulink libraries in the folder `<user-home-dir>/miniforge3/envs/robotologyenv/mex`. It should contain:
     ```
-    $ ls <user-home-dir>/miniforge3/envs/robotologyenv/mex/
+    +iDynTree               BlockFactory.mexmaci64      mwbs_lib.slx
+    +iDynTreeWrappers       BlockFactory.tlc            mwbs_robotDynamicsWithContacts_lib.slx
+    +mwbs                   iDynTreeMEX.mexmaci64       mwbs_robotSensors_lib.slx
+    +yarp.                  yarpMEX.mexmaci64           mwbs_visualizers_lib.slx
+    ```
+4. The `Matla Whole Body Simulator` library, along with the sub-libraries **robotDynamicsWithContacts**, **robotSensors** and **visualizers** should be visible in the Simulink Library Browser. They can be drag and dropped into any open Simulink model.
+<img width="963" alt="image" src="https://user-images.githubusercontent.com/6848872/116485698-1ff57580-a88c-11eb-8856-c4527e00b401.png">
 
-    +iDynTree
-    +iDynTreeWrappers
-    +wbc
-    BlockFactory.mexmaci64
-    BlockFactory.tlc
-    SwigGet.m
-    SwigMem.m
-    SwigRef.m
-    iDynTreeMEX.mexmaci64
-    mesh2tri.m
-    ```
-4. Clone the repository  `matlab-whole-body-simulators`
-    ```
-    $ git clone https://github.com/dic-iit/matlab-whole-body-simulator.git
-    ```
-5. Run matlab in the same conda environment.
-6. Change working directory to the root path of repository `matlab-whole-body-simulators`.
-7. Open and run the model `test_matlab_system_2020b.mdl`.
+For testing the installation, run the example as described in [this section](#eyes-checking-the-installation).
 
-## :floppy_disk: Installing the framework in MATLAB Online environment
+### :cloud: One Line Installation in MATLAB Online Session
 
 This use case is very convenient if a local host with installed MATLAB application and license is not available, or simply if the user wishes to leave his usual working environment unchanged by the package dependencies of this simulator framework.
 
 With a MATLAB account, one can sign in and access to [MATLAB online](https://www.mathworks.com/products/matlab-online.html#connect-to-the-cloud), an online workspace that provides MATLAB and Simulink from any standard web browser. The GUI is practically identical to the one provided by the desktop application.
 
-Once connected, the goal is to follow a procedure similar to the one from [the previous section](https://github.com/dic-iit/matlab-whole-body-simulator/tree/devel#floppy_disk-installing-the-dependencies-from-the-conda-robotology-channel) extensively using the [Robotology](https://anaconda.org/robotology) and the [conda-forge](https://anaconda.org/conda-forge) conda channels.
+The procedure is similar to the [One Line Installation](#one-line-installation) one, except that you run it in the MATLAB online session and the command set is slightly different (refer to [robotology-superbuild/doc/matlab-one-line-install.md](https://github.com/robotology/robotology-superbuild/blob/master/doc/matlab-one-line-install.md#installation-on-matlab-online)).
 
-The steps will slightly differ from the ones in the referenced procedure because of the limitations of the bash provided by the MATLAB online session, as listed below:
-- The session `~/.bashrc` cannot be sourced (or sourcing it won't have any effect), so the **PATH** environment variable shall be set directly.
-- No **Git** tool is available by default, so it has to be installed through **mamba**.
-- any command run on terminal in the original procedure shall be run through the `system` instruction (refer to https://github.com/robotology/robotology-superbuild/pull/652#issuecomment-794027294).
-- Any prompt resulting from those commands is not accessible from MATLAB, so we have to use the automatic "yes" user input (command option `-y`).
+The same example integrating the "YOGA++" controller and the **Matlab Whole-body Simulator simulator** library blocks can be run in MATLAB Online in the same way as described in section [One Line Installation](#one-line-installation).
 
-The required commands have been sequenced in a MATLAB script, `app/tools/matlabOnlineInstaller.m`. Follow the below steps once logged in the MATLAB Online session.
-1. Download and run the installer:
-  ```
-  system('curl -LO https://raw.githubusercontent.com/dic-iit/matlab-whole-body-simulator/featue/install-matlab-online/app/tools/matlabOnlineInstaller.m');
-  run matlabOnlineInstaller.
-  ```
-2. After step 1, you find the `matlab-whole-body-simulator` repository has been downloaded to `/MATLAB Drive/dev/matlab-whole-body-simulator`, further designated as <MATLAB_WB_SIM_SRC>, and its dependencies installed in `$HOME/miniforge3`. Select the robot model among the available ones in `<MATLAB_WB_SIM_SRC>/app/robots` and as described in the next section. For instance, selecting `iCubGenova04` would be done as follows:
-  ```
-  setenv('YARP_ROBOT_NAME','iCubGenova04');
-  ```
-3. Open the test model `<MATLAB_WB_SIM_SRC>/test_matlab_system_2020b.mdl`, and run it. After the compilation is complete, a figure will appear, displaying the robot performing the task driven by the controller used in the test model.
+For testing the installation, run the example as described in [this section](#eyes-checking-the-installation).
+
+## :floppy_disk: Source Installation
+
+This section is for developers wishing to implement new features or fixes in the library **Matlab Whole Body Simulator**. This repository has to be cloned and the modules listed in the [dependencies section](#hammer-dependencies) need to be installed.
+
+It is recommended to follow one of the two procedures using the [robotology-superbuild](https://github.com/robotology/robotology-superbuild) resources:
+- Get the `matlab-whole-body-simulators` repository and the dependencies by installing the full superbuild from source.
+- clone the `matlab-whole-body-simulators` repository, then install the dependency binary packages from the [conda robotology channel](https://anaconda.org/robotology)using the [miniforge conda distribution](https://github.com/conda-forge/miniforge) package manager.
+
+### [Source Installation using the full superbuild installation from source](doc/source-installation-using-the-full-superbuild-installation-from-source.md).
+
+### [Source Installation using the robotology conda packages](doc/source-installation-using-the-robotology-conda-packages.md).
+
+For testing the installation, run the example as described in [this section](#eyes-checking-the-installation).
+
+
+## :eyes: Checking The Installation
+
+A [Simulink model example](https://github.com/robotology/whole-body-controllers/tree/master/controllers/%2BfloatingBaseBalancingTorqueControlWithSimulator), from the repository `whole-body-controllers`, integrates a controller model with the simulator library **RobotDynWithContacts** from this repository. The controller (labelled "YOGA++") controls a humanoid robot (iCub) in performing a dynamic trajectory while balancing.
+
+For getting the `whole-body-controllers` repository, follow [this guide](doc/getting-whole-body-controllers.md).
+
+You can then run the model from the MATLAB command line, from any directory, as follows:
+```
+floatingBaseBalancingTorqueControlWithSimulator.torqueControlBalancingWithSimu
+```
+
 
 ## :runner: How to use the simulator
 

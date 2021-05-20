@@ -25,7 +25,7 @@ for n = 1:length(WBTConfigRobotSim.ControlBoardsNames)
 end
 
 % structure used to configure the Robot class
-% 
+%
 robot_config.jointOrder = WBTConfigRobotSim.ControlledJoints;
 robot_config.numOfJointsForEachControlboard = numOfJointsForEachControlboard;
 % Note: Since iDynTree 3.0.0, if meshFilePrefix='', the standard iDynTree workflow of locating the
@@ -39,7 +39,7 @@ robot_config.N_DOF_MATRIX = eye(robot_config.N_DOF);
 % Initial condition of iCub and for the integrators.
 initialConditions.base_position = [0; 0; 0];
 initialConditions.orientation = eye(3);
-initialConditions.w_H_b = mwbs.State.Rp2H(initialConditions.orientation, initialConditions.base_position);
+initialConditions.w_H_b = mwbs.Utils.Rp2H(initialConditions.orientation, initialConditions.base_position);
 % joint inital position (radians)
 initialConditions.s = [0; 1]*pi/180;
 % velocty initial conditions
@@ -62,7 +62,7 @@ Frames.RIGHT_FOOT = Frames.BASE;
 robot_config.robotFrames = Frames;
 
 % structure used to configure the Contacts class
-% 
+%
 
 % foot print of the feet (iCub)
 vertex = zeros(3, 4);

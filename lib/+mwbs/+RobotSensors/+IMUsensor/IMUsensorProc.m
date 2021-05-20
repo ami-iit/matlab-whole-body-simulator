@@ -52,7 +52,7 @@ classdef IMUsensorProc < matlab.System
             % Implement algorithm. Calculate y as a function of inputs and discrete states.
             
             % Sensor frame orientation
-            R = mwbs.State.H2Rp(w_H_imu);
+            R = mwbs.Utils.H2Rp(w_H_imu);
             
             % Gyroscope measurements
             w_imuVel = Jimu*nu;
@@ -63,7 +63,7 @@ classdef IMUsensorProc < matlab.System
             w_linAcc = R'*(w_imuAcc(1:3)-obj.GRAVITY_VECTOR);
             
             % Euler angles estimation
-            w_rollPitchYaw = wbc.rollPitchYawFromRotation(R);
+            w_rollPitchYaw = mwbs.Utils.rollPitchYawFromRotation(R);
             
             % composite sensor output
             imuOut = [w_rollPitchYaw; w_linAcc; w_omega; zeros(3,1)];

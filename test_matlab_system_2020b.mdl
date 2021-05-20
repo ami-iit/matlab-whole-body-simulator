@@ -7,7 +7,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.154"
+    ComputedModelVersion    "1.155"
     NumModelReferences	    0
     NumTestPointedSignals   0
     NumProvidedFunctions    0
@@ -87,7 +87,7 @@ Model {
       $ObjectID		      3
       $ClassName	      "Simulink.WindowInfo"
       IsActive		      [1]
-      Location		      [40.0, 23.0, 1752.0, 1097.0]
+      Location		      [41.0, 23.0, 1751.0, 1097.0]
       Object {
 	$PropName		"ModelBrowserInfo"
 	$ObjectID		4
@@ -114,13 +114,24 @@ Model {
 	  IsTabbed		  [1]
 	  ViewObjType		  "SimulinkTopLevel"
 	  LoadSaveID		  "0"
-	  Extents		  [1638.0, 868.0]
-	  ZoomFactor		  [1.9041986989946778]
-	  Offset		  [-132.35217391304349, -21.417391304347831]
-	  SceneRectInView	  [-132.35217391304349, -21.417391304347831, 860.204347826087, 455.83478260869566]
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [1.9029585799116318]
+	  Offset		  [-132.35696517401345, -21.565920394417503]
+	  SceneRectInView	  [-132.35696517401345, -21.565920394417503, 860.2394278471462, 456.131840788835]
 	}
 	Object {
 	  $ObjectID		  7
+	  IsActive		  [0]
+	  IsTabbed		  [0]
+	  ViewObjType		  "SimulinkSubsys"
+	  LoadSaveID		  "133"
+	  Extents		  [1637.0, 868.0]
+	  ZoomFactor		  [3.7858823529411763]
+	  Offset		  [626.30205096333123, 107.86357986326911]
+	  SceneRectInView	  [626.30205096333123, 107.86357986326911, 432.39589807333749, 229.27284027346178]
+	}
+	Object {
+	  $ObjectID		  8
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -131,7 +142,7 @@ Model {
 	  SceneRectInView	  [115.39687500000002, -192.39999999999998, 1450.8, 768.8]
 	}
 	Object {
-	  $ObjectID		  8
+	  $ObjectID		  9
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -142,7 +153,7 @@ Model {
 	  SceneRectInView	  [-327.97387892812696, -202.97930927193528, 751.49463285625393, 398.95861854387056]
 	}
 	Object {
-	  $ObjectID		  9
+	  $ObjectID		  10
 	  IsActive		  [0]
 	  IsTabbed		  [0]
 	  ViewObjType		  "SimulinkSubsys"
@@ -151,17 +162,6 @@ Model {
 	  ZoomFactor		  [2.4384133611691023]
 	  Offset		  [-247.28050085616439, -126.48458904109589]
 	  SceneRectInView	  [-247.28050085616439, -126.48458904109589, 670.10787671232879, 355.96917808219177]
-	}
-	Object {
-	  $ObjectID		  10
-	  IsActive		  [0]
-	  IsTabbed		  [0]
-	  ViewObjType		  "SimulinkSubsys"
-	  LoadSaveID		  "133"
-	  Extents		  [1637.0, 868.0]
-	  ZoomFactor		  [3.7858823529411763]
-	  Offset		  [626.30205096333123, 107.86357986326911]
-	  SceneRectInView	  [626.30205096333123, 107.86357986326911, 432.39589807333749, 229.27284027346178]
 	}
 	Object {
 	  $ObjectID		  11
@@ -278,7 +278,7 @@ Model {
       "ABvAG4AZQBuAHQALwBHAEwAVQBFADIAIAB0AHIAZQBlACAAYwBvAG0AcABvAG4AZQBuAHQAAAAAeQAAA6EAAABrAP////sAAABgAFMAaQBtAHUAb"
       "ABpAG4AawA6AEUAZABpAHQAbwByADoAUgBlAGYAZQByAGUAbgBjAGUAZABGAGkAbABlAHMALwBSAGUAZgBlAHIAZQBuAGMAZQBkACAARgBpAGwAZ"
       "QBzAAAAAAD/////AAAAjwD///8AAAABAAAAAAAAAAD8AgAAAAH7AAAAVABHAEwAVQBFADIAOgBQAHIAbwBwAGUAcgB0AHkASQBuAHMAcABlAGMAd"
-      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGjAAAA6EAAAABAAAAAgAAAAEAAAAC/"
+      "ABvAHIALwBQAHIAbwBwAGUAcgB0AHkAIABJAG4AcwBwAGUAYwB0AG8AcgAAAAAA/////wAAAawA////AAAGiwAAA6EAAAABAAAAAgAAAAEAAAAC/"
       "AAAAAMAAAAAAAAAAQAAADYAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEwAZQBmAHQDAAAAAP////8AAAAAA"
       "AAAAAAAAAEAAAABAAAAOABjAG8AbABsAGEAcABzAGkAYgBsAGUAUABhAG4AZQBsAFQAbwBvAGwAQgBhAHIAUgBpAGcAaAB0AwAAAAD/////AAAAA"
       "AAAAAAAAAADAAAAAQAAADoAYwBvAGwAbABhAHAAcwBpAGIAbABlAFAAYQBuAGUAbABUAG8AbwBsAEIAYQByAEIAbwB0AHQAbwBtAAAAAAD/////A"
@@ -301,9 +301,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "nunoguedelha"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Fri May 07 10:00:40 2021"
-  RTWModifiedTimeStamp	  542282437
-  ModelVersionFormat	  "%<AutoIncrement:1.154>"
+  LastModifiedDate	  "Thu May 13 06:19:38 2021"
+  RTWModifiedTimeStamp	  542787543
+  ModelVersionFormat	  "%<AutoIncrement:1.155>"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
   LibraryLinkDisplay	  "disabled"
@@ -1385,7 +1385,7 @@ Model {
   }
   System {
     Name		    "test_matlab_system_2020b"
-    Location		    [40, 23, 1792, 1120]
+    Location		    [41, 23, 1792, 1120]
     SystemRect		    [0.000000, 0.000000, 0.000000, 0.000000]
     Open		    on
     PortBlocksUseCompactNotation off
@@ -1717,7 +1717,7 @@ Model {
       Position		      [435, 210, 515, 290]
       ZOrder		      1251
       NameLocation	      "top"
-      InitFcn		      "initVisualizer"
+      InitFcn		      "src.initVisualizer"
       TreatAsAtomicUnit	      on
       SystemSampleTime	      "confVisualizer.tStep"
       RequestExecContextInheritance off
