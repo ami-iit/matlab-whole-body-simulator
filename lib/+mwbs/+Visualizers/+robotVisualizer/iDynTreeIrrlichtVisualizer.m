@@ -1,6 +1,6 @@
 classdef iDynTreeIrrlichtVisualizer < matlab.System
-    % RobotVisualizer matlab.System handling the robot visualization. Based
-    % on iDynTree-Irrlicht-Visualizer bindings.
+    % RobotVisualizer matlab.System handling the robot visualization. Based on iDynTree-Irrlicht-Visualizer bindings. This Visualizer does not work on macOS.
+    # See https://github.com/dic-iit/matlab-whole-body-simulator/pull/50#issuecomment-849515071
     % go in app/robots/iCub*/initRobotVisualizer.m to change the setup config
 
     properties (Nontunable)
@@ -41,9 +41,9 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
                 % take the kinematic quantities and set the robot state
                 iDynTreeWrappers.setRobotState(obj.KinDynModel, world_H_base, jointsPosition, base_velocity, jointsVelocity, obj.g);
                 if obj.viz.run()
-                    time_interval = toc;
+                    timeInterval = toc;
                     % check the maximum fps
-                    if time_interval > obj.minSampleTime
+                    if timeInterval > obj.minSampleTime
                         obj.updateVisualization(world_H_base, jointsPosition);
                         obj.viz.draw();
                         tic
