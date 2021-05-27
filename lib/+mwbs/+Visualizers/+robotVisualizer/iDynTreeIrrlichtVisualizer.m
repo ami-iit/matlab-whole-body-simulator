@@ -2,49 +2,49 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
     % RobotVisualizer matlab.System handling the robot visualization. Based
     % on iDynTree-Irrlicht-Visualizer bindings.
     % go in app/robots/iCub*/initRobotVisualizer.m to change the setup config
-    
+
     properties (Nontunable)
         config;
-        min_time_viz = 1/25;
+        minSampleTime = 1/25;
     end
-    
+
     properties (DiscreteState)
-        
+
     end
-    
+
     % Pre-computed constants
     properties (Access = private)
         KinDynModel, viz;
         g = [0, 0, -9.81]; % gravity vector
     end
-    
+
     methods (Access = protected)
-        
+
         function setupImpl(obj)
-            
+
             if obj.config.visualizeRobot
                 % Perform one-time calculations, such as computing constants
                 obj.prepareRobot()
                 tic;
             end
-            
+
         end
-        
+
         function icon = getIconImpl(~)
             % Define icon for System block
             icon = ["iDynTree-Irrlicht", "Visualizer"];
         end
-        
-        function stepImpl(obj, world_H_base, base_velocity, joints_positions, joints_velocity)
+
+        function stepImpl(obj, world_H_base, base_velocity, jointsPosition, jointsVelocity)
             % stepImpl Specifies the algorithm to execute when you run the System object
             if obj.config.visualizeRobot
                 % take the kinematic quantities and set the robot state
-                iDynTreeWrappers.setRobotState(obj.KinDynModel, world_H_base, joints_positions, base_velocity, joints_velocity, obj.g);
+                iDynTreeWrappers.setRobotState(obj.KinDynModel, world_H_base, jointsPosition, base_velocity, jointsVelocity, obj.g);
                 if obj.viz.run()
                     time_interval = toc;
                     % check the maximum fps
-                    if time_interval > obj.min_time_viz
-                        obj.updateVisualization(world_H_base, joints_positions);
+                    if time_interval > obj.minSampleTime
+                        obj.updateVisualization(world_H_base, jointsPosition);
                         obj.viz.draw();
                         tic
                     end
@@ -52,12 +52,12 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
                     error('Closing visualizer.')
                 end
             end
-            
+
         end
-        
+
         function prepareRobot(obj)
             % Prepare the robot model and the iDyntree visualization
-            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, 'root_link', ...
+            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, obj.config.robotFrames.BASE, ...
                 obj.config.modelPath, obj.config.fileName, false);
             % instantiate iDynTree visualizer
             obj.viz = iDynTree.Visualizer();
@@ -76,13 +76,13 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
             obj.viz.enviroment().lightViz('sun2').setType(iDynTree.DIRECTIONAL_LIGHT);
             obj.viz.enviroment().lightViz('sun2').setDirection(iDynTree.Direction(1, 0, 0));
         end
-        
-        function updateVisualization(obj, world_H_base, joints_positions)
+
+        function updateVisualization(obj, world_H_base, jointsPosition)
             % Update the visualization using the incoming kinematic
             % quantities
             s = iDynTree.VectorDynSize(obj.KinDynModel.NDOF);
-            for k = 0:length(joints_positions)-1
-                s.setVal(k,joints_positions(k+1));
+            for k = 0:length(jointsPosition)-1
+                s.setVal(k,jointsPosition(k+1));
             end
             baseRotation_iDyntree = iDynTree.Rotation();
             baseOrigin_iDyntree   = iDynTree.Position();
@@ -99,4 +99,3 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
         end
     end
 end
-
