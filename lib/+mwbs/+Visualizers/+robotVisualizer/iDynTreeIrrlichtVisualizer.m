@@ -1,6 +1,6 @@
 classdef iDynTreeIrrlichtVisualizer < matlab.System
-    % RobotVisualizer matlab.System handling the robot visualization. Based on iDynTree-Irrlicht-Visualizer bindings. This Visualizer does not work on macOS.
-    # See https://github.com/dic-iit/matlab-whole-body-simulator/pull/50#issuecomment-849515071
+    % iDynTreeIrrlichtVisualizer matlab.System handling the robot visualization, based on iDynTree-Irrlicht-Visualizer bindings. NOTE: this Visualizer does not work on macOS.
+    % See https://github.com/dic-iit/matlab-whole-body-simulator/pull/50#issuecomment-849515071
     % go in app/robots/iCub*/initRobotVisualizer.m to change the setup config
 
     properties (Nontunable)
