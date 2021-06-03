@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" display="inline" height="46.000000px" preserveAspectRatio="xMinYMin meet" viewBox="13.02 19.00 103.98 46.00" width="103.976562px" x="0" y="0" zoomAndPan="disable">
+  <g fill="none" stroke="black" stroke-width="1" fill-rule="evenodd" stroke-linecap="square" stroke-linejoin="bevel">
+    <!--RAWSTRING-->
+    <g id="background" pointer-events="none">
+      <g clip-path="none" fill="#ffffff" fill-opacity="1" opacity="1" stroke="none" stroke-opacity="0" transform="matrix(1,0,0,1,0,0)">
+        <path d="M14.0234,20 L116,20 L116,64 L14.0234,64 L14.0234,20 z" fill-rule="evenodd" vector-effect="none"/>
+      </g>
+      <!--RAWSTRING-->
+    </g>
+    <!--RAWSTRING-->
+    <g id="test_matlab_system_2020b:206">
+      <!--RAWSTRING-->
+      <g data-tags="blk">
+        <!--RAWSTRING-->
+        <g id="test_matlab_system_2020b:206:68">
+          <g clip-path="none" fill="#ffffff" fill-opacity="1" opacity="1" stroke="none" stroke-opacity="0" transform="matrix(1,0,0,1,95,25)">
+            <path d="M0,0 L20,0 L20,20 L0,20 L0,0 z" fill-rule="evenodd" vector-effect="none"/>
+          </g>
+          <!--RAWSTRING-->
+          <g data-tags="blk*">
+            <defs>
+              <clipPath id="clip2">
+                <path d="M0,0 L21,0 L21,21 L0,21 L0,0 z"/>
+              </clipPath>
+            </defs>
+            <g clip-path="url(#clip2)" fill="none" opacity="1" stroke="none" stroke-opacity="0" transform="matrix(1,0,0,1,95,25)">
+              <path d="M0,0 L21,0 L21,21 L0,21 L0,0 z" fill-rule="evenodd" vector-effect="none"/>
+            </g>
+            <!--RAWSTRING-->
+            <g data-tags="dvgImage">
+              <defs>
+                <clipPath id="clip7">
+                  <path d="M1,1 L21,1 L21,21 L1,21 L1,1 z"/>
+                </clipPath>
+              </defs>
+              <g clip-path="url(#clip7)" fill="none" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="1" stroke-width="1" transform="matrix(1,0,0,1,93.9999,23.9999)">
+                <path d="M4.5,6.5 L14.5,6.5 L14.5,16.5 L4.5,16.5" fill-rule="nonzero" vector-effect="none"/>
+              </g>
+              <defs>
+                <clipPath id="clip8">
+                  <path d="M1,1 L21,1 L21,21 L1,21 L1,1 z"/>
+                </clipPath>
+              </defs>
+              <g clip-path="url(#clip8)" fill="none" opacity="1" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="1" stroke-width="1" transform="matrix(1,0,0,1,93.9999,23.9999)">
+                <path d="M1.5,11.5 L13.5,11.5" fill-rule="nonzero" vector-effect="none"/>
+              </g>
+              <!--RAWSTRING-->
+            </g>
+            <!--RAWSTRING-->
+          </g>
+          <!--RAWSTRING-->
+          <g data-tags="blk">
+            <!--RAWSTRING-->
+          </g>
+          <!--RAWSTRING-->
+          <g data-tags="blk frame">
+            <g clip-path="none" fill="none" opacity="1" stroke="none" stroke-opacity="0" transform="matrix(1,0,0,1,95,25)">
+              <path d="M0,0 L20,0 L20,20 L0,20 L0,0 z" fill-rule="evenodd" vector-effect="none"/>
+            </g>
+            <!--RAWSTRING-->
+          </g>
+          <!--RAWSTRING-->
+        </g>
+        <!--RAWSTRING-->
+      </g>
+      <!--RAWSTRING-->
+      <g data-tags="blk">
+        <!--RAWSTRING-->
+        <g id="test_matlab_system_2020b:206:67">
+          <g clip-path="none" fill="none" opacity="0.65098" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-opacity="1" stroke-width="1" transform="matrix(1,0,0,1,19,19)">
+            <image height="41" preserveAspectRatio="none" width="41" x="0" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAApCAYAAACoYAD2AAAACXBIWXMAAAsTAAALEwEAmpwYAAABHElEQVRYhe2YMY/CMAxGHwgY2oEbYGG5if//m1hYjiEdYIDlhthqCCkngX0Skp9kJcqSJzsd+s2AZVWrYu/JTepa7LXuWIhMB/TV2jlLXqTO1Top2QNr4EtK954kYJA1ydmDYCnZidRWaiOrJz/AifFZ3cjdbEquyJ1UyV1RnvRytwpeyJ1tSmon1+QO7oBvKU+0g1dyBxMTH2tr3Cq5d5aEccQDefxNyfk/iLxNSFoRklaEpBUhaUVIWhGSVoSkFSFpRUhaEZJWhKQVC8b0IJH/fXv8EzWAA3CUOxMTYVUtOZCzmTL68OQodZK7n0q2Yg4980QDK+3kWe5tSpbjhvvow5M6+vtz3Nq1+n160gpRm5IzPiCODoLgBX4B1CBfReaSUXMAAAAASUVORK5CYII=" y="0"/>
+          </g>
+          <g clip-path="none" fill="#ffffff" fill-opacity="1" opacity="1" stroke="none" stroke-opacity="0" transform="matrix(1,0,0,1,20,20)">
+            <path d="M0,0 L30,0 L30,30 L0,30 L0,0 z" fill-rule="evenodd" vector-effect="none"/>
+          </g>
+          <!--RAWSTRING-->
+          <g data-tags="blk*">
+            <defs>
+              <clipPath id="clip20">
+                <path d="M0,0 L31,0 L31,31 L0,31 L0,0 z"/>
+              </clipPath>
+            </defs>
+            <g clip-path="url(#clip20)" fill="none" opacity="1" stroke="none" stroke-opacity="0" transform="matrix(1,0,0,1,20,20)">
+              <path d="M0,0 L31,0 L31,31 L0,31 L0,0 z" fill-rule="evenodd" vector-effect="none"/>
+            </g>
+            <!--RAWSTRING-->
+            <g data-tags="dvgImage">
+              <defs>
+                <clipPath id="clip25">
+                  <path d="M0,0 L30,0 L30,30 L0,30 L0,0 z"/>
+                </clipPath>
+              </defs>
+              <g clip-path="url(#clip25)" fill="#000000" fill-opacity="1" opacity="1" stroke="none" stroke-opacity="0" transform="matrix(1,0,0,1,20,20)">
+                <path d="M14.9238,10.6172 C15.8288,10.6172 16.4831,10.9899 16.8867,11.7354 C17.1992,12.3115 17.3555,13.1009 17.3555,14.1035 C17.3555,15.054 17.2139,15.8402 16.9307,16.4619 C16.5205,17.3538 15.8499,17.7998 14.9189,17.7998 C14.0791,17.7998 13.4541,17.4352 13.0439,16.7061 C12.7021,16.0973 12.5312,15.2803 12.5312,14.2549 C12.5312,13.4606 12.6338,12.7786 12.8389,12.209 C13.223,11.1478 13.918,10.6172 14.9238,10.6172 M14.9141,16.999 C15.3698,16.999 15.7327,16.7972 16.0029,16.3936 C16.2731,15.9899 16.4082,15.238 16.4082,14.1377 C16.4082,13.3434 16.3105,12.6899 16.1152,12.1772 C15.9199,11.6646 15.5407,11.4082 14.9775,11.4082 C14.46,11.4082 14.0815,11.6515 13.8423,12.1382 C13.603,12.6248 13.4834,13.3418 13.4834,14.2891 C13.4834,15.002 13.5599,15.5749 13.7129,16.0078 C13.9473,16.6686 14.3477,16.999 14.9141,16.999" fill-rule="nonzero" vector-effect="none"/>
+              </g>
+              <!--RAWSTRING-->
+            </g>
+            <!--RAWSTRING-->
+          </g>
+          <!--RAWSTRING-->
+          <g data-tags="blk">
+            <!--RAWSTRING-->
+          </g>
+          <!--RAWSTRING-->
+          <g data-tags="blk frame">
+            <g clip-path="none" fill="none" opacity="1" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2" stroke-opacity="1" stroke-width="1" transform="matrix(1,0,0,1,20,20)">
+              <path d="M0,0 L30,0 L30,30 L0,30 L0,0 z" fill-rule="evenodd" vector-effect="none"/>
+            </g>
+            <!--RAWSTRING-->
+          </g>
+          <!--RAWSTRING-->
+          <g data-tags="blk BlockName">
+            <defs>
+              <clipPath id="clip36">
+                <path d="M0,-34.0001 L102.977,-34.0001 L102.977,12 L0,12 L0,-34.0001 z"/>
+              </clipPath>
+            </defs>
+            <g clip-path="url(#clip36)" fill="none" opacity="1" stroke="#000000" stroke-linecap="square" stroke-linejoin="bevel" stroke-opacity="1" stroke-width="1" transform="matrix(1,0,0,1,14.0234,52)">
+              <text fill="#000000" fill-opacity="1" font-family="Helvetica" font-size="10" font-style="normal" font-weight="400" stroke="none" textLength="39.9531" x="1" xml:space="preserve" y="8.6875">ImConfig</text>
+            </g>
+            <!--RAWSTRING-->
+          </g>
+          <!--RAWSTRING-->
+        </g>
+        <!--RAWSTRING-->
+      </g>
+      <!--RAWSTRING-->
+      <g id="test_matlab_system_2020b:206:67#out:1">
+        <!--RAWSTRING-->
+        <g data-tags="PathIntersectionsEnabledTag">
+          <g clip-path="none" fill="#000000" fill-opacity="1" opacity="1" stroke="none" stroke-opacity="0" transform="matrix(1,0,0,1,95,35)">
+            <path d="M0,0 L-8,-4 L-8,4 L0,0 z" fill-rule="nonzero" vector-effect="none"/>
+          </g>
+          <g clip-path="none" fill="none" opacity="1" stroke="#000000" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="2" stroke-opacity="1" stroke-width="1" transform="matrix(1,0,0,1,0,0)">
+            <path d="M50,35 L87,35" fill-rule="evenodd" vector-effect="none"/>
+          </g>
+          <!--RAWSTRING-->
+        </g>
+        <!--RAWSTRING-->
+      </g>
+      <!--RAWSTRING-->
+    </g>
+  </g>
+  <!--generated on osx @ 2021-06-04 00:23:53 CEST-->
+</svg>
