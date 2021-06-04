@@ -102,7 +102,8 @@ floatingBaseBalancingTorqueControlWithSimulator.torqueControlBalancingWithSimu
 ## :runner: How to use the simulator
 
 1. Connect your controller to the **RobotDynWithContacts** block. This block takes as imput the **joints torque**, **motor inertia** and an eventual **generalized external wrench**. It outputs the robot **state**, the contact wrenches **wrench_LFoot** and **wrench_RFoot**, respectively applied to the left and right foot (sole frames), and **kinDynOut**, an output bus exposing all the computed dynamics quantities relevant for debugging or the extension of dynamics computations in external blocks (emulation of an IMU sensor, of pressure sensors on the feet, etc).
-2. Select the robot model by setting the environment variable `YARP_ROBOT_NAME` (e.g. `setenv('YARP_ROBOT_NAME','iCubGenova04')`). The available models are:
+    [A test model](https://dic-iit.github.io/matlab-whole-body-simulator/doc/webview/test_matlab_system_2020b/webview.html) was created for illustrating how the library can be integrated with the IMU sensor block and a dummy controller providing desired torques.
+3. Select the robot model by setting the environment variable `YARP_ROBOT_NAME` (e.g. `setenv('YARP_ROBOT_NAME','iCubGenova04')`). The available models are:
     | Model description | iCub robot (iCubGenova04) | RRBot from Gazebo |
     | --- | --- | --- |
     | Preview | <img width="982" alt="iCubGenova04" src="https://user-images.githubusercontent.com/6848872/114422028-31652f00-9bb6-11eb-987b-62e9b5b38811.png"> | <img width="930" alt="RRbot1" src="https://user-images.githubusercontent.com/6848872/114421414-910f0a80-9bb5-11eb-8256-a1f8678fec5a.png"> |
