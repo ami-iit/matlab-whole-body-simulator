@@ -223,7 +223,7 @@ classdef Contacts < handle
                     if (contact_point(i) > 0) % vertex NOT in contact with the ground
                         obj.ulb(3*i-2:3*i) = 0;
                     else % vertex in contact with the ground
-                        obj.ulb(3*i-2:3*i) = inf;
+                        obj.ulb(3*i-2:3*i) = 1/eps;
                     end
                 end
                 forces = simFunc_qpOASES(H, free_contact_acceleration, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
@@ -274,7 +274,7 @@ classdef Contacts < handle
             % fill the optimization matrix
             obj.A = zeros(num_constr, num_variables);
             obj.Ax_Ub = zeros(num_constr, 1);
-            obj.Ax_Lb = -Inf(num_constr, 1);
+            obj.Ax_Lb = -1/eps+zeros(num_constr, 1);
             
             % Constraint "Fz=0 if no contact" formulated as Aeq x = 0.
             % Aeq shall be concatenated with A in the case of OSQP.
