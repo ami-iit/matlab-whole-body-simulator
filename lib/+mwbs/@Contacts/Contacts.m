@@ -6,6 +6,7 @@ classdef Contacts < handle
 
     properties (Constant)
         num_vertices = 4;
+        max_consecuitive_fail = 4;
         useOSQP=false; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
         useQPOASES=true;
     end
@@ -19,6 +20,7 @@ classdef Contacts < handle
         A; Ax_Lb; Ax_Ub; Aeq; beq; ulb; % matrices used in the optimization problem
         osqpProb; % OSQP solver object
         firstSolverIter; % For handing osqp.setp and osqp.update
+        fail_counter = 0; % For counting the consecuitive fails of the solver
     end
 
     methods
@@ -217,6 +219,12 @@ classdef Contacts < handle
                 end
                 % Solve problem
                 res = obj.osqpProb.solve();
+                % Counter the consecuitive failure of the solver
+                if (res.info.status_val == 1)
+                    obj.fail_counter = 0;
+                else
+                    obj.fail_counter = obj.fail_counter + 1;
+                end
                 forces = res.x;
             elseif obj.useQPOASES
                 for i = 1:obj.num_vertices * 2
@@ -226,13 +234,28 @@ classdef Contacts < handle
                         obj.ulb(3*i-2:3*i) = 1/eps;
                     end
                 end
-                forces = simFunc_qpOASES(H, free_contact_acceleration, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
+                [forces,status] = simFunc_qpOASES(H, free_contact_acceleration, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
+                % Counter the consecuitive failure of the solver
+                if (status == 0)
+                    obj.fail_counter = 0;
+                else
+                    obj.fail_counter = obj.fail_counter + 1;
+                end
             else
                 for i = 1:obj.num_vertices * 2
                     obj.Aeq(i, i * 3) = contact_point(i) > 0;
                 end
                 options = optimoptions('quadprog', 'Algorithm', 'interior-point-convex', 'Display', 'off');
-                forces = quadprog(H, free_contact_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+                [forces,~,exitFlag,~] = quadprog(H, free_contact_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(24, 1), options);
+                % Counter the consecuitive failure of the solver
+                if (exitFlag == 1)
+                    obj.fail_counter = 0;
+                else
+                    obj.fail_counter = obj.fail_counter + 1;
+                end
+            end
+            if (obj.fail_counter >= obj.max_consecuitive_fail)
+                error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',num2str(obj.max_consecuitive_fail),'times'}));
             end
         end
 
