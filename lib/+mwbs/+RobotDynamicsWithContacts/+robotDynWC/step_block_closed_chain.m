@@ -1,11 +1,12 @@
-classdef step_block < matlab.System & matlab.system.mixin.Propagates
-    % step_block This block takes as input the joint torques and the
+classdef step_block_closed_chain < matlab.System & matlab.system.mixin.Propagates
+    % step_block_closed_chain This block takes as input the joint torques and the
     % applied external forces and evolves the state of the robot
 
     properties (Nontunable)
         robot_config;
         contact_config;
         physics_config;
+        closedKinematic_config;
         motorReflectedInertiaFormat;
         OutputBusName = 'bus_name';
     end
@@ -22,7 +23,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
 
         function setupImpl(obj)
             obj.robot = mwbs.Robot(obj.robot_config,obj.physics_config.GRAVITY_ACC);
-            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot, obj.contact_config.friction_coefficient, 0);
+            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot, obj.contact_config.friction_coefficient, length(obj.closedKinematic_config.splitPoints));
             obj.state = mwbs.State(obj.physics_config.TIME_STEP);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
@@ -34,7 +35,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
 
             % computes the contact quantites and the velocity after a possible impact
             [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot,obj);
+                obj.contacts.compute_contact_closed_chain(obj.robot, obj.closedKinematic_config, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot,obj);
             % sets the velocity in the state
             obj.state.set_velocity(base_pose_dot, s_dot);
             % compute the robot acceleration
