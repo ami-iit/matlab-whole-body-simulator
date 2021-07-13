@@ -74,10 +74,28 @@ classdef Robot < handle
             % OUTPUT: - h: bias force
             [ack,h] = obj.KinDynModel.kinDynComp.generalizedBiasForces();
             if (~ack)
-                error('[Robot: get_bias_forces] Unable to retrieve the bias force')
+                error('[Robot: get_bias_forces] Unable to retrieve the bias force');
             end
         end
 
+        function J_frame = get_frame_jacobian(obj,frameName)
+            % get_frame_jacobian Returns the Jacobian of the frame
+            % OUTPUT: - J_point: Jacobian of the frame
+            [ack,J_frame] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian(frameName);
+            if (~ack)
+                error(['[Robot: get_frame_jacobian] Unable to retrieve the jacobian for',frameName]);
+            end
+        end
+        
+        function JDot_nu_frame = get_frame_JDot_nu(obj,frameName)
+            % get_frame_jacobian Returns the Jacobian of the frame
+            % OUTPUT: - J_point: Jacobian of the frame
+            [ack,JDot_nu_frame] = obj.KinDynModel.kinDynComp.getFrameBiasAcc(frameName);
+            if (~ack)
+                error(['[Robot: get_frame_jacobian] Unable to retrieve the jacobian for',frameName]);
+            end
+        end
+        
         function [J_LFoot, J_RFoot] = get_feet_jacobians(obj)
             % get_feet_jacobians Returns the Jacobians of the feet
             % OUTPUT: - J_left_foot: Jacobian of the left foot
