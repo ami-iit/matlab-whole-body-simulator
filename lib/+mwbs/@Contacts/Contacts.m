@@ -8,7 +8,7 @@ classdef Contacts < handle
         num_vertices = 4;
         max_consecuitive_fail = 10;
         useOSQP=false; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
-        useQPOASES=true;
+        useQPOASES=false;
     end
     
     properties (Access = private)
@@ -90,7 +90,6 @@ classdef Contacts < handle
             % the constrin wrench on the split points
             %          - wrench_left_foot, wrench_right_foot: the wrench in sole frames
             %          - base_pose_dot, s_dot: configuration velocity, changed in the case of an impact with the ground
-
             % collecting robot quantities
             h = robot.get_bias_forces();
             M = robot.get_mass_matrix(motorInertias,obj_step_block);
@@ -169,8 +168,6 @@ classdef Contacts < handle
         end
         
         function [J_diff_splitPoint, JDot_diff_nu_splitPoint] = compute_J_and_JDot_nu_splitPoint(obj, robot)
-            %J_diff_splitPoint = zeros(6*length(splitPoints),6+robot.NDOF);
-            %JDot_diff_nu_splitPoint = zeros(6*length(splitPoints),1);
             [JDiff_Lpoint,JDiff_Rpoint] = robot.get_spilitPoints_diff_jacobian();
             [JDotNuDiff_Lpoint,JDotNuDiff_Rpoint] = robot.get_SpilitPoints_diff_JDot_nu();
             J_diff_splitPoint = [JDiff_Lpoint ; JDiff_Rpoint];
@@ -203,13 +200,12 @@ classdef Contacts < handle
             % compute_velocity returns the configuration velocity
             % the velocity does not change if there is no impact
             % the velocity change if there is the impact
-
             if size(G,1) == (2*3*obj.num_vertices)
                 J_feet = G;
                 J_split_points = [];
             elseif size(G,1) > (2*3*obj.num_vertices)
                 J_feet = G(1:(2*3*obj.num_vertices),:);
-                J_split_points = G(end-(2*3*obj.num_vertices):end,:);
+                J_split_points = G(2*3*obj.num_vertices+1:end,:);
             end
             
             % We shall stack the jacobians relative to the vertices that will be in contact. For
@@ -262,19 +258,10 @@ classdef Contacts < handle
             % applied to the split points if there is a closed chain
             % kinematic
             
-            coder.extrinsic('assignin');
             free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
             free_contact_diff_acceleration = obj.compute_free_contact_diff_acceleration(G, free_acceleration, P);
             
             H = G * (M \ G');
-            
-            emi = sum(sum(~isfinite(H)));
-            if emi > 0
-                assignin('base','venus_H',H);
-                assignin('base','venus_M',M);
-                assignin('base','venus_G',G);
-                error('[NON FINITE H]');
-            end
             
             if ~issymmetric(H)
                 H = (H + H') / 2; % if non sym
@@ -316,6 +303,17 @@ classdef Contacts < handle
 %                 forces = fmincon(myFunc,zeros(36,1), obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb,[],myOptions);
 %                 status = 0;
                 % Counter the consecuitive failure of the solver
+%                 p = H;
+%                 q = free_contact_diff_acceleration;
+%                 v = [obj.A;eye(36)];
+%                 l = [obj.Ax_Lb;-obj.ulb];
+%                 u = [obj.Ax_Ub;obj.ulb];
+%                 
+%                 obj.osqpProb = osqp;
+%                 obj.osqpProb.setup(p,q,v,l,u,'alpha',1);
+%                 res = obj.osqpProb.solve();
+%                 forces = res.x;
+%                 status = res.info.status_val - 1;
                 if (status == 0)
                     obj.fail_counter = 0;
                 else
@@ -325,8 +323,14 @@ classdef Contacts < handle
                 for i = 1:obj.num_vertices * 2
                     obj.Aeq(i, i * 3) = contact_point(i) > 0;
                 end
+                obj.ulb = 1e12 + zeros(obj.num_vertices*2*3 + 6*num_split_points, 1);
+                for i = 1 : obj.num_vertices * 2
+                    if (contact_point(i) > 0) % vertex NOT in contact with the ground
+                        obj.ulb(3*i-2:3*i) = 0;
+                    end
+                end
                 options = optimoptions('quadprog', 'Algorithm', 'active-set', 'Display', 'off');
-                [forces,~,exitFlag,~] = quadprog(H, free_contact_diff_acceleration, obj.A, obj.Ax_Ub, obj.Aeq, obj.beq, [], [], 100 * ones(size(H,1), 1), options);
+                [forces,~,exitFlag,~] = quadprog(H, free_contact_diff_acceleration, obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb, 100 * ones(size(H,1), 1), options);
                 % Counter the consecuitive failure of the solver
                 if (exitFlag == 1)
                     obj.fail_counter = 0;
@@ -335,7 +339,7 @@ classdef Contacts < handle
                 end
             end
             if (obj.fail_counter >= obj.max_consecuitive_fail)
-                error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',num2str(obj.max_consecuitive_fail),'times'}));
+                %error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',num2str(obj.max_consecuitive_fail),'times'}));
             end
         end
 
