@@ -78,21 +78,22 @@ classdef Robot < handle
             end
         end
 
-        function J_frame = get_frame_jacobian(obj,frameName)
+        function [JDiff_Lpoint,JDiff_Rpoint] = get_spilitPoints_diff_jacobian(obj)
             % get_frame_jacobian Returns the Jacobian of the frame
             % OUTPUT: - J_point: Jacobian of the frame
-            [ack,J_frame] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian(frameName);
+            [ack,JDiff_Lpoint,JDiff_Rpoint] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobianSpilitPoints();
             if (~ack)
-                error(['[Robot: get_frame_jacobian] Unable to retrieve the jacobian for',frameName]);
+                error('[Robot: get_spilitPoints_diff_jacobian] Unable to retrieve the jacobians for spilit points');
             end
         end
-        
-        function JDot_nu_frame = get_frame_JDot_nu(obj,frameName)
-            % get_frame_jacobian Returns the Jacobian of the frame
-            % OUTPUT: - J_point: Jacobian of the frame
-            [ack,JDot_nu_frame] = obj.KinDynModel.kinDynComp.getFrameBiasAcc(frameName);
+
+        function [JDotNuDiff_Lpoint,JDotNuDiff_Rpoint] = get_SpilitPoints_diff_JDot_nu(obj)
+            % get_frame_JDot_nu Returns the Jacobian derivative of the
+            % frame multiplied by the configuration velocity
+            % OUTPUT: - JDot_nu_frame: \dot{J} nu of the frame
+            [ack,JDotNuDiff_Lpoint,JDotNuDiff_Rpoint] = obj.KinDynModel.kinDynComp.getFrameBiasACCSpilitPoints();
             if (~ack)
-                error(['[Robot: get_frame_jacobian] Unable to retrieve the jacobian for',frameName]);
+                error('[Robot: get_SpilitPoints_diff_JDot_nu] Unable to retrieve the bias accelerations for spilit points');
             end
         end
         
