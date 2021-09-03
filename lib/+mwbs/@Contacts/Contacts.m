@@ -8,7 +8,7 @@ classdef Contacts < handle
         num_vertices = 4;
         max_consecuitive_fail = 10;
         useOSQP=false; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
-        useQPOASES=false;
+        useQPOASES=true;
     end
     
     properties (Access = private)
@@ -25,7 +25,7 @@ classdef Contacts < handle
 
     methods
 
-        function obj = Contacts(foot_print, robot, friction_coefficient, num_closed_chains)
+        function obj = Contacts(foot_print, robot, friction_coefficient)
             %CONTACTS The Contact class needs the coordinates of the vertices of the foot
             % Arguments
             %   foot_print - the coordinates of every vertex in xyz
@@ -39,7 +39,7 @@ classdef Contacts < handle
             obj.S = [zeros(6, robot.NDOF); ...
                     eye(robot.NDOF)];
             obj.mu = friction_coefficient;
-            obj.prepare_optimization_matrix(num_closed_chains);
+            obj.prepare_optimization_matrix();
             
             % initialize the setup/update step of the osqp solver
             obj.firstSolverIter = true;
@@ -63,7 +63,7 @@ classdef Contacts < handle
             % compute the vertical distance of every vertex from the ground
             contact_points = obj.compute_contact_points(robot);
             % computes a 3 * num_total_vertices vector containing the pure forces acting on every vertes
-            contact_forces = obj.compute_unilateral_linear_contact(J_feet, M, h, torque, JDot_nu_feet, contact_points, 0, generalized_ext_wrench);            
+            contact_forces = obj.compute_unilateral_linear_contact(M, h, J_feet, [], JDot_nu_feet, [], torque, contact_points, 0, generalized_ext_wrench);  
             % transform the contact in a wrench acting on the robot
             generalized_contact_wrench = J_feet' * contact_forces;
             % sum the contact wrench to the external one
@@ -78,7 +78,7 @@ classdef Contacts < handle
         
         function [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
                 compute_contact_closedChain(obj, robot, torque, generalized_ext_wrench, motorInertias, base_pose_dot, s_dot,obj_step_block)
-            % compute_contact_closedChains Computes the contact forces and the configuration velocity after a (possible) impact
+            % compute_contact_closedChains Computes the contact forces, the internal wrenches of the spilit points in the (possible) closed chains, and the configuration velocity after a (possible) impact
             % INPUTS: - robot: instance of the Robot object
             %         - closedChains_config: information about the closed
             %         chains
@@ -87,35 +87,35 @@ classdef Contacts < handle
             %         - base_pose_dot, s_dot: configuration velocity
             % OUTPUTS: - generalized_total_wrench: the sum of the
             % generalized_ext_wrench and the generalized contact wrench and
-            % the constrin wrench on the split points
+            % the internal wrench on the split points
             %          - wrench_left_foot, wrench_right_foot: the wrench in sole frames
             %          - base_pose_dot, s_dot: configuration velocity, changed in the case of an impact with the ground
-            % collecting robot quantities
+            
+            % collecting the open-chain robot quantities
             h = robot.get_bias_forces();
             M = robot.get_mass_matrix(motorInertias,obj_step_block);
             [J_feet, JDot_nu_feet] = obj.compute_J_and_JDot_nu_feet(robot);
-            G_contact = zeros(2*3*obj.num_vertices+6*obj_step_block.robot_config.closedChains,6+obj_step_block.robot_config.N_DOF);
             if (obj_step_block.robot_config.closedChains == 0)
-                G_contact(:,:) = J_feet;
-                P_contact = JDot_nu_feet;
+                J_diff_splitPoint = [];
+                JDot_diff_nu_splitPoint = [];
+                G_forces = J_feet;
             else
                 [J_diff_splitPoint, JDot_diff_nu_splitPoint] = compute_J_and_JDot_nu_splitPoint(obj, robot);
-                G_contact(:,:) = [J_feet;J_diff_splitPoint];
-                P_contact = [JDot_nu_feet;JDot_diff_nu_splitPoint];
+                G_forces = [J_feet;J_diff_splitPoint];
             end
             % compute the vertical distance of every vertex from the ground
             contact_points = obj.compute_contact_points(robot);
             % computes a 3 * num_total_vertices vector containing the pure forces acting on every vertes
-            contact_forces = obj.compute_unilateral_linear_contact(G_contact, M, h, torque, P_contact, contact_points, obj_step_block.robot_config.closedChains, generalized_ext_wrench);            
-            % transform the contact in a wrench acting on the robot
-            generalized_contact_wrench = G_contact' * contact_forces;
-            % sum the contact wrench to the external one
+            forces = obj.compute_unilateral_linear_contact(M, h, J_feet, J_diff_splitPoint, JDot_nu_feet, JDot_diff_nu_splitPoint, torque, contact_points, obj_step_block.robot_config.closedChains, generalized_ext_wrench);            
+            % transform the contact and the internal wrenches of the spilit points in the closed chains in a wrench acting on the robot
+            generalized_contact_wrench = G_forces' * forces;
+            % sum the contact wrench and the internal wrenches of the spilit points to the external one
             generalized_total_wrench = generalized_ext_wrench + generalized_contact_wrench;
             % compute the wrench in the sole frames, in order to simulate a sensor mounted onto the sole frame
-            ground_forces = contact_forces(1:end-6*obj_step_block.robot_config.closedChains);
+            ground_forces = forces(1:end-6*obj_step_block.robot_config.closedChains);
             [wrench_left_foot, wrench_right_foot] = obj.compute_contact_wrench_in_sole_frames(ground_forces, robot);
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
-            [base_pose_dot, s_dot] = obj.compute_velocity(M, G_contact, robot, base_pose_dot, s_dot);
+            [base_pose_dot, s_dot] = obj.compute_velocity(M, G_forces, robot, base_pose_dot, s_dot);
             % update the contact log
             obj.was_in_contact = obj.is_in_contact;
         end
@@ -231,14 +231,18 @@ classdef Contacts < handle
             % compute the projection in the null space of the scaled Jacobian of the vertices if a
             % new contact is detected, otherwise just resuse the input variables (base_pose_dot,
             % s_dot).
-            if new_contact
-                N = (eye(robot.NDOF + 6) - M \ (G' * ((G * (M \ G')) \ G)));
+            if new_contact 
+                N = (eye(robot.NDOF + 6) - M \ (G' * (obj.compute_damped_psudo_inverse(G * (M \ G'),0.001) * G)));
                 % the velocity after the impact is a function of the velocity before the impact
                 % under the constraint that the vertex velocity is equal to zeros
                 x = N * [base_pose_dot; s_dot];
                 base_pose_dot = x(1:6);
                 s_dot = x(7:end);
             end
+        end
+        
+        function P_damped_psudo_inverse = compute_damped_psudo_inverse(obj,P,damped_coefficient)
+            P_damped_psudo_inverse = P'/(P*P'+damped_coefficient^2*eye(size(P,1)));
         end
 
         function free_acceleration = compute_free_acceleration(obj, M, h, torque, generalized_ext_wrench)
@@ -252,16 +256,23 @@ classdef Contacts < handle
             free_contact_diff_acceleration = G * free_acceleration + P;
         end
 
-        function forces = compute_unilateral_linear_contact(obj, G, M, h, torque, P, contact_point, num_split_points, generalized_ext_wrench)
+        function forces = compute_unilateral_linear_contact(obj, M, h, J_feet, J_diff_splitPoint, JDot_nu_feet, JDot_diff_nu_splitPoint, torque, contact_point, closedChains, generalized_ext_wrench)
             % compute_unilateral_linear_contact returns the pure forces
             % acting on the feet vertices and the internal force/torques
             % applied to the split points if there is a closed chain
             % kinematic
             
             free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
-            free_contact_diff_acceleration = obj.compute_free_contact_diff_acceleration(G, free_acceleration, P);
+            free_contact_diff_acceleration_contact = obj.compute_free_contact_diff_acceleration(J_feet, free_acceleration, JDot_nu_feet);
             
-            H = G * (M \ G');
+            if (closedChains == 0) % there is no closed chain
+                H = J_feet * (M \ J_feet');
+                g = free_contact_diff_acceleration_contact;
+            else % there is some closed chains
+                H = J_feet * (M\J_feet') - (J_feet*(M\J_diff_splitPoint'))*(obj.compute_damped_psudo_inverse(J_diff_splitPoint *(M\J_diff_splitPoint'),0.001)*(J_diff_splitPoint*(M\J_feet') ));
+                free_contact_diff_acceleration_internal = obj.compute_free_contact_diff_acceleration(J_diff_splitPoint, free_acceleration, JDot_diff_nu_splitPoint);
+                g = free_contact_diff_acceleration_contact - (J_feet*(M\J_diff_splitPoint'))*(obj.compute_damped_psudo_inverse(J_diff_splitPoint *(M\J_diff_splitPoint') ,0.001 )*free_contact_diff_acceleration_internal);
+            end
             
             if ~issymmetric(H)
                 H = (H + H') / 2; % if non sym
@@ -274,11 +285,11 @@ classdef Contacts < handle
                 if obj.firstSolverIter
                     % Setup workspace and change alpha parameter
                     obj.osqpProb = osqp;
-                    obj.osqpProb.setup(sparse(H), free_contact_diff_acceleration, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
+                    obj.osqpProb.setup(sparse(H), g, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
                     obj.firstSolverIter = true;
                 else
                     % Update the problem
-                    obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', free_contact_diff_acceleration, 'Ax', sparse([obj.A;obj.Aeq]));
+                    obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', g, 'Ax', sparse([obj.A;obj.Aeq]));
                 end
                 % Solve problem
                 res = obj.osqpProb.solve();
@@ -288,32 +299,16 @@ classdef Contacts < handle
                 else
                     obj.fail_counter = obj.fail_counter + 1;
                 end
-                forces = res.x;
+                contactForces = res.x;
             elseif obj.useQPOASES
-                obj.ulb = 1e12 + zeros(obj.num_vertices*2*3 + 6*num_split_points, 1);
+                obj.ulb = 1e12 + zeros(obj.num_vertices*2*3, 1);
                 for i = 1 : obj.num_vertices * 2
                     if (contact_point(i) > 0) % vertex NOT in contact with the ground
                         obj.ulb(3*i-2:3*i) = 0;
                     end
                 end
-                %[forces,status] = simFunc_qpOASES(H, free_contact_diff_acceleration, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
-                [forces,status] = simFunc_qpOASES(H, free_contact_diff_acceleration, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
-%                 myFunc = @(x) 0.5*x'*H*x+free_contact_diff_acceleration'*x;
-%                 myOptions = optimoptions('fmincon','Display','iter','Algorithm','sqp');
-%                 forces = fmincon(myFunc,zeros(36,1), obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb,[],myOptions);
-%                 status = 0;
+                [contactForces,status] = simFunc_qpOASES(H, g, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
                 % Counter the consecuitive failure of the solver
-%                 p = H;
-%                 q = free_contact_diff_acceleration;
-%                 v = [obj.A;eye(36)];
-%                 l = [obj.Ax_Lb;-obj.ulb];
-%                 u = [obj.Ax_Ub;obj.ulb];
-%                 
-%                 obj.osqpProb = osqp;
-%                 obj.osqpProb.setup(p,q,v,l,u,'alpha',1);
-%                 res = obj.osqpProb.solve();
-%                 forces = res.x;
-%                 status = res.info.status_val - 1;
                 if (status == 0)
                     obj.fail_counter = 0;
                 else
@@ -323,14 +318,14 @@ classdef Contacts < handle
                 for i = 1:obj.num_vertices * 2
                     obj.Aeq(i, i * 3) = contact_point(i) > 0;
                 end
-                obj.ulb = 1e12 + zeros(obj.num_vertices*2*3 + 6*num_split_points, 1);
+                obj.ulb = 1e12 + zeros(obj.num_vertices*2*3, 1);
                 for i = 1 : obj.num_vertices * 2
                     if (contact_point(i) > 0) % vertex NOT in contact with the ground
                         obj.ulb(3*i-2:3*i) = 0;
                     end
                 end
                 options = optimoptions('quadprog', 'Algorithm', 'active-set', 'Display', 'off');
-                [forces,~,exitFlag,~] = quadprog(H, free_contact_diff_acceleration, obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb, 100 * ones(size(H,1), 1), options);
+                [contactForces,~,exitFlag,~] = quadprog(H, g, obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb, 100 * ones(size(H,1), 1), options);
                 % Counter the consecuitive failure of the solver
                 if (exitFlag == 1)
                     obj.fail_counter = 0;
@@ -338,9 +333,19 @@ classdef Contacts < handle
                     obj.fail_counter = obj.fail_counter + 1;
                 end
             end
+            % generate an error if the optimization solver fails to solve
+            % the optimization problem and obtain the contact forces.
             if (obj.fail_counter >= obj.max_consecuitive_fail)
-                %error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',num2str(obj.max_consecuitive_fail),'times'}));
+                error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',num2str(obj.max_consecuitive_fail),'times'}));
             end
+            % compute the internal wrenches of the spilit points if there
+            % is closed chain
+            if (closedChains == 0)
+                internalWrenches = [];
+            else
+                internalWrenches = -obj.compute_damped_psudo_inverse(J_diff_splitPoint *(M\J_diff_splitPoint'),0.001 )*((J_diff_splitPoint*(M\J_feet'))*contactForces + free_contact_diff_acceleration_internal);
+            end
+            forces = [contactForces;internalWrenches];
         end
 
         function [wrench_left_foot, wrench_right_foot] = compute_contact_wrench_in_sole_frames(obj, contact_forces, robot)
@@ -367,7 +372,7 @@ classdef Contacts < handle
 
         end
 
-        function prepare_optimization_matrix(obj,num_split_points)
+        function prepare_optimization_matrix(obj)
             % prepare_optimization_matrix Fills the matrix used by the optimization problem solver.
             % A being the matrix of friction cone constraints, for ...
             % - quadprog: Ax <= b (should include -x <= 0).
@@ -376,7 +381,7 @@ classdef Contacts < handle
             % So in both cases we define: Ax_Lb <= Ax <= Ax_Ub where Ax_Lb = -Inf.
             
             total_num_vertices = obj.num_vertices * 2; % number of vertex per foot * number feet
-            num_variables = 3 * total_num_vertices + 6 * num_split_points; % number of unknowns (3 force components per vertex + 6 force/torque components per split points)
+            num_variables = 3 * total_num_vertices; % number of unknowns (3 force components per vertex)
             num_constr = 5 * total_num_vertices; % number of constraint: simplified friction cone + non negativity of vertical force
             % fill the optimization matrix
             obj.A = zeros(num_constr, num_variables);
