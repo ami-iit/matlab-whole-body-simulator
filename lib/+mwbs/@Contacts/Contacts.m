@@ -71,7 +71,8 @@ classdef Contacts < handle
             % compute the wrench in the sole frames, in order to simulate a sensor mounted onto the sole frame
             [wrench_left_foot, wrench_right_foot] = obj.compute_contact_wrench_in_sole_frames(contact_forces, robot);
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
-            [base_pose_dot, s_dot] = obj.compute_velocity(M, J_feet, robot, base_pose_dot, s_dot);
+            [base_pose_dot, s_dot] = obj.compute_velocity(M, J_feet, robot, base_pose_dot, s_dot, obj_step_block.robot_config.closedChains );
+
             % update the contact log
             obj.was_in_contact = obj.is_in_contact;
         end
@@ -115,7 +116,7 @@ classdef Contacts < handle
             ground_forces = forces(1:end-6*obj_step_block.robot_config.closedChains);
             [wrench_left_foot, wrench_right_foot] = obj.compute_contact_wrench_in_sole_frames(ground_forces, robot);
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
-            [base_pose_dot, s_dot] = obj.compute_velocity(M, G_forces, robot, base_pose_dot, s_dot);
+            [base_pose_dot, s_dot] = obj.compute_velocity(M, G_forces, robot, base_pose_dot, s_dot,obj_step_block.robot_config.closedChains);
             % update the contact log
             obj.was_in_contact = obj.is_in_contact;
         end
@@ -196,7 +197,7 @@ classdef Contacts < handle
             contact_points = [left_z_foot_print; right_z_foot_print];
         end
 
-        function [base_pose_dot, s_dot] = compute_velocity(obj, M, G, robot, base_pose_dot, s_dot)
+        function [base_pose_dot, s_dot] = compute_velocity(obj, M, G, robot, base_pose_dot, s_dot, closed_chains)
             % compute_velocity returns the configuration velocity
             % the velocity does not change if there is no impact
             % the velocity change if there is the impact
@@ -232,7 +233,11 @@ classdef Contacts < handle
             % new contact is detected, otherwise just resuse the input variables (base_pose_dot,
             % s_dot).
             if new_contact 
-                N = (eye(robot.NDOF + 6) - M \ (G' * (obj.compute_damped_psudo_inverse(G * (M \ G'),0.001) * G)));
+                if(closed_chains==0)
+                    N = (eye(robot.NDOF + 6) - M \ (G' * (G * (M \ G') \ G)));   
+                else
+                    N = (eye(robot.NDOF + 6) - M \ (G' * (obj.compute_damped_psudo_inverse(G * (M \ G'),0.001) * G)));
+                end
                 % the velocity after the impact is a function of the velocity before the impact
                 % under the constraint that the vertex velocity is equal to zeros
                 x = N * [base_pose_dot; s_dot];
@@ -301,7 +306,7 @@ classdef Contacts < handle
                 end
                 contactForces = res.x;
             elseif obj.useQPOASES
-                obj.ulb = 1e12 + zeros(obj.num_vertices*2*3, 1);
+                obj.ulb = 1e10 + zeros(obj.num_vertices*2*3, 1);
                 for i = 1 : obj.num_vertices * 2
                     if (contact_point(i) > 0) % vertex NOT in contact with the ground
                         obj.ulb(3*i-2:3*i) = 0;
@@ -318,7 +323,7 @@ classdef Contacts < handle
                 for i = 1:obj.num_vertices * 2
                     obj.Aeq(i, i * 3) = contact_point(i) > 0;
                 end
-                obj.ulb = 1e12 + zeros(obj.num_vertices*2*3, 1);
+                obj.ulb = 1e10 + zeros(obj.num_vertices*2*3, 1);
                 for i = 1 : obj.num_vertices * 2
                     if (contact_point(i) > 0) % vertex NOT in contact with the ground
                         obj.ulb(3*i-2:3*i) = 0;
@@ -386,7 +391,7 @@ classdef Contacts < handle
             % fill the optimization matrix
             obj.A = zeros(num_constr, num_variables);
             obj.Ax_Ub = zeros(num_constr, 1);
-            obj.Ax_Lb = -1e12 + zeros(num_constr, 1);
+            obj.Ax_Lb = -1e20 + zeros(num_constr, 1);
             
             % Constraint "Fz=0 if no contact" formulated as Aeq x = 0.
             % Aeq shall be concatenated with A in the case of OSQP.
