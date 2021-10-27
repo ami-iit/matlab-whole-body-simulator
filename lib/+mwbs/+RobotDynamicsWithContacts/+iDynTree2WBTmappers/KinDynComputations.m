@@ -25,16 +25,9 @@ classdef KinDynComputations
             [w_H_b,s,base_pose_dot,s_dot,NDOF] = deal(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot,obj.NDOF);
         end
         
-        function [ack,J_LRfoot] = getFrameFreeFloatingJacobianLRfoot(obj,LRfoot)
+        function [ack,J_inGroundContact] = getFrameFreeFloatingJacobian_inContactFrames(obj)
             ack = true;
-            switch LRfoot
-                case 'LFoot'
-                    J_LRfoot = simFunc_getFrameFreeFloatingJacobianLFoot(obj.w_H_b,obj.s);
-                case 'RFoot'
-                    J_LRfoot = simFunc_getFrameFreeFloatingJacobianRFoot(obj.w_H_b,obj.s);
-                otherwise
-                    ack = false;
-            end
+            J_inGroundContact = simFunc_getFrameFreeFloatingJacobian_inContactFrames(obj.w_H_b,obj.s);
         end
         
         function [ack,JDiff_Lpoint,JDiff_Rpoint] = getFrameFreeFloatingJacobianSpilitPoints(obj)
@@ -57,26 +50,14 @@ classdef KinDynComputations
             ack = true;
         end
         
-        function JDot_nu_LRfoot = getFrameBiasAccLRfoot(obj,LRfoot)
-            switch LRfoot
-                case 'LFoot'
-                    JDot_nu_LRfoot = simFunc_getFrameBiasAccLFoot(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
-                case 'RFoot'
-                    JDot_nu_LRfoot = simFunc_getFrameBiasAccRFoot(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
-                otherwise
-                    error('Unsupported "getFrameBiasAccRFoot" input parameter.');
-            end
+        function [ack,JDot_nu_inGroundContact] = getFrameBiasAcc_inContactFrames(obj)
+            JDot_nu_inGroundContact = simFunc_getFrameBiasAcc_inContactFrames(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
+            ack = true;
         end
         
-        function transform = getWorldTransformLRfoot(obj,LRfoot)
-            switch LRfoot
-                case 'LFoot'
-                    transform = simFunc_getWorldTransformLFoot(obj.w_H_b,obj.s);
-                case 'RFoot'
-                    transform = simFunc_getWorldTransformRFoot(obj.w_H_b,obj.s);
-                otherwise
-                    error('Unsupported "getWorldTransform" input parameter.');
-            end
+        function [ack,transform] = getWorldTransform_inContactFrames(obj)
+            transform = simFunc_getWorldTransform_inContactFrames(obj.w_H_b,obj.s);
+            ack = true;
         end
     end
 end
