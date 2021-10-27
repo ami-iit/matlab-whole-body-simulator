@@ -21,7 +21,7 @@ classdef Robot < handle
         useMotorReflectedInertias; % Adds the reflected inetias to the mass matrix
         JDot_nu_LFoot_iDyntree; % \dot{J} \nu relative to left foot
         JDot_nu_RFoot_iDyntree; % \dot{J} \nu relative to right foot
-        LFoot_frameName; RFoot_frameName; % frame names relative to left and right foot
+        %LFoot_frameName; RFoot_frameName; % frame names relative to left and right foot
         S; % selector matrix
     end
 
@@ -39,8 +39,8 @@ classdef Robot < handle
                 config.initialConditions.base_pose_dot, config.initialConditions.s_dot);
 
             % initialize general quantites and iDynTree objects
-            obj.LFoot_frameName = config.robotFrames.LEFT_FOOT;
-            obj.RFoot_frameName = config.robotFrames.RIGHT_FOOT;
+            %obj.LFoot_frameName = config.robotFrames.LEFT_FOOT;
+            %obj.RFoot_frameName = config.robotFrames.RIGHT_FOOT;
             obj.useMotorReflectedInertias = config.SIMULATE_MOTOR_REFLECTED_INERTIA;
             obj.NDOF = obj.KinDynModel.NDOF;
             obj.S = [zeros(6, obj.KinDynModel.NDOF); eye(obj.KinDynModel.NDOF)];
@@ -97,35 +97,36 @@ classdef Robot < handle
             end
         end
         
-        function [J_LFoot, J_RFoot] = get_feet_jacobians(obj)
-            % get_feet_jacobians Returns the Jacobians of the feet
-            % OUTPUT: - J_left_foot: Jacobian of the left foot
-            %         - J_right_foot: Jacobian of the right foot
-            [ack,J_LFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobianLRfoot('LFoot');
+        function J_IN_CONTACT_WITH_GROUND = get_inContactWithGround_jacobians(obj)
+            % get_feet_jacobians Returns the Jacobians of the links that
+            % can be in contact with the ground
+            % OUTPUT: - J_in_contact_frames =
+            % [J_in_contact_frame_1;J_in_contact_frame_2;...]: Jacobian of
+            % the frame 1
+            [ack,J_IN_CONTACT_WITH_GROUND] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian_inContactFrames();
             if (~ack)
-                error('[Robot: get_feet_jacobians] Unable to retrieve the left foot jacobian');
-            end
-
-            [ack,J_RFoot] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobianLRfoot('RFoot');
-            if (~ack)
-                error('[Robot: get_feet_jacobians] Unable to retrieve the right foot jacobian');
+                error('[Robot: get_inContactWithGround_jacobians] Unable to retrieve the jacobian of the links that are in contact with the ground');
             end
         end
 
-        function [JDot_nu_LFOOT, JDot_nu_RFOOT] = get_feet_JDot_nu(obj)
+        function JDot_nu_IN_CONTACT_WITH_GROUND = get_inContactWithGround_JDot_nu(obj)
             % get_feet_JDot_nu Returns the Jacobian derivative of the feet multiplied by the configuration velocity
             % OUTPUT: - JDot_nu_LFOOT: \dot{J} nu relative to the left foot
             %         - JDot_nu_RFOOT: \dot{J} nu relative to the right foot
-            JDot_nu_LFOOT = obj.KinDynModel.kinDynComp.getFrameBiasAccLRfoot('LFoot');
-            JDot_nu_RFOOT = obj.KinDynModel.kinDynComp.getFrameBiasAccLRfoot('RFoot');
+            [ack,JDot_nu_IN_CONTACT_WITH_GROUND] = obj.KinDynModel.kinDynComp.getFrameBiasAcc_inContactFrames();
+            if (~ack)
+                error('[Robot: get_inContactWithGround_JDot_nu] Unable to retrieve the bias accelerations of the links that are in contact with the ground');
+            end
         end
 
-        function [H_LFOOT, H_RFOOT] = get_feet_H(obj)
-            % get_feet_H Returns the Homogenous transform of the feet in the world frame
-            % OUTPUT: - H_LFOOT: w_H_b of relative to the left feet
-            %         - H_RFOOT: w_H_b of relative to the right feet
-            H_LFOOT = obj.KinDynModel.kinDynComp.getWorldTransformLRfoot('LFoot');
-            H_RFOOT = obj.KinDynModel.kinDynComp.getWorldTransformLRfoot('RFoot');
+        function H_IN_CONTACT_WITH_GROUND = get_inContactWithGround_H(obj)
+            % get_inContactWithGround_H Returns the Homogenous transform of the links that can be in contact with the ground in the world frame
+            % OUTPUT: - H_IN_CONTACT_WITH_GROUND=[w_H_b1;w_H_b2;...]: w_H_b1 of the first frame relative to the
+            % world frame
+            [ack,H_IN_CONTACT_WITH_GROUND] = obj.KinDynModel.kinDynComp.getWorldTransform_inContactFrames();
+            if (~ack)
+                error('[Robot: get_inContactWithGround_H] Unable to retrieve world transformation of the frames that are in contact with the ground');
+            end
         end
 
         function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench,motorInertias,obj_step_block)
