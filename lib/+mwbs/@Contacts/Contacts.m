@@ -18,8 +18,8 @@ classdef Contacts < handle
     end
     
     properties (Access = private)
-        was_in_contact = ones(8, 1); % this vector says if the vertex was in contact (1) or not (0)
-        is_in_contact = ones(8, 1); % this vector says if the vertex is in contact (1) or not (0)
+        was_in_contact; % this vector says if the vertex was in contact (1) or not (0)
+        is_in_contact; % this vector says if the vertex is in contact (1) or not (0)
         A; Ax_Lb; Ax_Ub; Aeq; beq; ulb; % matrices used in the optimization problem
         osqpProb; % OSQP solver object
         firstSolverIter; % For handing osqp.setp and osqp.update
@@ -48,6 +48,9 @@ classdef Contacts < handle
             obj.S = [zeros(6, robot.NDOF); ...
                     eye(robot.NDOF)];
             obj.mu = friction_coefficient;
+            
+            obj.is_in_contact = ones(4*length(in_contact_frames),1);
+            obj.was_in_contact = ones(4*length(in_contact_frames),1);
             
             % initialize the setup/update step of the osqp solver
             obj.firstSolverIter = true;
