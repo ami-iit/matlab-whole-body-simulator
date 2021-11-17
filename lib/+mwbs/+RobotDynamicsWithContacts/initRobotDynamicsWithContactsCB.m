@@ -1,8 +1,3 @@
-% %% PRELIMINARY CONFIGURATION
-% %
-% % Add path to local source code
-% addpath(strcat(fileparts(mfilename('fullpath')),'/../../src'))
-
 % Create in the workspace the bus required for having an output bus with the kynematic & dynamic
 % variables.
 kinDynOut_bus = initKinDynOut_bus(robot_config);

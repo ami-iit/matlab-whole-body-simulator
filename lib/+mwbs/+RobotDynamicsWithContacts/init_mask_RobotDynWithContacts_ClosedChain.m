@@ -1,7 +1,7 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % /**
 %  * Copyright (C) 2021 CoDyCo
-%  * @author: Venus Pasandi
+%  * @author: Venus Pasandi (venus.pasandi@iit.it)
 %  * Permission is granted to copy, distribute, and/or modify this program
 %  * under the terms of the GNU General Public License, version 2 or any
 %  * later version published by the Free Software Foundation.
@@ -14,7 +14,6 @@
 %  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
 %  * Public License for more details
 %  *
-%  * venus.pasandi@iit.it
 %  */
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % NOTE: THIS SCRIPT IS RUN AUTOMATICALLY WHEN THE USER STARTS THE ASSOCIATED
@@ -144,4 +143,105 @@ else
 end
 
 clear H_jacobianBLK H_forwardKinBLK H_biasAccBLK 
-clear blockPath H_simFuncJConFramesBLK numInContactFrames
+clear H_simFuncJConFramesBLK numInContactFrames
+
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initialize the simulink functions for having the jacobian and bias acceleration for the links that interact with
+% the ground
+
+H_jacobianBLK = find_system(gcb,'FindAll','On','LookUnderMasks','on','FollowLinks','on','Type','Block','Name','First Diff Jacobian');
+H_biasAccBLK = find_system(gcb,'FindAll','On','LookUnderMasks','on','FollowLinks','on','Type','Block','Name','First Diff DotJNu');
+
+if (robot_config.closedChains == 0)
+    set_param(getfullname(H_jacobianBLK),'firstFrameName','robot_config.robotFrames.BASE','secondFrameName','robot_config.robotFrames.BASE');
+    set_param(getfullname(H_biasAccBLK),'firstFrameName','robot_config.robotFrames.BASE','secondFrameName','robot_config.robotFrames.BASE');
+else
+    set_param(getfullname(H_jacobianBLK),'firstFrameName','robot_config.robotFrames.BREAK.P1{1}','secondFrameName','robot_config.robotFrames.BREAK.P1{2}');
+    set_param(getfullname(H_biasAccBLK),'firstFrameName','robot_config.robotFrames.BREAK.P1{1}','secondFrameName','robot_config.robotFrames.BREAK.P1{2}');
+end
+
+% Determine the number of split points considered currently in the block
+H_simFuncJSPsBLK = find_system(strcat(blockPath.getBlock(1),'/simulinkFunction_dyn_jacobian_splitPoints'),'FindAll','On','LookUnderMasks','on','FollowLinks','on','BlockType','Concatenate');
+if isempty(H_simFuncJSPsBLK)
+    numSplitPoints = 1;
+else
+    numSplitPoints = eval(get_param(H_simFuncJSPsBLK,'NumInputs'));
+end
+
+% Determine the number of split points that required according to the desired robot
+% model
+numRobotSplitPoints = robot_config.closedChains;
+% Not to pass zero dimension
+if (robot_config.closedChains == 0)
+    numRobotSplitPoints = 1;
+end
+
+% Check if the current block structure matches the robot model
+if (numSplitPoints == numRobotSplitPoints)
+    % the current structure perfectly matches the robot model so there is
+    % no need for further modifications.
+elseif (numRobotSplitPoints > numSplitPoints)
+    disBLK = 5;
+    pose_jacobianBLK = get_param(H_jacobianBLK,'position');
+    pose_biasAccBLK = get_param(H_biasAccBLK,'position');
+    height_jacobianBLK = abs(pose_jacobianBLK(4)-pose_jacobianBLK(2));
+    height_biasAccBLK = abs(pose_biasAccBLK(4)-pose_biasAccBLK(2));
+    if (numSplitPoints == 1)
+        delete_line(get_param(H_jacobianBLK,'parent'),'First Diff Jacobian/1','jacobianDiffSplitPoint/1');
+        delete_line(get_param(H_biasAccBLK,'parent'),'First Diff DotJNu/1','dotJNuDiffSplitPoint/1');
+        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints),'position',[pose_jacobianBLK(3)+50,pose_jacobianBLK(2),pose_jacobianBLK(3)+70,pose_jacobianBLK(4)],'ConcatenateDimension','1');
+        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints),'position',[pose_biasAccBLK(3)+50,pose_biasAccBLK(2),pose_biasAccBLK(3)+70,pose_biasAccBLK(4)],'ConcatenateDimension','1');
+        add_line(get_param(H_jacobianBLK,'parent'),'First Diff Jacobian/1','myMux/1');
+        add_line(get_param(H_biasAccBLK,'parent'),'First Diff DotJNu/1','myMux/1');
+        add_line(get_param(H_jacobianBLK,'parent'),'myMux/1','jacobianDiffSplitPoint/1');
+        add_line(get_param(H_biasAccBLK,'parent'),'myMux/1','dotJNuDiffSplitPoint/1');
+    else
+        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints));
+        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints));
+    end
+    
+    for counter = numSplitPoints+1 : numRobotSplitPoints
+        pose_BLK = [0,(counter-1)*(disBLK+height_jacobianBLK),0,(counter-1)*(disBLK+height_jacobianBLK)];
+        add_block(strcat(get_param(H_jacobianBLK,'parent'),'/First Diff Jacobian'),strcat(get_param(H_jacobianBLK,'parent'),'/DiffJacobian_',num2str(counter)),'position',pose_jacobianBLK + pose_BLK,'firstFrameName',strcat('robot_config.robotFrames.BREAK.P',num2str(counter),'{1}'),'secondFrameName',strcat('robot_config.robotFrames.BREAK.P',num2str(counter),'{2}'));
+        add_line(get_param(H_jacobianBLK,'parent'),'basePose/1',strcat('DiffJacobian_',num2str(counter),'/1'));
+        add_line(get_param(H_jacobianBLK,'parent'),'jointPosition/1',strcat('DiffJacobian_',num2str(counter),'/2'));
+        add_line(get_param(H_jacobianBLK,'parent'),strcat('DiffJacobian_',num2str(counter),'/1'),strcat('myMux/',num2str(counter)));
+        
+        pose_BLK = [0,(counter-1)*(disBLK+height_biasAccBLK),0,(counter-1)*(disBLK+height_biasAccBLK)];
+        add_block(strcat(get_param(H_biasAccBLK,'parent'),'/First Diff DotJNu'),strcat(get_param(H_biasAccBLK,'parent'),'/DiffDotJNu_',num2str(counter)),'position',pose_biasAccBLK + pose_BLK,'firstFrameName',strcat('robot_config.robotFrames.BREAK.P',num2str(counter),'{1}'),'secondFrameName',strcat('robot_config.robotFrames.BREAK.P',num2str(counter),'{2}'));
+        add_line(get_param(H_biasAccBLK,'parent'),'basePose/1',strcat('DiffDotJNu_',num2str(counter),'/1'));
+        add_line(get_param(H_biasAccBLK,'parent'),'jointPosition/1',strcat('DiffDotJNu_',num2str(counter),'/2'));
+        add_line(get_param(H_biasAccBLK,'parent'),'baseVel/1',strcat('DiffDotJNu_',num2str(counter),'/3'));
+        add_line(get_param(H_biasAccBLK,'parent'),'jointVel/1',strcat('DiffDotJNu_',num2str(counter),'/4'));
+        add_line(get_param(H_biasAccBLK,'parent'),strcat('DiffDotJNu_',num2str(counter),'/1'),strcat('myMux/',num2str(counter)));
+    end
+  else
+    % Deleting the extra blocks
+    for counter = numRobotSplitPoints+1 : numSplitPoints
+        delete_line(get_param(H_jacobianBLK,'parent'),'basePose/1',strcat('DiffJacobian_',num2str(counter),'/1'));
+        delete_line(get_param(H_jacobianBLK,'parent'),'jointPosition/1',strcat('DiffJacobian_',num2str(counter),'/2'));
+        delete_line(get_param(H_jacobianBLK,'parent'),strcat('DiffJacobian_',num2str(counter),'/1'),strcat('myMux/',num2str(counter)));
+        delete_block(strcat(get_param(H_jacobianBLK,'parent'),'/DiffJacobian_',num2str(counter)));
+       
+        delete_line(get_param(H_biasAccBLK,'parent'),'basePose/1',strcat('DiffDotJNu_',num2str(counter),'/1'));
+        delete_line(get_param(H_biasAccBLK,'parent'),'jointPosition/1',strcat('DiffDotJNu_',num2str(counter),'/2'));
+        delete_line(get_param(H_biasAccBLK,'parent'),'baseVel/1',strcat('DiffDotJNu_',num2str(counter),'/3'));
+        delete_line(get_param(H_biasAccBLK,'parent'),'jointVel/1',strcat('DiffDotJNu_',num2str(counter),'/4'));
+        delete_line(get_param(H_biasAccBLK,'parent'),strcat('DiffDotJNu_',num2str(counter),'/1'),strcat('myMux/',num2str(counter)));
+        delete_block(strcat(get_param(H_biasAccBLK,'parent'),'/DiffDotJNu_',num2str(counter)));
+    end
+    if (numRobotSplitPoints == 1)
+        delete_line(get_param(H_jacobianBLK,'parent'),'First Diff Jacobian/1','myMux/1');
+        delete_line(get_param(H_biasAccBLK,'parent'),'First Diff DotJNu/1','myMux/1');
+        delete_line(get_param(H_jacobianBLK,'parent'),'myMux/1','jacobianDiffSplitPoint/1');
+        delete_line(get_param(H_biasAccBLK,'parent'),'myMux/1','dotJNuDiffSplitPoint/1');
+        delete_block(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'));
+        delete_block(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'));
+        add_line(get_param(H_jacobianBLK,'parent'),'First Diff Jacobian/1','jacobianDiffSplitPoint/1');
+        add_line(get_param(H_biasAccBLK,'parent'),'First Diff DotJNu/1','dotJNuDiffSplitPoint/1');
+    else
+        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints));
+        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints));
+    end
+end  
+    

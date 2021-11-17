@@ -30,14 +30,14 @@ classdef KinDynComputations
             J_inGroundContact = simFunc_getFrameFreeFloatingJacobian_inContactFrames(obj.w_H_b,obj.s);
         end
         
-        function [ack,JDiff_Lpoint,JDiff_Rpoint] = getFrameFreeFloatingJacobianSpilitPoints(obj)
+        function [ack,JDiff_splitPoint] = getFrameFreeFloatingJacobianSpilitPoints(obj)
             ack = true;
-            [JDiff_Lpoint,JDiff_Rpoint] = simFunc_getFrameFreeFloatingJacobianSpilitPoints(obj.w_H_b,obj.s);
+            JDiff_splitPoint = simFunc_getFrameFreeFloatingJacobianSpilitPoints(obj.w_H_b,obj.s);
         end
         
-        function [ack,JDotNuDiff_Lpoint,JDotNuDiff_Rpoint] = getFrameBiasACCSpilitPoints(obj)
+        function [ack,JDotNuDiff_splitPoint] = getFrameBiasACCSpilitPoints(obj)
             ack = true;
-            [JDotNuDiff_Lpoint,JDotNuDiff_Rpoint] = simFunc_getFrameBiasAccSpilitPoints(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
+            JDotNuDiff_splitPoint = simFunc_getFrameBiasAccSpilitPoints(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
         end
         
         function [ack,M] = getFreeFloatingMassMatrix(obj)
