@@ -6,7 +6,7 @@ classdef Contacts < handle
 
     properties (Constant)
         num_vertices = 4;
-        max_consecuitive_fail = 20;
+        max_consecuitive_fail = 40;
         useOSQP=false; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
         useQPOASES=true;
     end
