@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Added the option to load model with the absolute path, without using the YARP resource management at all (https://github.com/ami-iit/matlab-whole-body-simulator/pull/61).
+
 ## [2.0.0] - 2021-05-12
 ### Added
 
