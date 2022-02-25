@@ -1,3 +1,3 @@
 %% configuration for the matlab iDyntree visualizer
 
-[confVisualizer.modelPath,confVisualizer.fileName] = mwbs.getModelPathFromFileNameAndYarpFinder(confVisualizer.fileName);
+[confVisualizer.modelPath,confVisualizer.fileName] = mwbs.getModelPathFromFileNameAndYarpFinder(confVisualizer.UrdfFile);

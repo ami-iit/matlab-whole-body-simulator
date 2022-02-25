@@ -3,7 +3,7 @@
 kinDynOut_bus = initKinDynOut_bus(robot_config);
 
 % Get the model path through the YARP resource finder
-robot_config.modelPath = mwbs.getModelPathFromFileNameAndYarpFinder(robot_config.fileName);
+[robot_config.modelPath,robot_config.fileName] = mwbs.getModelPathFromFileNameAndYarpFinder(robot_config.UrdfFile);
 
 %======== LOCAL FUNCTIONS ====================
 
