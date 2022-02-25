@@ -1,6 +1,6 @@
 %% configuration for the matlab iDyntree visualizer
 
-confVisualizer.fileName = robot_config.fileName;
+confVisualizer.UrdfFile = robot_config.UrdfFile;
 confVisualizer.meshFilePrefix = robot_config.meshFilePrefix;
 confVisualizer.jointOrder = robot_config.jointOrder;
 confVisualizer.robotFrames = robot_config.robotFrames;

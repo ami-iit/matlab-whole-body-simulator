@@ -36,7 +36,7 @@ robot_config.numOfJointsForEachControlboard = numOfJointsForEachControlboard;
 % mesh via the ExternalMesh.getFileLocationOnLocalFileSystem method is used. The iCub model meshes
 % file tree is compatible with this workflow.
 robot_config.meshFilePrefix = '';
-robot_config.fileName = WBTConfigRobotSim.UrdfFile;
+robot_config.UrdfFile = WBTConfigRobotSim.UrdfFile;
 robot_config.N_DOF = numel(WBTConfigRobotSim.ControlledJoints);
 robot_config.N_DOF_MATRIX = eye(robot_config.N_DOF);
 
