@@ -2,8 +2,14 @@
 % variables.
 kinDynOut_bus = initKinDynOut_bus(robot_config);
 
-% Get the model path through the YARP resource finder
+% Get the model path from the Urdf file name and the YARP resource finder
+if ~isfield(robot_config,'UrdfFile') && isfield(robot_config,'fileName')
+	robot_config.UrdfFile = robot_config.fileName;
+elseif ~isfield(robot_config,'UrdfFile') && ~isfield(robot_config,'fileName')
+	error('[initRobotDyanmicsWithContactsCB]: The urdf file is not provided in "robot_config".');
+end
 [robot_config.modelPath,robot_config.fileName] = mwbs.getModelPathFromFileNameAndYarpFinder(robot_config.UrdfFile);
+
 
 %======== LOCAL FUNCTIONS ====================
 
