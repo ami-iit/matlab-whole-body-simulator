@@ -12,6 +12,7 @@ end
 
 
 
+
 %======== LOCAL FUNCTIONS ====================
 
 function kinDynOut_bus = initKinDynOut_bus(robot_config)
