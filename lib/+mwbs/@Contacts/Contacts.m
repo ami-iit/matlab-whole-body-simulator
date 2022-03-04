@@ -7,8 +7,8 @@ classdef Contacts < handle
     properties (Constant)
         num_vertices = 4;
         max_consecuitive_fail = 40;
-        useOSQP=false; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
-        useQPOASES=true;
+        useOSQP = false; % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
+        useQPOASES = true;
     end
     
     properties (SetAccess = immutable)
@@ -77,7 +77,7 @@ classdef Contacts < handle
 
         contact_points = compute_contact_points(obj, robot, num_inContact_frames);
 
-        [base_pose_dot, s_dot] = compute_velocity(obj, M, G, robot, base_pose_dot, s_dot, closed_chains, num_inContact_frames);
+        [base_pose_dot, s_dot] = compute_velocity(obj, M, G, base_pose_dot, s_dot, closed_chains, num_inContact_frames, contact_point)
         
         P_damped_psudo_inverse = compute_damped_psudo_inverse(obj,P,damped_coefficient);
 
@@ -86,7 +86,9 @@ classdef Contacts < handle
         free_contact_diff_acceleration = compute_free_contact_diff_acceleration(obj, G, free_acceleration, P);
 
         forces = compute_unilateral_linear_contact(obj, M, h, J_inContact, J_diff_splitPoint, JDot_nu_inContact, JDot_diff_nu_splitPoint, torque, contact_point, closedChains, generalized_ext_wrench, num_inContact_frames);
-
+        
+        impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_inContact, J_diff_splitPoint, contact_point, closedChains, num_inContact_frames, mapVerticesNewContact);
+        
         wrench_inContactFrames = compute_contact_wrench_in_sole_frames(obj, contact_forces, robot, num_inContact_frames);
 
         prepare_optimization_matrix(obj,num_inContact_frames);
