@@ -16,6 +16,9 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
     properties (Access = private)
         KinDynModel, viz;
         g = [0, 0, -9.81]; % gravity vector
+        world_H_base = eye(4);
+        jointsPosition;
+        t; 
     end
 
     methods (Access = protected)
@@ -25,9 +28,24 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
             if obj.config.visualizeRobot
                 % Perform one-time calculations, such as computing constants
                 obj.prepareRobot()
-                tic;
             end
 
+        end
+        
+        function resetImpl(obj)
+            obj.t = timer('TimerFcn',@(x,y)obj.updateVisualization(), 'Period', obj.minSampleTime,  ...
+                          'ExecutionMode', 'fixedRate', 'BusyMode','queue');  
+
+            start(obj.t);
+        end
+        
+        function releaseImpl(obj)
+            R = get(obj.t, 'Running');
+            if isequal(R ,'on')
+                stop(obj.t);
+            end
+            obj.viz.close();
+            delete(obj.viz);
         end
 
         function icon = getIconImpl(~)
@@ -40,17 +58,8 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
             if obj.config.visualizeRobot
                 % take the kinematic quantities and set the robot state
                 iDynTreeWrappers.setRobotState(obj.KinDynModel, world_H_base, jointsPosition, base_velocity, jointsVelocity, obj.g);
-                if obj.viz.run()
-                    timeInterval = toc;
-                    % check the maximum fps
-                    if timeInterval > obj.minSampleTime
-                        obj.updateVisualization(world_H_base, jointsPosition);
-                        obj.viz.draw();
-                        tic
-                    end
-                else
-                    error('Closing visualizer.')
-                end
+                obj.world_H_base = world_H_base;
+                obj.jointsPosition = jointsPosition;
             end
 
         end
@@ -75,27 +84,35 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
             obj.viz.enviroment().addLight('sun2');
             obj.viz.enviroment().lightViz('sun2').setType(iDynTree.DIRECTIONAL_LIGHT);
             obj.viz.enviroment().lightViz('sun2').setDirection(iDynTree.Direction(1, 0, 0));
+            
+            obj.jointsPosition = zeros(obj.KinDynModel.NDOF,1);
         end
 
-        function updateVisualization(obj, world_H_base, jointsPosition)
+        function updateVisualization(obj)
             % Update the visualization using the incoming kinematic
             % quantities
-            s = iDynTree.VectorDynSize(obj.KinDynModel.NDOF);
-            for k = 0:length(jointsPosition)-1
-                s.setVal(k,jointsPosition(k+1));
-            end
-            baseRotation_iDyntree = iDynTree.Rotation();
-            baseOrigin_iDyntree   = iDynTree.Position();
-            T = iDynTree.Transform();
-            for k = 0:2
-                baseOrigin_iDyntree.setVal(k,world_H_base(k+1,4));
-                for j = 0:2
-                    baseRotation_iDyntree.setVal(k,j,world_H_base(k+1,j+1));
+            if obj.viz.run()
+                s = iDynTree.VectorDynSize(obj.KinDynModel.NDOF);
+                for k = 0:length(obj.jointsPosition)-1
+                    s.setVal(k,obj.jointsPosition(k+1));
                 end
+                baseRotation_iDyntree = iDynTree.Rotation();
+                baseOrigin_iDyntree   = iDynTree.Position();
+                T = iDynTree.Transform();
+                for k = 0:2
+                    baseOrigin_iDyntree.setVal(k,obj.world_H_base(k+1,4));
+                    for j = 0:2
+                        baseRotation_iDyntree.setVal(k,j,obj.world_H_base(k+1,j+1));
+                    end
+                end
+                T.setRotation(baseRotation_iDyntree);
+                T.setPosition(baseOrigin_iDyntree);
+                obj.viz.modelViz('model').setPositions(T, s);
+                obj.viz.draw();
+            else
+                stop(obj.t);
+                error('Closing visualizer.')
             end
-            T.setRotation(baseRotation_iDyntree);
-            T.setPosition(baseOrigin_iDyntree);
-            obj.viz.modelViz('model').setPositions(T, s);
         end
     end
 end
