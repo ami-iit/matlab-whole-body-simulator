@@ -47,32 +47,58 @@ elseif obj.useQPOASES
             obj.ulb(3*i-2:3*i) = 0;
         end
     end
-%     allIndexes = 1:numel(mapVerticesNewContact);
-%     mapVerticesAtZeroVel_logical = logical(mapVerticesNewContact);
-%     indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*3+1; % each vertex has 3 components
-% %     expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
-%     expandedIdxesVerticesAtZeroVel = indexesVerticesAtZeroVel+2;
-%     expandedIdxesVerticesAtZeroVel_new = expandedIdxesVerticesAtZeroVel(:);
-
-    allIndexes = 1:numel(obj.was_in_contact);
+    
+    allIndexes = 1:numel(obj.is_in_contact);
+    mapVerticesAtZeroVel_logical = logical(obj.is_in_contact);
+    indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*3+1; % each vertex has 3 components
+    expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
+    expandedIdxesVerticesAtZeroVel_all = expandedIdxesVerticesAtZeroVel(:);
+    H_active = H(expandedIdxesVerticesAtZeroVel_all,expandedIdxesVerticesAtZeroVel_all);
+    g_active = g(expandedIdxesVerticesAtZeroVel_all);
+    
+    allIndexes = 1:numel(mapVerticesNewContact);
     mapVerticesAtZeroVel_logical = logical(mapVerticesNewContact);
     indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*3+1; % each vertex has 3 components
 %     expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
     expandedIdxesVerticesAtZeroVel = indexesVerticesAtZeroVel+2;
-    expandedIdxesVerticesAtZeroVel = expandedIdxesVerticesAtZeroVel(:);
+    expandedIdxesVerticesAtZeroVel_new = expandedIdxesVerticesAtZeroVel(:);
+
+    allIndexes = 1:numel(obj.was_in_contact);
+    mapVerticesAtZeroVel_logical = logical(obj.was_in_contact);
+    indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*3+1; % each vertex has 3 components
+%     expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
+    expandedIdxesVerticesAtZeroVel = indexesVerticesAtZeroVel+2;
+    expandedIdxesVerticesAtZeroVel_c = expandedIdxesVerticesAtZeroVel(:);
 %     A_more = zeros(24,24);
 %     A_more(expandedIdxesVerticesAtZeroVel,:) = H(expandedIdxesVerticesAtZeroVel,:);
 %     Ax_more = zeros(24,1);
 %     Ax_more(expandedIdxesVerticesAtZeroVel) = -g(expandedIdxesVerticesAtZeroVel);
     A_more = zeros(24,24);
-    A_more(expandedIdxesVerticesAtZeroVel,:) = H(expandedIdxesVerticesAtZeroVel,:);
-    Ax_more = zeros(24,1);
-    Ax_more(expandedIdxesVerticesAtZeroVel) = -g(expandedIdxesVerticesAtZeroVel);
-    Ax_Ub_more = zeros(24,1);
+%     A_more(expandedIdxesVerticesAtZeroVel_c,:) = H(expandedIdxesVerticesAtZeroVel_c,:);
+%     A_more(expandedIdxesVerticesAtZeroVel_new,:) = H(expandedIdxesVerticesAtZeroVel_new,:);
+    Ax_more = zeros(24,1) - 1e20;
+%     Ax_more(expandedIdxesVerticesAtZeroVel_c) = -g(expandedIdxesVerticesAtZeroVel_c);
+%     Ax_more(expandedIdxesVerticesAtZeroVel_new) = -g(expandedIdxesVerticesAtZeroVel_new);
+    Ax_Ub_more = zeros(24,1) + 1e20;
 %     Ax_Ub_more(expandedIdxesVerticesAtZeroVel_c) = 1e12;
 %     Ax_Ub_more(expandedIdxesVerticesAtZeroVel_new) = -g(expandedIdxesVerticesAtZeroVel_new);
+%     Ax_Ub_more(expandedIdxesVerticesAtZeroVel_c) = -g(expandedIdxesVerticesAtZeroVel_c);
 
-    [contactForces,status] = simFunc_qpOASES_impact(H, g, [obj.A;A_more], [obj.Ax_Lb;Ax_more], [obj.Ax_Ub;Ax_Ub_more], -obj.ulb, obj.ulb);
+
+    allIndexes = 1:numel(obj.was_in_contact);
+    mapVerticesAtZeroVel_logical = logical(obj.was_in_contact);
+    indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*5+1; % each vertex has 5 friction constraint
+    expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2;indexesVerticesAtZeroVel+3;indexesVerticesAtZeroVel+4];
+    expandedIdxesVerticesAtZeroVel_old = expandedIdxesVerticesAtZeroVel(:);
+    A = zeros(5*2*4,24);
+    A(expandedIdxesVerticesAtZeroVel_old,:) = obj.A(expandedIdxesVerticesAtZeroVel_old,:);
+
+%     F_active = -(H_active'*H_active)\(H_active'*g_active) + null(H_active);
+%     F = zeros(24,1);
+%     F(expandedIdxesVerticesAtZeroVel_all) = F_active;
+%     g = -F;
+%     H = eye(24);
+    [contactForces,status] = simFunc_qpOASES_impact(H' * H, H' * g, [obj.A;A_more], [obj.Ax_Lb;Ax_more], [obj.Ax_Ub;Ax_Ub_more], -obj.ulb, obj.ulb);
     % Counter the consecuitive failure of the solver
     if (status == 0)
         obj.fail_counter = 0;
