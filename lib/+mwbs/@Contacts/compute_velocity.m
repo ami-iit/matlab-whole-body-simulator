@@ -24,7 +24,7 @@ new_contact = any(mapVerticesNewContact);
 if new_contact
     % the velocity after the impact is a function of the velocity before the impact
     % under the constraint that the vertex velocity is equal to zeros
-    impulsive_forces = compute_unilateral_linear_impact(obj, M, [base_pose_dot; s_dot], J_feet, J_split_points, contact_point, closed_chains, num_inContact_frames, mapVerticesNewContact);
+    impulsive_forces = compute_unilateral_linear_impact(obj, M, [base_pose_dot; s_dot], J_feet, J_split_points, contact_point, closed_chains, num_inContact_frames);
     nu_after_impact = [base_pose_dot; s_dot] + M \ (G' * impulsive_forces);
     base_pose_dot = nu_after_impact(1:6);
     s_dot = nu_after_impact(7:end);

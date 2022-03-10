@@ -1,4 +1,4 @@
-function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_inContact, J_diff_splitPoint, contact_point, closedChains, num_inContact_frames, mapVerticesNewContact)
+function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_inContact, J_diff_splitPoint, contact_point, closedChains, num_inContact_frames)
 % compute_unilateral_linear_contact returns the pure forces
 % acting on the feet vertices and the internal force/torques
 % applied to the split points if there is a closed chain
@@ -41,64 +41,40 @@ if obj.useOSQP
     
 elseif obj.useQPOASES
     
-    obj.ulb = 1e10 + zeros(obj.num_vertices*num_inContact_frames*3, 1);
+    obj.ulb = 1e10 + zeros(3*obj.num_vertices*num_inContact_frames, 1);
     for i = 1 : obj.num_vertices * num_inContact_frames
-        if (~obj.is_in_contact(i)) % vertex NOT in contact with the ground
+        if (contact_point(i) > 0) % vertex NOT in contact with the ground
             obj.ulb(3*i-2:3*i) = 0;
         end
     end
     
     allIndexes = 1:numel(obj.is_in_contact);
-    mapVerticesAtZeroVel_logical = logical(obj.is_in_contact);
-    indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*3+1; % each vertex has 3 components
-    expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
-    expandedIdxesVerticesAtZeroVel_all = expandedIdxesVerticesAtZeroVel(:);
-    H_active = H(expandedIdxesVerticesAtZeroVel_all,expandedIdxesVerticesAtZeroVel_all);
-    g_active = g(expandedIdxesVerticesAtZeroVel_all);
+    mapVertices = true(numel(obj.is_in_contact),1);
+    indexesVertices = (allIndexes(mapVertices) - 1) * 3 + 1; % each vertex has 3 components
+    indexesVerticesNormalDirection = indexesVertices + 2;
+    indexesVerticesNormalDirection = indexesVerticesNormalDirection(:);
     
-    allIndexes = 1:numel(mapVerticesNewContact);
-    mapVerticesAtZeroVel_logical = logical(mapVerticesNewContact);
-    indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*3+1; % each vertex has 3 components
-%     expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
-    expandedIdxesVerticesAtZeroVel = indexesVerticesAtZeroVel+2;
-    expandedIdxesVerticesAtZeroVel_new = expandedIdxesVerticesAtZeroVel(:);
-
-    allIndexes = 1:numel(obj.was_in_contact);
-    mapVerticesAtZeroVel_logical = logical(obj.was_in_contact);
-    indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*3+1; % each vertex has 3 components
-%     expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
-    expandedIdxesVerticesAtZeroVel = indexesVerticesAtZeroVel+2;
-    expandedIdxesVerticesAtZeroVel_c = expandedIdxesVerticesAtZeroVel(:);
-%     A_more = zeros(24,24);
-%     A_more(expandedIdxesVerticesAtZeroVel,:) = H(expandedIdxesVerticesAtZeroVel,:);
-%     Ax_more = zeros(24,1);
-%     Ax_more(expandedIdxesVerticesAtZeroVel) = -g(expandedIdxesVerticesAtZeroVel);
-    A_more = zeros(24,24);
-%     A_more(expandedIdxesVerticesAtZeroVel_c,:) = H(expandedIdxesVerticesAtZeroVel_c,:);
-%     A_more(expandedIdxesVerticesAtZeroVel_new,:) = H(expandedIdxesVerticesAtZeroVel_new,:);
-    Ax_more = zeros(24,1) - 1e20;
-%     Ax_more(expandedIdxesVerticesAtZeroVel_c) = -g(expandedIdxesVerticesAtZeroVel_c);
-%     Ax_more(expandedIdxesVerticesAtZeroVel_new) = -g(expandedIdxesVerticesAtZeroVel_new);
-    Ax_Ub_more = zeros(24,1) + 1e20;
-%     Ax_Ub_more(expandedIdxesVerticesAtZeroVel_c) = 1e12;
-%     Ax_Ub_more(expandedIdxesVerticesAtZeroVel_new) = -g(expandedIdxesVerticesAtZeroVel_new);
-%     Ax_Ub_more(expandedIdxesVerticesAtZeroVel_c) = -g(expandedIdxesVerticesAtZeroVel_c);
-
-
-    allIndexes = 1:numel(obj.was_in_contact);
-    mapVerticesAtZeroVel_logical = logical(obj.was_in_contact);
-    indexesVerticesAtZeroVel = (allIndexes(mapVerticesAtZeroVel_logical)-1)*5+1; % each vertex has 5 friction constraint
-    expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2;indexesVerticesAtZeroVel+3;indexesVerticesAtZeroVel+4];
-    expandedIdxesVerticesAtZeroVel_old = expandedIdxesVerticesAtZeroVel(:);
-    A = zeros(5*2*4,24);
-    A(expandedIdxesVerticesAtZeroVel_old,:) = obj.A(expandedIdxesVerticesAtZeroVel_old,:);
-
-%     F_active = -(H_active'*H_active)\(H_active'*g_active) + null(H_active);
-%     F = zeros(24,1);
-%     F(expandedIdxesVerticesAtZeroVel_all) = F_active;
-%     g = -F;
-%     H = eye(24);
-    [contactForces,status] = simFunc_qpOASES_impact(H' * H, H' * g, [obj.A;A_more], [obj.Ax_Lb;Ax_more], [obj.Ax_Ub;Ax_Ub_more], -obj.ulb, obj.ulb);
+    normalForces = [0,0,1];
+    expandedNormalForces = repmat(normalForces,[1,numel(obj.is_in_contact)]);
+    
+    H_nn = H(indexesVerticesNormalDirection,indexesVerticesNormalDirection);
+    H_n = H(indexesVerticesNormalDirection,:);
+    g_n = g(indexesVerticesNormalDirection);
+    
+    % The first phase of the impact model
+    lb_phase_I = zeros(numel(obj.is_in_contact),1);
+    ub_phase_I = obj.ulb(indexesVerticesNormalDirection);
+    
+    [contactForcesNormal,~] = simFunc_qpOASES_impact_phase_I(H_nn, g_n, lb_phase_I, ub_phase_I);
+    
+    % The second phase of the impact model
+    maximumNormalForceMagnitude = sum(contactForcesNormal);
+    
+    A_phase_II = [obj.A;-diag(obj.is_in_contact)*H_n;expandedNormalForces];
+    A_Ub_phase_II = [obj.Ax_Ub;diag(obj.is_in_contact)*g_n;maximumNormalForceMagnitude];
+    A_Lb_phase_II = -1e10 + zeros(1+(5+1)*8,1);
+    
+    [contactForces,status] = simFunc_qpOASES_impact_phase_II(H, g, A_phase_II, A_Lb_phase_II, A_Ub_phase_II, -obj.ulb, obj.ulb);
     % Counter the consecuitive failure of the solver
     if (status == 0)
         obj.fail_counter = 0;
