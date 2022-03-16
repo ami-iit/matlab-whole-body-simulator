@@ -20,6 +20,12 @@ classdef KinDynComputations
             obj.NDOF = numel(s_dot);
         end
         
+        function obj = setRobotVelocity(obj,base_pose_dot,s_dot)
+            % Sets the robot velocity the wrapper methods depend on
+            [obj.base_pose_dot,obj.s_dot] = deal(base_pose_dot,s_dot);
+            obj.NDOF = numel(s_dot);
+        end
+        
         function [w_H_b,s,base_pose_dot,s_dot,NDOF] = getRobotState(obj)
             % Gets the robot state the wrapper methods depend on
             [w_H_b,s,base_pose_dot,s_dot,NDOF] = deal(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot,obj.NDOF);
