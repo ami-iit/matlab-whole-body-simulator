@@ -54,6 +54,10 @@ classdef Robot < handle
             %        - s_dot = [NDOF, 1] Joints velocity vector
             obj.KinDynModel.kinDynComp = obj.KinDynModel.kinDynComp.setRobotState(w_H_b, s, base_pose_dot, s_dot);
         end
+        
+        function set_robot_velocity(obj, base_pose_dot, s_dot)
+           obj.KinDynModel.kinDynComp = obj.KinDynModel.kinDynComp.setRobotVelocity(base_pose_dot, s_dot);
+        end
 
         function M = get_mass_matrix(obj,motorInertias,obj_step_block)
             % get_mass_matrix Returns the mass matrix
