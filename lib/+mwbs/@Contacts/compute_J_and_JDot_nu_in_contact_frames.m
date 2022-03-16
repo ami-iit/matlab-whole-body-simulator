@@ -26,7 +26,7 @@ function [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj,
     %     PLACE AND DATE: <Genoa, March 2022>
 
 % -------------------- INITIALIZATION ----------------------------
-NDOF = robot.NDOF;
+NDOF = robot.NDOF + 6;
 
 J_print = zeros(3 * obj.num_vertices * num_in_contact_frames, NDOF);
 JDot_nu_print = zeros(3 * obj.num_vertices * num_in_contact_frames, 1);

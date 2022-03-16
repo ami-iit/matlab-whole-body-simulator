@@ -1,4 +1,4 @@
-function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, num_closed_chains, generalized_ext_wrench, num_in_contact_frames)
+function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, num_closed_chains, generalized_ext_wrench, num_in_contact_frames, base_pose_dot, s_dot)
 
     %     COMPUTE_UNILATERAL_LINEAR_CONTACT: computes the pure forces acting on the feet vertices and the internal wrenches applied to the split points in the (possible) closed chains
     % 
@@ -137,6 +137,8 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     %             - num_closed_chains:          [SCALAR]         The number of the closed chains
     %             - generalized_ext_wrench:     [(N+6) x 1]      The external wrenches applied to the robot projected to the state space of the robot
     %             - num_in_contact_frames:      [SCALAR]         The number of the links/frames interacting with the ground
+    %             - base_pose_dot:              [6 x 1]          The velocity vector of the base link
+    %             - s_dot:                      [N x 1]          The configuration velocity vector
     % 
     %     **OUTPUT:**
     %             - forces:  [(3m+6p) x 1] The contact pure forces and the internal wrenches in the spilit points
@@ -154,19 +156,19 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
 free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
 free_contact_acceleration_contact = obj.compute_free_contact_acceleration(J_in_contact, free_acceleration, JDot_nu_in_contact);
 
-if useDiscreteContact && num_closed_chains == 0 % there is no closed chain
+if obj.useDiscreteContact && num_closed_chains == 0 % there is no closed chain
     
     H = J_in_contact * (M \ J_in_contact');
     g = J_in_contact * [base_pose_dot ; s_dot] / obj.dt + free_contact_acceleration_contact;
     
-elseif useDiscreteContact % there are some closed chains
+elseif obj.useDiscreteContact % there are some closed chains
     free_contact_diff_acceleration_internal = obj.compute_free_contact_acceleration(J_diff_split_points, free_acceleration, JDot_diff_nu_split_points);
     JMJ_dmp_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001);
     
     H = J_in_contact * (M \ J_in_contact') - (J_in_contact * (M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * (J_diff_split_points * (M \ J_in_contact') ));
     g = J_in_contact * [base_pose_dot ; s_dot] / obj.dt + free_contact_acceleration_contact - (J_in_contact * (M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * (J_diff_split_points * [base_pose_dot ; s_dot] / obj.dt + free_contact_diff_acceleration_internal));
     
-elseif ~useDiscreteContact && num_closed_chains == 0 % there is no closed chain
+elseif ~obj.useDiscreteContact && num_closed_chains == 0 % there is no closed chain
       
     H = J_in_contact * (M \ J_in_contact');
     g = free_contact_acceleration_contact;
