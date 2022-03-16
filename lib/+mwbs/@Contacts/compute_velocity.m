@@ -119,6 +119,8 @@ function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_
     %     PLACE AND DATE: <Genoa, March 2022>
     
 % ---------------- INITIALIZAITON -------------------------------------
+NDOF = size(s_dot,1);
+
 num_total_vertices = num_in_contact_frames * obj.num_vertices;
 num_contact_forces = 3 * num_total_vertices;
 
@@ -146,10 +148,10 @@ if new_contact && ~obj.useFrictionalImpact % A frictionless impact
     J = J_feet(expandedIdxesVerticesAtZeroVel,1:end);
     G = [J;J_split_points];
     
-    if closed_chains == 0
-        N = (eye(robot.NDOF + 6) - M \ (G' * (G * (M \ G') \ G)));
+    if (num_closed_chains == 0)
+        N = (eye(NDOF + 6) - M \ (G' * (G * (M \ G') \ G)));
     else
-        N = (eye(robot.NDOF + 6) - M \ (G' * (obj.compute_damped_psudo_inverse(G * (M \ G'),0.001) * G)));
+        N = (eye(NDOF + 6) - M \ (G' * (obj.compute_damped_psudo_inverse(G * (M \ G'),0.001) * G)));
     end
     nu_after_impact = N * [base_pose_dot; s_dot];
     base_pose_dot = nu_after_impact(1:6);

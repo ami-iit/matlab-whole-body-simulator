@@ -84,7 +84,7 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
 
             % Compute the contact quantites and the velocity after a possible impact
             [generalized_total_wrench, wrench_inContact_frames, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact_closed_chain_(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot,obj);
+                obj.contacts.compute_contact_closed_chain(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot,obj);
             
             % Update the velocity vector of the robot
             obj.state.set_velocity(base_pose_dot, s_dot);

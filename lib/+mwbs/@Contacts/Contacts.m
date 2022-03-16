@@ -178,7 +178,7 @@ classdef Contacts < handle
             %
             
             num_in_contact_frames = length(obj_step_block.robot_config.robotFrames.IN_CONTACT_WITH_GROUND);  % The number of the links interacting with the ground
-            num_closed_chains = obj_step_block.robot_config.closed_chains;  % The number of the closed chains of the robot
+            num_closed_chains = obj_step_block.robot_config.closedChains;  % The number of the closed chains of the robot
             
             % collect the open-chain kinematic dynamic quantities
             M = robot.get_mass_matrix(motor_inertias,obj_step_block);
@@ -210,7 +210,7 @@ classdef Contacts < handle
             % computes a 3 * num_total_vertices + 6 * num_closed_chains vector
             % containing the pure contact forces acting on every vertex and the
             % internal wrenches in the spilit points
-            forces = obj.compute_unilateral_linear_contact(M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_points, num_closed_chains, generalized_ext_wrench, num_in_contact_frames);
+            forces = obj.compute_unilateral_linear_contact(M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_points, num_closed_chains, generalized_ext_wrench, num_in_contact_frames, base_pose_dot, s_dot);
             
             % transform the contact and the internal wrenches of the spilit points in the closed chains in a wrench acting on the robot
             generalized_contact_wrench = G_forces' * forces;
@@ -256,7 +256,7 @@ classdef Contacts < handle
 
         % computes the pure forces acting on the feet vertices and the
         % internal wrenches applied to the split points in the (possible) closed chains
-        forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, num_closed_chains, generalized_ext_wrench, num_in_contact_frames);
+        forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, num_closed_chains, generalized_ext_wrench, num_in_contact_frames, base_pose_dot, s_dot);
         
         % computes the impulsive pure forces acting on the feet vertices and the impulsive internal wrenches applied to the split points in the (possible) closed chain
         impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_contact, J_diff_split_points, contact_point, num_closed_chains, num_in_contact_frames, map_vertices_new_contact);
