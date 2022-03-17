@@ -156,29 +156,31 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
 free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
 free_contact_acceleration_contact = obj.compute_free_contact_acceleration(J_in_contact, free_acceleration, JDot_nu_in_contact);
 
-if obj.useDiscreteContact && num_closed_chains == 0 % there is no closed chain
+if obj.useDiscreteContact && num_closed_chains ~= 0 % there are some closed chains
     
-    H = J_in_contact * (M \ J_in_contact');
-    g = J_in_contact * [base_pose_dot ; s_dot] / obj.dt + free_contact_acceleration_contact;
-    
-elseif obj.useDiscreteContact % there are some closed chains
     free_contact_diff_acceleration_internal = obj.compute_free_contact_acceleration(J_diff_split_points, free_acceleration, JDot_diff_nu_split_points);
     JMJ_dmp_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001);
     
     H = J_in_contact * (M \ J_in_contact') - (J_in_contact * (M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * (J_diff_split_points * (M \ J_in_contact') ));
     g = J_in_contact * [base_pose_dot ; s_dot] / obj.dt + free_contact_acceleration_contact - (J_in_contact * (M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * (J_diff_split_points * [base_pose_dot ; s_dot] / obj.dt + free_contact_diff_acceleration_internal));
     
-elseif ~obj.useDiscreteContact && num_closed_chains == 0 % there is no closed chain
-      
-    H = J_in_contact * (M \ J_in_contact');
-    g = free_contact_acceleration_contact;
+elseif obj.useDiscreteContact % there is no closed chain
     
-else % there are some closed chains
+    H = J_in_contact * (M \ J_in_contact');
+    g = J_in_contact * [base_pose_dot ; s_dot] / obj.dt + free_contact_acceleration_contact;
+        
+elseif ~obj.useDiscreteContact && num_closed_chains ~= 0 % there are some closed chains
+     
     free_contact_diff_acceleration_internal = obj.compute_free_contact_acceleration(J_diff_split_points, free_acceleration, JDot_diff_nu_split_points);
     JMJ_dmp_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001);
     
     H = J_in_contact * (M \ J_in_contact') - (J_in_contact*(M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * (J_diff_split_points * (M \ J_in_contact') ));
     g = free_contact_acceleration_contact - (J_in_contact*(M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * free_contact_diff_acceleration_internal);
+    
+else % there is no closed chain
+     
+    H = J_in_contact * (M \ J_in_contact');
+    g = free_contact_acceleration_contact;
     
 end
 
@@ -253,7 +255,7 @@ end
 % generate an error if the optimization solver fails to solve
 % the optimization problem and obtain the contact forces.
 if (obj.fail_counter >= obj.max_consecuitive_fail)
-    error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',num2str(obj.max_consecuitive_fail),'times'}));
+    error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',sprintf('%d',int8(obj.max_consecuitive_fail)),'times'}));
 end
 
 % compute the internal wrenches of the spilit points in the (possible)
