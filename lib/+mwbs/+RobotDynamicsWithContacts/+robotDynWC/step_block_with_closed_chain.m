@@ -72,8 +72,29 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
     methods (Access = protected)
 
         function setupImpl(obj)
+            if isfield(obj.contact_config, 'max_consecuitive_fail')
+               max_consecuitive_fail = obj.contact_config.max_consecuitive_fail;
+            else
+                max_consecuitive_fail = 10;
+            end
+            if isfield(obj.contact_config, 'useFrictionalImpact')
+                useFrictionalImpact = obj.contact_config.useFrictionalImpact;
+            else
+                useFrictionalImpact = false;
+            end
+            if isfield(obj.contact_config, 'useDiscreteContact')
+                useDiscreteContact = obj.contact_config.useDiscreteContact;
+            else
+                useDiscreteContact = false;
+            end
+            if isfield(obj.contact_config, 'useQPOASES')
+                useQPOASES = obj.contact_config.useQPOASES;
+            else
+                useQPOASES = true;
+            end
+            
             obj.robot = mwbs.Robot(obj.robot_config,obj.physics_config.GRAVITY_ACC);
-            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, length(obj.robot_config.robotFrames.IN_CONTACT_WITH_GROUND), obj.physics_config.TIME_STEP);
+            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, length(obj.robot_config.robotFrames.IN_CONTACT_WITH_GROUND), obj.physics_config.TIME_STEP, max_consecuitive_fail, useFrictionalImpact, useDiscreteContact, useQPOASES);
             obj.state = mwbs.State(obj.physics_config.TIME_STEP);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);

@@ -27,11 +27,7 @@ classdef Contacts < handle
 
     properties (Constant)
         num_vertices = 4;            % The number of vertices in each foot
-        max_consecuitive_fail = 40;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
-        useOSQP = false;             % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
-        useQPOASES = true;           % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
-        useFrictionalImpact = false  % Use the frictional impact model instead of the frictionless one
-        useDiscreteContact = false   % Use the discrete contact model instead of the continuous one
+        useOSQP = false;                % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
     end
     
     properties (SetAccess = immutable)
@@ -39,6 +35,10 @@ classdef Contacts < handle
         S;           % The selector matrix for the robot torque
         mu;          % The friction coefficient
         dt;          % The time step for the discrete contact model
+        max_consecuitive_fail;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
+        useFrictionalImpact;    % Use the frictional impact model instead of the frictionless one
+        useDiscreteContact;     % Use the discrete contact model instead of the continuous one
+        useQPOASES;             % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
     end
     
     properties (Access = private)
@@ -52,14 +52,18 @@ classdef Contacts < handle
     
     methods
         
-        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, dt)
+        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, dt, max_consecuitive_fail, useFrictionalImpact, useDiscreteContact, useQPOASES)
             % CONTACTS: This function initializes the Contact class
             % INPUTE:
             %         - foot_print:            [(3m) x k] The coordinates of every vertex in xyz
             %         - NDOF:                  [SCALAR]   The number of the joints of the robot
-            %         - friction_coefficient:  [SCALAR] The friction coefficient of the ground
-            %         - num_in_contact_frames: [SCALAR] The number of the frames that can interact with the ground
-            %         - dt:                    [SCALAR] The time step for the discrete contact model
+            %         - friction_coefficient:  [SCALAR]   The friction coefficient of the ground
+            %         - num_in_contact_frames: [SCALAR]   The number of the frames that can interact with the ground
+            %         - dt:                    [SCALAR]   The time step for the discrete contact model
+            %         - max_consecuitive_fail: [SCALAR]   The maximum allowable fail in the computation of the reaction forces
+            %         - useFrictionalImpact:   [BOOLEAN]  Determine if the frictional impact model is used instead of the frictionless unpact model
+            %         - useDiscreteContact:    [BOOLEAN]  Determine if the discrete contact model is used instead of the continuous model
+            %         - useQPOASES;            [BOOLEAN]  Determine if QPOQSES solver is used for the contact and impact models         
             
             if (~isequal(length(foot_print), num_in_contact_frames))
                 error('The foot print is a cell array composed of the foot print matrix of all the frames that are in contact with the ground');
@@ -76,6 +80,10 @@ classdef Contacts < handle
                 eye(NDOF)];
             obj.mu = friction_coefficient;
             obj.dt = dt;
+            obj.max_consecuitive_fail = max_consecuitive_fail;
+            obj.useFrictionalImpact = useFrictionalImpact;
+            obj.useDiscreteContact = useDiscreteContact;
+            obj.useQPOASES = useQPOASES;
             
             obj.is_in_contact = ones(4*num_in_contact_frames,1);
             obj.was_in_contact = ones(4*num_in_contact_frames,1);

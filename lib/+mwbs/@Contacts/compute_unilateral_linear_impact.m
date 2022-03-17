@@ -126,12 +126,7 @@ if obj.useOSQP
     end
     % Solve problem
     res = obj.osqpProb.solve();
-    % Counter the consecuitive failure of the solver
-    if (res.info.status_val == 1)
-        obj.fail_counter = 0;
-    else
-        obj.fail_counter = obj.fail_counter + 1;
-    end
+
     contactForces = res.x;
     
 elseif obj.useQPOASES
@@ -169,14 +164,7 @@ elseif obj.useQPOASES
     A_Ub_phase_II = [obj.Ax_Ub; diag(obj.is_in_contact)*g_n; maximumNormalForceMagnitude];
     A_Lb_phase_II = -1e10 + zeros(1+(5+1)*8,1);
     
-    [contactForces, status] = simFunc_qpOASES_impact_phase_II(H, g, A_phase_II, A_Lb_phase_II, A_Ub_phase_II, -obj.ulb, obj.ulb);
-    
-    % Count the consecuitive failure of the solver
-    if (status == 0)
-        obj.fail_counter = 0;
-    else
-        obj.fail_counter = obj.fail_counter + 1;
-    end
+    [contactForces, ~] = simFunc_qpOASES_impact_phase_II(H, g, A_phase_II, A_Lb_phase_II, A_Ub_phase_II, -obj.ulb, obj.ulb);
     
 else
     for i = 1:obj.num_vertices * num_in_contact_frames
@@ -189,18 +177,7 @@ else
         end
     end
     options = optimoptions('quadprog', 'Algorithm', 'active-set', 'Display', 'off');
-    [contactForces,~,exitFlag,~] = quadprog(H, g, obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb, 100 * ones(size(H,1), 1), options);
-    % Counter the consecuitive failure of the solver
-    if (exitFlag == 1)
-        obj.fail_counter = 0;
-    else
-        obj.fail_counter = obj.fail_counter + 1;
-    end
-end
-% generate an error if the optimization solver fails to solve
-% the optimization problem and obtain the contact forces.
-if (obj.fail_counter >= obj.max_consecuitive_fail)
-    error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',num2str(obj.max_consecuitive_fail),'times'}));
+    [contactForces,~,~,~] = quadprog(H, g, obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb, 100 * ones(size(H,1), 1), options);
 end
 
 % compute the internal wrenches of the spilit points if there
