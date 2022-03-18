@@ -31,14 +31,13 @@ classdef Contacts < handle
     end
     
     properties (SetAccess = immutable)
-        foot_print;  % The coordinates of the vertices
-        S;           % The selector matrix for the robot torque
-        mu;          % The friction coefficient
-        dt;          % The time step for the discrete contact model
-        max_consecuitive_fail;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
-        useFrictionalImpact;    % Use the frictional impact model instead of the frictionless one
-        useDiscreteContact;     % Use the discrete contact model instead of the continuous one
-        useQPOASES;             % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
+        S;                           % The selector matrix for the robot torque
+        mu;                          % The friction coefficient
+        dt;                          % The time step for the discrete contact model
+        max_consecuitive_fail = 10;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
+        useFrictionalImpact = false;    % Use the frictional impact model instead of the frictionless one
+        useDiscreteContact = false;     % Use the discrete contact model instead of the continuous one
+        useQPOASES = true;              % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
     end
     
     properties (Access = private)
@@ -48,6 +47,7 @@ classdef Contacts < handle
         osqpProb;                        % The OSQP solver object
         firstSolverIter;                 % For handing osqp.setp and osqp.update
         fail_counter = 0;                % For counting the consecuitive fails of the solver
+        foot_print;                      % The coordinates of the vertices
     end
     
     methods
@@ -64,39 +64,38 @@ classdef Contacts < handle
             %         - useFrictionalImpact:   [BOOLEAN]  Determine if the frictional impact model is used instead of the frictionless unpact model
             %         - useDiscreteContact:    [BOOLEAN]  Determine if the discrete contact model is used instead of the continuous model
             %         - useQPOASES;            [BOOLEAN]  Determine if QPOQSES solver is used for the contact and impact models         
-            
-            if (~isequal(length(foot_print), num_in_contact_frames))
-                error('The foot print is a cell array composed of the foot print matrix of all the frames that are in contact with the ground');
-            else
-                for counter = 1 : num_in_contact_frames
-                    if (~isequal(size(foot_print{1}),[3,4]))
-                        error('The foot print matrix for each contact frame is represented with a matrix composed by 4 columns in which every column is the set of xyz coordinates')
-                    end
-                end
-            end
-            
-            obj.foot_print = foot_print;
+                
             obj.S = [zeros(6, NDOF); ...
                 eye(NDOF)];
             obj.mu = friction_coefficient;
             obj.dt = dt;
-            obj.max_consecuitive_fail = max_consecuitive_fail;
-            obj.useFrictionalImpact = useFrictionalImpact;
-            obj.useDiscreteContact = useDiscreteContact;
-            obj.useQPOASES = useQPOASES;
             
+            if ~isempty(max_consecuitive_fail)
+               obj.max_consecuitive_fail = max_consecuitive_fail;
+            end
+            if ~isempty(useFrictionalImpact)
+                obj.useFrictionalImpact = useFrictionalImpact;
+            end
+            if ~isempty(useDiscreteContact)
+                obj.useDiscreteContact = useDiscreteContact;
+            end
+            if ~isempty(useQPOASES)
+                obj.useQPOASES = useQPOASES;
+            end
+
             obj.is_in_contact = ones(4*num_in_contact_frames,1);
             obj.was_in_contact = ones(4*num_in_contact_frames,1);
             
             % initialize the setup/update step of the osqp solver
             obj.firstSolverIter = true;
             
+            obj.prepare_foot_print(num_in_contact_frames, obj.num_vertices, foot_print);
             obj.prepare_optimization_matrix(num_in_contact_frames);
             
         end
         
-        function [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                compute_contact(obj, robot, torque, generalized_ext_wrench, motor_inertias, base_pose_dot, s_dot,obj_step_block)
+        function [generalized_total_wrench, wrench_in_contact_frames, base_pose_dot, s_dot] = ...
+                compute_contact(obj, robot, torque, generalized_ext_wrench, motor_inertias, base_pose_dot, s_dot, obj_step_block)
             
             % compute_contact Computes the contact forces and the configuration velocity after a (possible) impact
             % INPUTS: - robot: instance of the Robot object
@@ -106,23 +105,30 @@ classdef Contacts < handle
             % OUTPUTS: - generalized_total_wrench: the sum of the generalized_ext_wrench and the generalized contact wrench
             %          - wrench_left_foot, wrench_right_foot: the wrench in sole frames
             %          - base_pose_dot, s_dot: configuration velocity, changed in the case of an impact with the ground
+            num_in_contact_frames = obj_step_block.num_in_contact_frames; % The number of the links interacting with the ground
             
             % collecting robot quantities
             h = robot.get_bias_forces();
             M = robot.get_mass_matrix(motor_inertias,obj_step_block);
-            [J_feet, JDot_nu_feet] = obj.compute_J_and_JDot_nu_inContact_frames(robot,length(obj_step_block.robot_config.robotFrames.IN_CONTACT_WITH_GROUND));
+            [J_feet, JDot_nu_feet] = obj.compute_J_and_JDot_nu_in_contact_frames(robot, num_in_contact_frames);
+            
             % compute the vertical distance of every vertex from the ground
-            contact_points = obj.compute_contact_points(robot, length(obj_step_block.robot_config.robotFrames.IN_CONTACT_WITH_GROUND));
+            contact_points = obj.compute_contact_points(robot, num_in_contact_frames);
+            
             % computes a 3 * num_total_vertices vector containing the pure forces acting on every vertes
-            contact_forces = obj.compute_unilateral_linear_contact(M, h, J_feet, [], JDot_nu_feet, [], torque, contact_points, 0, generalized_ext_wrench, length(obj_step_block.robot_config.robotFrames.IN_CONTACT_WITH_GROUND));
+            contact_forces = obj.compute_unilateral_linear_contact(M, h, J_feet, [], JDot_nu_feet, [], torque, contact_points, 0, generalized_ext_wrench, num_in_contact_frames, base_pose_dot, s_dot);
+            
             % transform the contact in a wrench acting on the robot
             generalized_contact_wrench = J_feet' * contact_forces;
+            
             % sum the contact wrench to the external one
             generalized_total_wrench = generalized_ext_wrench + generalized_contact_wrench;
+            
             % compute the wrench in the sole frames, in order to simulate a sensor mounted onto the sole frame
-            [wrench_left_foot, wrench_right_foot] = obj.compute_contact_wrench_in_sole_frames(contact_forces, robot, length(obj_step_block.robot_config.robotFrames.IN_CONTACT_WITH_GROUND));
+            wrench_in_contact_frames = obj.compute_contact_wrench_in_sole_frames(contact_forces, robot, num_in_contact_frames);
+            
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
-            [base_pose_dot, s_dot] = obj.compute_velocity(M, J_feet, robot, base_pose_dot, s_dot, obj_step_block.robot_config.closedChains, length(obj_step_block.robot_config.robotFrames.IN_CONTACT_WITH_GROUND));
+            [base_pose_dot, s_dot, ~] = obj.compute_velocity(M, J_feet, base_pose_dot, s_dot, 0, num_in_contact_frames, contact_points);
             
             % update the contact log
             obj.was_in_contact = obj.is_in_contact;
@@ -204,7 +210,7 @@ classdef Contacts < handle
             contact_points = obj.compute_contact_points(robot, num_in_contact_frames);
             
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
-            [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G_forces, base_pose_dot, s_dot, num_closed_chains, num_in_contact_frames, contact_points);
+            [base_pose_dot, s_dot, impact_flag] = obj.compute_velocity(M, G_forces, base_pose_dot, s_dot, num_closed_chains, num_in_contact_frames, contact_points);
             
             % update the robot velocity in the case of impact
             if impact_flag
