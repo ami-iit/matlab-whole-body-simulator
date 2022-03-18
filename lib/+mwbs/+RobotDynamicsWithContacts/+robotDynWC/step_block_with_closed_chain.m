@@ -72,29 +72,9 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
     methods (Access = protected)
 
         function setupImpl(obj)
-            if isfield(obj.contact_config, 'max_consecuitive_fail')
-               max_consecuitive_fail = obj.contact_config.max_consecuitive_fail;
-            else
-                max_consecuitive_fail = 10;
-            end
-            if isfield(obj.contact_config, 'useFrictionalImpact')
-                useFrictionalImpact = obj.contact_config.useFrictionalImpact;
-            else
-                useFrictionalImpact = false;
-            end
-            if isfield(obj.contact_config, 'useDiscreteContact')
-                useDiscreteContact = obj.contact_config.useDiscreteContact;
-            else
-                useDiscreteContact = false;
-            end
-            if isfield(obj.contact_config, 'useQPOASES')
-                useQPOASES = obj.contact_config.useQPOASES;
-            else
-                useQPOASES = true;
-            end
             
             obj.robot = mwbs.Robot(obj.robot_config,obj.physics_config.GRAVITY_ACC);
-            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, length(obj.robot_config.robotFrames.IN_CONTACT_WITH_GROUND), obj.physics_config.TIME_STEP, max_consecuitive_fail, useFrictionalImpact, useDiscreteContact, useQPOASES);
+            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, length(obj.robot_config.robotFrames.IN_CONTACT_WITH_GROUND), obj.physics_config.TIME_STEP, obj.ifFieldExists('contact_config','max_consecuitive_fail'), obj.ifFieldExists('contact_config','useFrictionalImpact'), obj.ifFieldExists('contact_config','useDiscreteContact'), obj.ifFieldExists('contact_config','useQPOASES'));
             obj.state = mwbs.State(obj.physics_config.TIME_STEP);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
@@ -127,21 +107,29 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
             kinDynOut.w_H_b = w_H_b;
             kinDynOut.s = s;
             kinDynOut.nu = [base_pose_dot;s_dot];
-            kinDynOut.w_H_frames_sole = obj.robot.get_inContactWithGround_H();
-            kinDynOut.J_frames_sole = obj.robot.get_inContactWithGround_jacobians();
-            kinDynOut.JDot_frames_sole_nu = obj.robot.get_inContactWithGround_JDot_nu();
+            kinDynOut.w_H_feet_sole = obj.robot.get_inContactWithGround_H();
+            kinDynOut.J_feet_sole = obj.robot.get_inContactWithGround_jacobians();
+            kinDynOut.JDot_feet_sole_nu = obj.robot.get_inContactWithGround_JDot_nu();
             kinDynOut.M = obj.robot.get_mass_matrix(motorInertias,obj);
             kinDynOut.h = obj.robot.get_bias_forces();
             kinDynOut.motorGrpI = zeros(size(s));
             kinDynOut.fc = wrench_inContact_frames;
             kinDynOut.nuDot = [base_pose_ddot;s_ddot];
-            kinDynOut.frames_in_contact = links_in_contact;
+            kinDynOut.feet_in_contact = links_in_contact;
         end
 
         function resetImpl(obj)
 
         end
 
+        function field_value = ifFieldExists(obj, struct_name, field_name)
+            if isfield(obj.(struct_name),field_name)
+                field_value = obj.(struct_name).(field_name);
+            else
+                field_value = [];
+            end
+        end
+        
         function [out, out2, out3, out4, out5, out6] = getOutputSizeImpl(obj)
             % Return size for each output port
             out  = [4 4];                              % homogeneous matrix dim

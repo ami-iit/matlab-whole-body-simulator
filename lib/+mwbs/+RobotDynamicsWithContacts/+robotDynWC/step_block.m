@@ -14,6 +14,10 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
 
     end
 
+    properties (Constant)
+        num_in_contact_frames = 2;  % The number of the links interacting with the ground
+    end
+    
     properties (Access = private)
         robot; contacts; state;
     end
@@ -21,50 +25,68 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
     methods (Access = protected)
 
         function setupImpl(obj)
-            obj.robot = mwbs.Robot(obj.robot_config,obj.physics_config.GRAVITY_ACC);
-            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot, obj.contact_config.friction_coefficient, 0);
+            
+            obj.robot = mwbs.Robot(obj.robot_config, obj.physics_config.GRAVITY_ACC);            
+            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, obj.num_in_contact_frames, obj.physics_config.TIME_STEP, obj.ifFieldExists('contact_config','max_consecuitive_fail'), obj.ifFieldExists('contact_config','useFrictionalImpact'), obj.ifFieldExists('contact_config','useDiscreteContact'), obj.ifFieldExists('contact_config','useQPOASES'));
             obj.state = mwbs.State(obj.physics_config.TIME_STEP);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
         end
 
-        function [w_H_b, s, base_pose_dot, s_dot, wrench_left_foot, wrench_right_foot, kinDynOut] = stepImpl(obj, generalized_ext_wrench, torque, motorInertias)
+        function [w_H_b, s, base_pose_dot, s_dot, wrench_LFoot, wrench_RFoot, kinDynOut] = stepImpl(obj, generalized_ext_wrench, torque, motorInertias)
             % Implement algorithm. Calculate y as a function of input u and
             % discrete states.
 
             % computes the contact quantites and the velocity after a possible impact
-            [generalized_total_wrench, wrench_left_foot, wrench_right_foot, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot,obj);
+            [generalized_total_wrench, wrench_in_contact_frames, base_pose_dot, s_dot] = ...
+                obj.contacts.compute_contact(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot, obj);
+            
             % sets the velocity in the state
             obj.state.set_velocity(base_pose_dot, s_dot);
+            
             % compute the robot acceleration
-            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench,motorInertias,obj);
+            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench, motorInertias, obj);
+            
             % integrate the dynamics
             [w_H_b, s, base_pose_dot, s_dot] = obj.state.ode_step(base_pose_ddot, s_ddot);
+            
             % update the robot state
             obj.robot.set_robot_state(w_H_b, s, base_pose_dot, s_dot);
+            
             % Get feet contact state
-            [left_foot_in_contact, right_foot_in_contact] = obj.contacts.getFeetContactState();
+            links_in_contact = obj.contacts.getFeetContactState(obj.num_in_contact_frames);
+            
+            % Get the wrench of the left and right feet
+            wrench_LFoot = wrench_in_contact_frames(1:6);
+            wrench_RFoot = wrench_in_contact_frames(7:12);
             
             % output the kinematic and dynamic variables
             kinDynOut.w_H_b = w_H_b;
             kinDynOut.s = s;
             kinDynOut.nu = [base_pose_dot;s_dot];
-            [kinDynOut.w_H_l_sole    , kinDynOut.w_H_r_sole    ] = obj.robot.get_feet_H();
-            [kinDynOut.J_l_sole      , kinDynOut.J_r_sole      ] = obj.robot.get_feet_jacobians();
-            [kinDynOut.JDot_l_sole_nu, kinDynOut.JDot_r_sole_nu] = obj.robot.get_feet_JDot_nu();
+            kinDynOut.w_H_feet_sole = obj.robot.get_inContactWithGround_H();
+            kinDynOut.J_feet_sole = obj.robot.get_inContactWithGround_jacobians();
+            kinDynOut.JDot_feet_sole_nu = obj.robot.get_inContactWithGround_JDot_nu();
             kinDynOut.M = obj.robot.get_mass_matrix(motorInertias,obj);
             kinDynOut.h = obj.robot.get_bias_forces();
             kinDynOut.motorGrpI = zeros(size(s));
-            kinDynOut.fc = [wrench_left_foot;wrench_right_foot];
+            kinDynOut.fc = wrench_in_contact_frames;
             kinDynOut.nuDot = [base_pose_ddot;s_ddot];
-            kinDynOut.left_right_foot_in_contact = [left_foot_in_contact,right_foot_in_contact];
+            kinDynOut.feet_in_contact = links_in_contact;
         end
 
         function resetImpl(obj)
 
         end
 
+        function field_value = ifFieldExists(obj, struct_name, field_name)
+            if isfield(obj.(struct_name),field_name)
+                field_value = obj.(struct_name).(field_name);
+            else
+                field_value = [];
+            end
+        end
+        
         function [out, out2, out3, out4, out5, out6, out7] = getOutputSizeImpl(obj)
             % Return size for each output port
             out = [4 4]; % homogeneous matrix dim
@@ -72,7 +94,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             out3 = [6 1]; % base velocity vector dim
             out4 = [double(obj.robot_config.N_DOF),1]; % joints velocity vector dim
             out5 = [6 1]; % wrench left foot vector dim
-            out6 = [6 1]; % wrench right foot vector dim
+            out6 = [6 1]; % wrench left foot vector dim
             out7 = 1;
         end
 
@@ -111,15 +133,14 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
 
         function names = getSimulinkFunctionNamesImpl(~)
             names = {...
-                'simFunc_getFrameFreeFloatingJacobianLFoot', ...
-                'simFunc_getFrameFreeFloatingJacobianRFoot', ...
+                'simFunc_getFrameFreeFloatingJacobian_inContactFrames', ...
                 'simFunc_getFreeFloatingMassMatrix', ...
                 'simFunc_generalizedBiasForces', ...
-                'simFunc_getFrameBiasAccLFoot', ...
-                'simFunc_getFrameBiasAccRFoot', ...
-                'simFunc_getWorldTransformLFoot', ...
-                'simFunc_getWorldTransformRFoot', ...
-                'simFunc_qpOASES'};
+                'simFunc_getFrameBiasAcc_inContactFrames', ...
+                'simFunc_getWorldTransform_inContactFrames', ...
+                'simFunc_qpOASES', ...
+                'simFunc_qpOASES_impact_phase_I', ...
+                'simFunc_qpOASES_impact_phase_II'};
         end
     end
 
