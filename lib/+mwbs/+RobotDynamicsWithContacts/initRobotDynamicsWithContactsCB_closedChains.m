@@ -17,6 +17,15 @@ end
 
 function kinDynOut_bus = initKinDynOut_bus(robot_config)
 
+% --------------------- INITIALIZATION -----------------------------------
+if ~isfield(robot_config.robotFrames,'IN_CONTACT_WITH_GROUND')
+    num_in_contact_frames = 1;
+elseif isempty(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)
+    num_in_contact_frames = 1;
+else
+    num_in_contact_frames = length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND);
+end 
+
 % Variable properties to stream on the output bus
 kinDynListSignals = {
 'name','format','type'; ...
@@ -44,7 +53,7 @@ for formatIdx = 1:numel(kinDynListFormats)
         case 'Htrans'
             kinDynListDimensions{formatIdx} = [4,4];
         case 'HtransGrp'
-            kinDynListDimensions{formatIdx} = [4*length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND),4];
+            kinDynListDimensions{formatIdx} = [4*num_in_contact_frames,4];
         case 'genJointVec'
             kinDynListDimensions{formatIdx} = [double(robot_config.N_DOF),1];
         case 'genBaseJointVec'
@@ -52,17 +61,17 @@ for formatIdx = 1:numel(kinDynListFormats)
         case 'JcbianW'
             kinDynListDimensions{formatIdx} = [6,6+double(robot_config.N_DOF)];
         case 'JcbianWGrp'
-            kinDynListDimensions{formatIdx} = [6*length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND),6+double(robot_config.N_DOF)];
+            kinDynListDimensions{formatIdx} = [6*num_in_contact_frames,6+double(robot_config.N_DOF)];
         case 'massMtx'
             kinDynListDimensions{formatIdx} = 6+size(robot_config.N_DOF_MATRIX);
         case 'wrench'
             kinDynListDimensions{formatIdx} = [6,1];
         case 'wrenchGrp'
-            kinDynListDimensions{formatIdx} = [6*length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND),1];
+            kinDynListDimensions{formatIdx} = [6*num_in_contact_frames,1];
         case 'dbleWrench'
             kinDynListDimensions{formatIdx} = [12,1];
         case 'BlGrp'
-            kinDynListDimensions{formatIdx} = [1,length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)];
+            kinDynListDimensions{formatIdx} = [1,num_in_contact_frames];
         otherwise
             eval(['kinDynListDimensions{formatIdx} = ',kinDynListFormats{formatIdx}]);
     end
