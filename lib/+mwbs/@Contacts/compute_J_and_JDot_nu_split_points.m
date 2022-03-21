@@ -15,8 +15,8 @@ function [J_diff_split_points, JDot_diff_nu_split_points] = compute_J_and_JDot_n
     %                 - robot  [ROBOT OBJECT]
     % 
     %     **OUTPUT:**
-    %                 - J_diff_split_points:       [(2*6) x (N+6)] The group of the difference of the Jacobian matrix between the two prints of the spilit points
-    %                 - JDot_diff_nu_split_points  [(2*6) x 1]     The group of the difference of the JDot * nu vector between the two prints of the spilit points
+    %                 - J_diff_split_points:       [(p*6) x (N+6)] The group of the difference of the Jacobian matrix between the two prints of the spilit points
+    %                 - JDot_diff_nu_split_points  [(p*6) x 1]     The group of the difference of the JDot * nu vector between the two prints of the spilit points
     % 
     %     **AUTHORS:** Venus Pasandi
     % 
@@ -26,11 +26,7 @@ function [J_diff_split_points, JDot_diff_nu_split_points] = compute_J_and_JDot_n
     %     PLACE AND DATE: <Genoa, March 2022>
 
 % read the J_diff and JDot_nu_diff for each split point
-[J_diff_Lpoint, J_diff_Rpoint] = robot.get_spilitPoints_diff_jacobian();
-[JDot_nu_diff_Lpoint, JDot_nu_diff_Rpoint] = robot.get_SpilitPoints_diff_JDot_nu();
-
-% Group the J_diff and JDot_nu_diff
-J_diff_split_points = [J_diff_Lpoint ; J_diff_Rpoint];
-JDot_diff_nu_split_points = [JDot_nu_diff_Lpoint ; JDot_nu_diff_Rpoint];
+J_diff_split_points = robot.get_spilitPoints_diff_jacobian();
+JDot_diff_nu_split_points = robot.get_SpilitPoints_diff_JDot_nu();
 
 end

@@ -82,20 +82,20 @@ classdef Robot < handle
             end
         end
 
-        function [JDiff_Lpoint,JDiff_Rpoint] = get_spilitPoints_diff_jacobian(obj)
+        function JDiff_splitPoint = get_spilitPoints_diff_jacobian(obj)
             % get_frame_jacobian Returns the Jacobian of the frame
             % OUTPUT: - J_point: Jacobian of the frame
-            [ack,JDiff_Lpoint,JDiff_Rpoint] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobianSpilitPoints();
+            [ack,JDiff_splitPoint] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobianSpilitPoints();
             if (~ack)
                 error('[Robot: get_spilitPoints_diff_jacobian] Unable to retrieve the jacobians for spilit points');
             end
         end
 
-        function [JDotNuDiff_Lpoint,JDotNuDiff_Rpoint] = get_SpilitPoints_diff_JDot_nu(obj)
+        function JDotNuDiff_splitPoint = get_SpilitPoints_diff_JDot_nu(obj)
             % get_frame_JDot_nu Returns the Jacobian derivative of the
             % frame multiplied by the configuration velocity
             % OUTPUT: - JDot_nu_frame: \dot{J} nu of the frame
-            [ack,JDotNuDiff_Lpoint,JDotNuDiff_Rpoint] = obj.KinDynModel.kinDynComp.getFrameBiasACCSpilitPoints();
+            [ack,JDotNuDiff_splitPoint] = obj.KinDynModel.kinDynComp.getFrameBiasACCSpilitPoints();
             if (~ack)
                 error('[Robot: get_SpilitPoints_diff_JDot_nu] Unable to retrieve the bias accelerations for spilit points');
             end
