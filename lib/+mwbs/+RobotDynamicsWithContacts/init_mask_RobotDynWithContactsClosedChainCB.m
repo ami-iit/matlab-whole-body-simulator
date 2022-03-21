@@ -170,12 +170,12 @@ clear H_simFuncJConFramesBLK numInContactFrames
 % desired robot model
 if isfield(robot_config.robotFrames,'BREAK')
     spilitPointsFramesReq = robot_config.robotFrames.BREAK;
-    if isempty(robot_config.robotFrames.BREAK)
+    if (numel(fieldnames(robot_config.robotFrames.BREAK)) == 0)
         numRobotSplitPoints = 0;
         numRobotSplitPointsSlc = 1; % Not to pass zero dimension
     else
-        numRobotSplitPoints = length(spilitPointsFramesReq);
-        numRobotSplitPointsSlc = length(spilitPointsFramesReq);
+        numRobotSplitPoints = numel(fieldnames(robot_config.robotFrames.BREAK));
+        numRobotSplitPointsSlc = numel(fieldnames(robot_config.robotFrames.BREAK));
     end
 else
     spilitPointsFramesReq = {};
