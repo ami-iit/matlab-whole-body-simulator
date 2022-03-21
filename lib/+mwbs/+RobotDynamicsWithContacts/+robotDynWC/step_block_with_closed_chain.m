@@ -74,25 +74,25 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
         function setupImpl(obj)
             
             obj.robot = mwbs.Robot(obj.robot_config,obj.physics_config.GRAVITY_ACC);
-            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, length(obj.robot_config.robotFrames.IN_CONTACT_WITH_GROUND), obj.physics_config.TIME_STEP, obj.ifFieldExists('contact_config','max_consecuitive_fail'), obj.ifFieldExists('contact_config','useFrictionalImpact'), obj.ifFieldExists('contact_config','useDiscreteContact'), obj.ifFieldExists('contact_config','useQPOASES'));
+            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, obj.contact_config.num_in_contact_frames, obj.physics_config.TIME_STEP, obj.ifFieldExists('contact_config','max_consecuitive_fail'), obj.ifFieldExists('contact_config','useFrictionalImpact'), obj.ifFieldExists('contact_config','useDiscreteContact'), obj.ifFieldExists('contact_config','useQPOASES'));
             obj.state = mwbs.State(obj.physics_config.TIME_STEP);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
         end
 
-        function [w_H_b, s, base_pose_dot, s_dot, wrench_inContact_frames, kinDynOut] = stepImpl(obj, generalized_ext_wrench, torque, motorInertias)
+        function [w_H_b, s, base_pose_dot, s_dot, wrench_in_contact_frames, kinDynOut] = stepImpl(obj, generalized_ext_wrench, torque, motor_inertias)
             % Implement algorithm.
 
             % Compute the contact quantites and the velocity after a possible impact
-            [generalized_total_wrench, wrench_inContact_frames, base_pose_dot, s_dot] = ...
-                obj.contacts.compute_contact_closed_chain(obj.robot, torque, generalized_ext_wrench, motorInertias, obj.state.base_pose_dot, obj.state.s_dot,obj);
+            [generalized_total_wrench, wrench_in_contact_frames, base_pose_dot, s_dot] = ...
+                obj.contacts.compute_contact_closed_chain(obj.robot, torque, generalized_ext_wrench, motor_inertias, obj.state.base_pose_dot, obj.state.s_dot,obj);
             
             % Update the velocity vector of the robot
             obj.state.set_velocity(base_pose_dot, s_dot);
             obj.robot.set_robot_velocity(base_pose_dot, s_dot);
             
             % Compute the robot acceleration vector
-            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench, motorInertias, obj);
+            [base_pose_ddot, s_ddot] = obj.robot.forward_dynamics(torque, generalized_total_wrench, motor_inertias, obj);
             
             % Integrate the robot acceleration vector
             [w_H_b, s, base_pose_dot, s_dot] = obj.state.ode_step(base_pose_ddot, s_ddot);
@@ -101,7 +101,7 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
             obj.robot.set_robot_state(w_H_b, s, base_pose_dot, s_dot);
             
             % Get feet contact state
-            links_in_contact = obj.contacts.getFeetContactState(length(obj.robot_config.robotFrames.IN_CONTACT_WITH_GROUND));
+            links_in_contact = obj.contacts.get_feet_contact_state(obj.contact_config.num_in_contact_frames);
             
             % Compute some kinematic and dynamic variables
             kinDynOut.w_H_b = w_H_b;
@@ -110,12 +110,16 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
             kinDynOut.w_H_feet_sole = obj.robot.get_inContactWithGround_H();
             kinDynOut.J_feet_sole = obj.robot.get_inContactWithGround_jacobians();
             kinDynOut.JDot_feet_sole_nu = obj.robot.get_inContactWithGround_JDot_nu();
-            kinDynOut.M = obj.robot.get_mass_matrix(motorInertias,obj);
+            kinDynOut.M = obj.robot.get_mass_matrix(motor_inertias,obj);
             kinDynOut.h = obj.robot.get_bias_forces();
             kinDynOut.motorGrpI = zeros(size(s));
-            kinDynOut.fc = wrench_inContact_frames;
+            kinDynOut.fc = wrench_in_contact_frames;
             kinDynOut.nuDot = [base_pose_ddot;s_ddot];
-            kinDynOut.feet_in_contact = links_in_contact;
+            if (obj.contact_config.num_in_contact_frames == 0)
+                kinDynOut.feet_in_contact  = false;
+            else
+                kinDynOut.feet_in_contact = links_in_contact;
+            end
         end
 
         function resetImpl(obj)

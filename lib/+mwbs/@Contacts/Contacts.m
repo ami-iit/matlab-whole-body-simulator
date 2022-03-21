@@ -191,8 +191,8 @@ classdef Contacts < handle
             %     PLACE AND DATE: <Genoa, March 2022>
             %
             
-            num_in_contact_frames = length(obj_step_block.robot_config.robotFrames.IN_CONTACT_WITH_GROUND);  % The number of the links interacting with the ground
-            num_closed_chains = obj_step_block.robot_config.closedChains;  % The number of the closed chains of the robot
+            num_in_contact_frames = obj_step_block.contact_config.num_in_contact_frames;  % The number of the links interacting with the ground
+            num_closed_chains = obj_step_block.contact_config.num_closed_chains;  % The number of the closed chains of the robot
             
             % collect the open-chain kinematic dynamic quantities
             M = robot.get_mass_matrix(motor_inertias,obj_step_block);

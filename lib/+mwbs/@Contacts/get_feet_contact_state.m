@@ -20,7 +20,11 @@ function links_in_contact = get_feet_contact_state(obj, num_in_contact_frames)
     %     PLACE AND DATE: <Genoa, March 2022>
 
 % ------------- INITIALIZATION ----------------------------
-links_in_contact = false(1, num_in_contact_frames);
+if (num_in_contact_frames == 0)
+    links_in_contact = false(1, 1);
+else
+    links_in_contact = false(1, num_in_contact_frames);
+end
 
 % ------------- MAIN COMPUTATION --------------------------
 for counter = 1 : num_in_contact_frames

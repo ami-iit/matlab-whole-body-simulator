@@ -27,7 +27,22 @@ propMotorReflectedInertiaFormat = get_param(gcb,'motorReflectedInertiaFormat');
 % kinematic and bias acceleration for the links that interact with
 % the ground
 
-if isempty(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)
+if isfield (robot_config.robotFrames,'IN_CONTACT_WITH_GROUND')
+    robotInContactFrames = robot_config.robotFrames.IN_CONTACT_WITH_GROUND;
+    if isempty(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)
+        numRobotInContactFrames = 0;
+        numInContactFramesSlc = 1;
+    else
+        numRobotInContactFrames = length(robotInContactFrames);
+        numInContactFramesSlc = length(robotInContactFrames);
+    end
+else
+    robotInContactFrames = {};
+    numRobotInContactFrames = 0;
+    numInContactFramesSlc = 1;
+end
+    
+if (numRobotInContactFrames == 0)
     H_jacobianBLK = find_system(gcb,'FindAll','On','LookUnderMasks','on','FollowLinks','on','Type','Block','Name','First Jacobian');
     H_forwardKinBLK = find_system(gcb,'FindAll','On','LookUnderMasks','on','FollowLinks','on','Type','Block','Name','First ForwardKinematics');
     H_biasAccBLK = find_system(gcb,'FindAll','On','LookUnderMasks','on','FollowLinks','on','Type','Block','Name','First DotJNu');
@@ -52,10 +67,10 @@ else
     numInContactFrames = eval(get_param(H_simFuncJConFramesBLK,'NumInputs'));
 end
 
-if (numInContactFrames == length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND))
+if (numInContactFramesSlc == numInContactFrames)
     % the current structure perfectly matches the robot model so there is
     % no need for further modifications.
-elseif length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND) > numInContactFrames
+elseif numInContactFramesSlc > numInContactFrames
     disBLK = 5;
     pose_jacobianBLK = get_param(H_jacobianBLK,'position');
     pose_forwardKinBLK = get_param(H_forwardKinBLK,'position');
@@ -67,9 +82,9 @@ elseif length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND) > numInContactFra
         delete_line(get_param(H_jacobianBLK,'parent'),'First Jacobian/1','jacobian/1');
         delete_line(get_param(H_forwardKinBLK,'parent'),'First ForwardKinematics/1','w_H_sole/1');
         delete_line(get_param(H_biasAccBLK,'parent'),'First DotJNu/1','dotJnu/1');
-        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)),'position',[pose_jacobianBLK(3)+50,pose_jacobianBLK(2),pose_jacobianBLK(3)+70,pose_jacobianBLK(4)],'ConcatenateDimension','1');
-        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_forwardKinBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)),'position',[pose_forwardKinBLK(3)+50,pose_forwardKinBLK(2),pose_forwardKinBLK(3)+70,pose_forwardKinBLK(4)],'ConcatenateDimension','1');
-        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)),'position',[pose_biasAccBLK(3)+50,pose_biasAccBLK(2),pose_biasAccBLK(3)+70,pose_biasAccBLK(4)],'ConcatenateDimension','1');
+        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames),'position',[pose_jacobianBLK(3)+50,pose_jacobianBLK(2),pose_jacobianBLK(3)+70,pose_jacobianBLK(4)],'ConcatenateDimension','1');
+        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_forwardKinBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames),'position',[pose_forwardKinBLK(3)+50,pose_forwardKinBLK(2),pose_forwardKinBLK(3)+70,pose_forwardKinBLK(4)],'ConcatenateDimension','1');
+        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames),'position',[pose_biasAccBLK(3)+50,pose_biasAccBLK(2),pose_biasAccBLK(3)+70,pose_biasAccBLK(4)],'ConcatenateDimension','1');
         add_line(get_param(H_jacobianBLK,'parent'),'First Jacobian/1','myMux/1');
         add_line(get_param(H_forwardKinBLK,'parent'),'First ForwardKinematics/1','myMux/1');
         add_line(get_param(H_biasAccBLK,'parent'),'First DotJNu/1','myMux/1');
@@ -77,11 +92,11 @@ elseif length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND) > numInContactFra
         add_line(get_param(H_forwardKinBLK,'parent'),'myMux/1','w_H_sole/1');
         add_line(get_param(H_biasAccBLK,'parent'),'myMux/1','dotJnu/1');
     else
-        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)));
-        set_param(strcat(get_param(H_forwardKinBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)));
-        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)));
+        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames));
+        set_param(strcat(get_param(H_forwardKinBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames));
+        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames));
     end
-    for counter = numInContactFrames+1 : length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)
+    for counter = numInContactFrames+1 : numRobotInContactFrames
         pose_BLK = [0,(counter-1)*(disBLK+height_jacobianBLK),0,(counter-1)*(disBLK+height_jacobianBLK)];
         add_block(strcat(get_param(H_jacobianBLK,'parent'),'/First Jacobian'),strcat(get_param(H_jacobianBLK,'parent'),'/Jacobian_',num2str(counter)),'position',pose_jacobianBLK + pose_BLK,'FrameName',strcat('robot_config.robotFrames.IN_CONTACT_WITH_GROUND{',num2str(counter),'}'));
         add_line(get_param(H_jacobianBLK,'parent'),'basePose/1',strcat('Jacobian_',num2str(counter),'/1'));
@@ -104,7 +119,7 @@ elseif length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND) > numInContactFra
     end
 else
     % Deleting the extra blocks
-    for counter = length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)+1 : numInContactFrames
+    for counter = numInContactFramesSlc+1 : numInContactFrames
         delete_line(get_param(H_jacobianBLK,'parent'),'basePose/1',strcat('Jacobian_',num2str(counter),'/1'));
         delete_line(get_param(H_jacobianBLK,'parent'),'jointPosition/1',strcat('Jacobian_',num2str(counter),'/2'));
         delete_line(get_param(H_jacobianBLK,'parent'),strcat('Jacobian_',num2str(counter),'/1'),strcat('myMux/',num2str(counter)));
@@ -122,7 +137,7 @@ else
         delete_line(get_param(H_biasAccBLK,'parent'),strcat('DotJNu_',num2str(counter),'/1'),strcat('myMux/',num2str(counter)));
         delete_block(strcat(get_param(H_biasAccBLK,'parent'),'/DotJNu_',num2str(counter)));
     end
-    if (length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND) == 1)
+    if (numInContactFramesSlc == 1)
         delete_line(get_param(H_jacobianBLK,'parent'),'First Jacobian/1','myMux/1');
         delete_line(get_param(H_forwardKinBLK,'parent'),'First ForwardKinematics/1','myMux/1');
         delete_line(get_param(H_biasAccBLK,'parent'),'First DotJNu/1','myMux/1');
@@ -136,9 +151,9 @@ else
         add_line(get_param(H_forwardKinBLK,'parent'),'First ForwardKinematics/1','w_H_sole/1');
         add_line(get_param(H_biasAccBLK,'parent'),'First DotJNu/1','dotJnu/1');
     else
-        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)));
-        set_param(strcat(get_param(H_forwardKinBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)));
-        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(length(robot_config.robotFrames.IN_CONTACT_WITH_GROUND)));
+        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames));
+        set_param(strcat(get_param(H_forwardKinBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames));
+        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotInContactFrames));
     end
 end
 
@@ -150,10 +165,29 @@ clear H_simFuncJConFramesBLK numInContactFrames
 % kinematic and bias acceleration for the frames of the prints of the 
 % spilit points in the closed chains
 
+% ----------------------------- INITIALIZATION ---------------------------
+% Determine the number of split points that required according to the 
+% desired robot model
+if isfield(robot_config.robotFrames,'BREAK')
+    spilitPointsFramesReq = robot_config.robotFrames.BREAK;
+    if isempty(robot_config.robotFrames.BREAK)
+        numRobotSplitPoints = 0;
+        numRobotSplitPointsSlc = 1; % Not to pass zero dimension
+    else
+        numRobotSplitPoints = length(spilitPointsFramesReq);
+        numRobotSplitPointsSlc = length(spilitPointsFramesReq);
+    end
+else
+    spilitPointsFramesReq = {};
+    numRobotSplitPoints = 0;
+    numRobotSplitPointsSlc = 1; % Not to pass zero dimension
+end
+
+% ----------------------------- MAIN -------------------------------------
 H_jacobianBLK = find_system(gcb,'FindAll','On','LookUnderMasks','on','FollowLinks','on','Type','Block','Name','First Diff Jacobian');
 H_biasAccBLK = find_system(gcb,'FindAll','On','LookUnderMasks','on','FollowLinks','on','Type','Block','Name','First Diff DotJNu');
 
-if (robot_config.closedChains == 0)
+if (numRobotSplitPoints == 0)
     set_param(getfullname(H_jacobianBLK),'firstFrameName','robot_config.robotFrames.BASE','secondFrameName','robot_config.robotFrames.BASE');
     set_param(getfullname(H_biasAccBLK),'firstFrameName','robot_config.robotFrames.BASE','secondFrameName','robot_config.robotFrames.BASE');
 else
@@ -169,19 +203,11 @@ else
     numSplitPoints = eval(get_param(H_simFuncJSPsBLK,'NumInputs'));
 end
 
-% Determine the number of split points that required according to the desired robot
-% model
-numRobotSplitPoints = robot_config.closedChains;
-% Not to pass zero dimension
-if (robot_config.closedChains == 0)
-    numRobotSplitPoints = 1;
-end
-
 % Check if the current block structure matches the robot model
-if (numSplitPoints == numRobotSplitPoints)
+if (numSplitPoints == numRobotSplitPointsSlc)
     % the current structure perfectly matches the robot model so there is
     % no need for further modifications.
-elseif (numRobotSplitPoints > numSplitPoints)
+elseif (numRobotSplitPointsSlc > numSplitPoints)
     disBLK = 5;
     pose_jacobianBLK = get_param(H_jacobianBLK,'position');
     pose_biasAccBLK = get_param(H_biasAccBLK,'position');
@@ -190,18 +216,18 @@ elseif (numRobotSplitPoints > numSplitPoints)
     if (numSplitPoints == 1)
         delete_line(get_param(H_jacobianBLK,'parent'),'First Diff Jacobian/1','jacobianDiffSplitPoint/1');
         delete_line(get_param(H_biasAccBLK,'parent'),'First Diff DotJNu/1','dotJNuDiffSplitPoint/1');
-        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints),'position',[pose_jacobianBLK(3)+50,pose_jacobianBLK(2),pose_jacobianBLK(3)+70,pose_jacobianBLK(4)],'ConcatenateDimension','1');
-        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints),'position',[pose_biasAccBLK(3)+50,pose_biasAccBLK(2),pose_biasAccBLK(3)+70,pose_biasAccBLK(4)],'ConcatenateDimension','1');
+        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPointsSlc),'position',[pose_jacobianBLK(3)+50,pose_jacobianBLK(2),pose_jacobianBLK(3)+70,pose_jacobianBLK(4)],'ConcatenateDimension','1');
+        add_block('simulink/Math Operations/Matrix Concatenate',strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPointsSlc),'position',[pose_biasAccBLK(3)+50,pose_biasAccBLK(2),pose_biasAccBLK(3)+70,pose_biasAccBLK(4)],'ConcatenateDimension','1');
         add_line(get_param(H_jacobianBLK,'parent'),'First Diff Jacobian/1','myMux/1');
         add_line(get_param(H_biasAccBLK,'parent'),'First Diff DotJNu/1','myMux/1');
         add_line(get_param(H_jacobianBLK,'parent'),'myMux/1','jacobianDiffSplitPoint/1');
         add_line(get_param(H_biasAccBLK,'parent'),'myMux/1','dotJNuDiffSplitPoint/1');
     else
-        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints));
-        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints));
+        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPointsSlc));
+        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPointsSlc));
     end
     
-    for counter = numSplitPoints+1 : numRobotSplitPoints
+    for counter = numSplitPoints+1 : numRobotSplitPointsSlc
         pose_BLK = [0,(counter-1)*(disBLK+height_jacobianBLK),0,(counter-1)*(disBLK+height_jacobianBLK)];
         add_block(strcat(get_param(H_jacobianBLK,'parent'),'/First Diff Jacobian'),strcat(get_param(H_jacobianBLK,'parent'),'/DiffJacobian_',num2str(counter)),'position',pose_jacobianBLK + pose_BLK,'firstFrameName',strcat('robot_config.robotFrames.BREAK.P',num2str(counter),'{1}'),'secondFrameName',strcat('robot_config.robotFrames.BREAK.P',num2str(counter),'{2}'));
         add_line(get_param(H_jacobianBLK,'parent'),'basePose/1',strcat('DiffJacobian_',num2str(counter),'/1'));
@@ -218,7 +244,7 @@ elseif (numRobotSplitPoints > numSplitPoints)
     end
   else
     % Deleting the extra blocks
-    for counter = numRobotSplitPoints+1 : numSplitPoints
+    for counter = numRobotSplitPointsSlc+1 : numSplitPoints
         delete_line(get_param(H_jacobianBLK,'parent'),'basePose/1',strcat('DiffJacobian_',num2str(counter),'/1'));
         delete_line(get_param(H_jacobianBLK,'parent'),'jointPosition/1',strcat('DiffJacobian_',num2str(counter),'/2'));
         delete_line(get_param(H_jacobianBLK,'parent'),strcat('DiffJacobian_',num2str(counter),'/1'),strcat('myMux/',num2str(counter)));
@@ -231,7 +257,7 @@ elseif (numRobotSplitPoints > numSplitPoints)
         delete_line(get_param(H_biasAccBLK,'parent'),strcat('DiffDotJNu_',num2str(counter),'/1'),strcat('myMux/',num2str(counter)));
         delete_block(strcat(get_param(H_biasAccBLK,'parent'),'/DiffDotJNu_',num2str(counter)));
     end
-    if (numRobotSplitPoints == 1)
+    if (numRobotSplitPointsSlc == 1)
         delete_line(get_param(H_jacobianBLK,'parent'),'First Diff Jacobian/1','myMux/1');
         delete_line(get_param(H_biasAccBLK,'parent'),'First Diff DotJNu/1','myMux/1');
         delete_line(get_param(H_jacobianBLK,'parent'),'myMux/1','jacobianDiffSplitPoint/1');
@@ -241,7 +267,12 @@ elseif (numRobotSplitPoints > numSplitPoints)
         add_line(get_param(H_jacobianBLK,'parent'),'First Diff Jacobian/1','jacobianDiffSplitPoint/1');
         add_line(get_param(H_biasAccBLK,'parent'),'First Diff DotJNu/1','dotJNuDiffSplitPoint/1');
     else
-        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints));
-        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPoints));
+        set_param(strcat(get_param(H_jacobianBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPointsSlc));
+        set_param(strcat(get_param(H_biasAccBLK,'parent'),'/myMux'),'NumInputs',num2str(numRobotSplitPointsSlc));
     end
 end
+
+%% Prepare the parameters for the step block
+
+contact_config.num_in_contact_frames = numRobotInContactFrames;
+contact_config.num_closed_chains = numRobotSplitPoints;
