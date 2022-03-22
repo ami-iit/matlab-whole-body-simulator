@@ -101,7 +101,17 @@ floatingBaseBalancingTorqueControlWithSimulator.torqueControlBalancingWithSimu
 
 ## :runner: How to use the simulator
 
-1. Connect your controller to the **RobotDynWithContacts** block. This block takes as imput the **joints torque**, **motor inertia** and an eventual **generalized external wrench**. It outputs the robot **state**, the contact wrenches **wrench_LFoot** and **wrench_RFoot**, respectively applied to the left and right foot (sole frames), and **kinDynOut**, an output bus exposing all the computed dynamics quantities relevant for debugging or the extension of dynamics computations in external blocks (emulation of an IMU sensor, of pressure sensors on the feet, etc).
+Two simulator blocks are available, namely **RobotDynWithContacts** and **RobotDynWithContacts_closedChain**.
+The **RobotDynWithContacts** block simulates an open-chain kinematic robot with two feets as the links interacting with the ground.
+Instead, the **RobotDynWithContacts_closedChain** block is capable of simulating a robot with open/closed chain kinematic where multiple number of links can be defined as the links interacting with the ground.
+
+For using the simulators:
+
+1. Connect your controller to the **RobotDynWithContacts** or **RobotDynWithContacts_closedChain** block.
+These block takes as input the **joints torque**, **motor inertia** and an eventual **generalized external wrench**.
+The **RobotDynWithContacts** block outputs the robot **state**, the contact wrenches **wrench_LFoot** and **wrench_RFoot**, respectively applied to the left and right foot (sole frames), and **kinDynOut**, an output bus exposing all the computed dynamics quantities relevant for debugging or the extension of dynamics computations in external blocks (emulation of an IMU sensor, of pressure sensors on the feet, etc).
+The **RobotDynWithContacts_closedChain** block combines all the contact wrenches applied to the sole frame of the links defined as the links inetracting with the ground, and outputs **wrench_groundContact** instead of **wrench_LFoot** and **wrench_RFoot**.
+
 2. Select the robot model by setting the environment variable `YARP_ROBOT_NAME` (e.g. `setenv('YARP_ROBOT_NAME','iCubGenova04')`). The available models are:
     | Model description | iCub robot (iCubGenova04) | RRBot from Gazebo |
     | --- | --- | --- |
@@ -114,17 +124,26 @@ floatingBaseBalancingTorqueControlWithSimulator.torqueControlBalancingWithSimu
    **Details:**
 || Structure | Field name | Size/Type | Description |
 | --- | --- | --- | --- | --- |
-|<td rowspan="8">robot_config</td>| jointOrder | [1×N_DOF] / cell | List of N_DOF "controlled" joints (matches dimension of joint torques input) |
+|<td rowspan="13">robot_config</td>| jointOrder | [1×N_DOF] / cell | List of N_DOF "controlled" joints (matches dimension of joint torques input) |
 |                                 |                  meshFilePrefix  | char | Prefix to be concatenated to the mesh file path specified in the URDF model file (*) |
 |                                 |                        fileName  | char | File name of the URDF model (typically: model.urdf) |
 |                                 |                           N_DOF  | [1x1] double | Robot degrees of freedom |
 |                                 |                    N_DOF_MATRIX  | [23×23] double] | `eye(robot_config.N_DOF)` |
 |                                 |               initialConditions  | [1×1] struct | Base pose and velocity. Joint positions and velocities |
 |                                 | SIMULATE_MOTOR_REFLECTED_INERTIA | [1x1] logical | Activate motor reflected inertia emulation |
-|                                 |                     robotFrames  | [1×1] struct | Selected reference frames (base, left/right sole) |
-|<td rowspan="3">contact_config</td>|                     foot_print | [3×4] double | 4 Contact points on one of the feet soles |
+|                                 |                     robotFrames  | [1×1] struct  | Selected reference frames (base, left/right sole) |
+|                                 |                robotFrames.BASE  | char          | Base frame |
+|                                 |          robotFrames.LEFT_FOOT   | char         | (**RobotDynWithContacts** block) Left foot frame |
+|                                 |          robotFrames.RIGHT_FOOT  | char         | (**RobotDynWithContacts** block) Right foot frame |
+|                                 |robotFrames.IN_CONTACT_WITH_GROUND   | [1xN_C] cell | (**RobotDynWithContacts_closedChain** block) List of the links interacting with the ground |
+|                                 |          robotFrames.BREAK       | [1xN_P] struct  | (**RobotDynWithContacts_closedChain** block, optional) List of the prints of the break points in N_p closed chains |
+|<td rowspan="7">contact_config</td>|                     foot_print | [3×4] double | 4 Contact points on one of the feet soles |
 |                                   |             total_num_vertices | [1x1] double | Total number of contact points (Nv=8) |
 |                                   |           friction_coefficient | [1x1] double | Ground/feet Coulomb friction coefficient $\mu _{xy}$ (F _{\bot} = \mu _{xy} N) |
+|                                   |           useFrictionalImpact  | boolean      | (optional) Consider the friction effects in the impact model if it is true. By default, it is false.     |
+|                                   |           useDiscreteContact   | boolean      | (optional) Use the discrete contact model that considers the contact constraints in the velocity level if it is true. By default, it is false.     |
+|                                   |           useQPOASES           | boolean      | (optional) Use QPOASES solver if it is true. By default, it is true. If it false, QUADPROG solver in MATLAB is used. |
+|                                   |          max_consecuitive_fail | boolean      | (optional) Maximum acceptable fails in computing the reaction forces. By default, it is equal to 10. |
 |<td rowspan="3">physics_config</td>|                    GRAVITY_ACC | [1x3] double | Gravity vector (gz = -9.81) |
 |                                   |                      TIME_STEP | [1x1] double | Simulator sampling time (recommended 1e-03) |
 
