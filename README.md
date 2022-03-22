@@ -119,7 +119,9 @@ The **RobotDynWithContacts_closedChain** block combines all the contact wrenches
     | $YARP_ROBOT_NAME | `'iCubGenova04'` | `'RRbot1'` |
 
 3. Set the configuration parameters `robot_config`, `contact_config` and `physics_config`.
-<img width="1035" alt="image" src="https://user-images.githubusercontent.com/6848872/117595197-742c0f80-b140-11eb-8b7c-85f3274760d9.png">
+<img width="900" alt="image" src="https://user-images.githubusercontent.com/34647611/159449934-c4af969b-1ee3-461c-bbe9-4b4692745085.png">
+<img width="1035" alt="image" src="https://user-images.githubusercontent.com/34647611/159449664-4cd2d374-5656-4c24-af7c-9af23b7a4c63.png">
+
 
    **Details:**
 || Structure | Field name | Size/Type | Description |
