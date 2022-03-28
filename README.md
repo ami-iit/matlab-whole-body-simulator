@@ -141,7 +141,7 @@ The **RobotDynWithContacts_closedChain** block combines all the contact wrenches
 |                                 |          robotFrames.BREAK       | [1xN_P] struct  | (**RobotDynWithContacts_closedChain** block, optional) List of the prints of the break points in N_p closed chains |
 |<td rowspan="7">contact_config</td>|                     foot_print | [3×4] double | 4 Contact points on one of the feet soles |
 |                                   |             total_num_vertices | [1x1] double | Total number of contact points (Nv=8) |
-|                                   |           friction_coefficient | [1x1] double | Ground/feet Coulomb friction coefficient $\mu _{xy}$ (F _{\bot} = \mu _{xy} N) |
+|                                   |           friction_coefficient | [1x1] double | Ground/feet Coulomb friction coefficient $\mu _{xy}$ ($F _{\bot} = \mu _{xy} N$) |
 |                                   |           useFrictionalImpact  | boolean      | (optional) Consider the friction effects in the impact model if it is true. By default, it is false.     |
 |                                   |           useDiscreteContact   | boolean      | (optional) Use the discrete contact model that considers the contact constraints in the velocity level if it is true. By default, it is false.     |
 |                                   |           useQPOASES           | boolean      | (optional) Use QPOASES solver if it is true. By default, it is true. If it false, QUADPROG solver in MATLAB is used. |
