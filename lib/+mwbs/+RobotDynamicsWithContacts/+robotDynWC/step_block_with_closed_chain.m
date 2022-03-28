@@ -72,9 +72,8 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
     methods (Access = protected)
 
         function setupImpl(obj)
-            
             obj.robot = mwbs.Robot(obj.robot_config,obj.physics_config.GRAVITY_ACC);
-            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, obj.contact_config.num_in_contact_frames, obj.physics_config.TIME_STEP, obj.ifFieldExists('contact_config','max_consecutive_failures'), obj.ifFieldExists('contact_config','useFrictionalImpact'), obj.ifFieldExists('contact_config','useDiscreteContact'));
+            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, obj.contact_config.num_in_contact_frames, obj.contact_config.num_vertices, obj.physics_config.TIME_STEP, obj.ifFieldExists('contact_config','max_consecutive_failures'), obj.ifFieldExists('contact_config','useFrictionalImpact'), obj.ifFieldExists('contact_config','useDiscreteContact'));
             obj.state = mwbs.State(obj.physics_config.TIME_STEP);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
@@ -101,7 +100,7 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
             obj.robot.set_robot_state(w_H_b, s, base_pose_dot, s_dot);
             
             % Get feet contact state
-            links_in_contact = obj.contacts.get_feet_contact_state(obj.contact_config.num_in_contact_frames);
+            links_in_contact = obj.contacts.get_feet_contact_state(obj.contact_config.num_in_contact_frames, obj.contact_config.num_vertices);
             
             % Compute some kinematic and dynamic variables
             kinDynOut.w_H_b = w_H_b;

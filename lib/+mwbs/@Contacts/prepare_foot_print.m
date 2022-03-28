@@ -1,4 +1,4 @@
-function prepare_foot_print (obj, num_in_contact_frames, num_vertices, foot_print)
+function prepare_foot_print (obj, num_in_contact_frames, foot_print)
 
     %     PREPARE_FOOT_PRINT : This function writes the local coordinates of the foot vertices in a cell array format
     % 
@@ -10,8 +10,7 @@ function prepare_foot_print (obj, num_in_contact_frames, num_vertices, foot_prin
     %     **FORMAT**: Contact_object.prepare_foot_print (num_in_contact_frames, num_vertices, foot_print)
     % 
     %     **INPUT:**
-    %             - num_in_contact_frames:  [SCALAR]                    The number of the feet (i.e. the links interacting with the ground)
-    %             - num_vertices:           [SCALAR]                    The number of the vertices for each foot
+    %             - num_in_contact_frames:  [SCALAR]                    The number of the feet (i.e. the links interacting with the ground
     %             - foot_print:             [(3m) x k] or [CELL ARRAY]  The coordinates of the foot prints of the feet represented in the corresponding foot frame
     % 
     %     **OUTPUT:**
@@ -34,7 +33,7 @@ function prepare_foot_print (obj, num_in_contact_frames, num_vertices, foot_prin
         
     else
         
-        obj.foot_print = repmat({foot_print(1:3,1:num_vertices)},num_in_contact_frames,1);
+        obj.foot_print = repmat({foot_print(1:3,1:obj.num_vertices)},num_in_contact_frames,1);
         
     end
 end

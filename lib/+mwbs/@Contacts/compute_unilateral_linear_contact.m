@@ -1,4 +1,4 @@
-function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, num_closed_chains, generalized_ext_wrench, num_in_contact_frames, base_pose_dot, s_dot)
+function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, num_closed_chains, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot)
 
     %     COMPUTE_UNILATERAL_LINEAR_CONTACT: computes the pure forces acting on the feet vertices and the internal wrenches applied to the split points in the (possible) closed chains
     % 
@@ -190,7 +190,7 @@ end
 
 if obj.useOSQP
     
-    for i = 1 : obj.num_vertices * num_in_contact_frames
+    for i = 1 : num_vertices * num_in_contact_frames
         obj.Aeq(i, i * 3) = contact_point(i) > 0;
     end
     if obj.firstSolverIter
@@ -215,8 +215,8 @@ if obj.useOSQP
     
 elseif obj.useQPOASES
     
-    obj.ulb = 1e10 + zeros(obj.num_vertices * num_in_contact_frames * 3, 1);
-    for i = 1 : obj.num_vertices * num_in_contact_frames
+    obj.ulb = 1e10 + zeros(num_vertices * num_in_contact_frames * 3, 1);
+    for i = 1 : num_vertices * num_in_contact_frames
         if (contact_point(i) > 0) % vertex NOT in contact with the ground
             obj.ulb(3*i-2:3*i) = 0;
         end
@@ -233,11 +233,11 @@ elseif obj.useQPOASES
     
 else % USE QUADPROG
     
-    for i = 1:obj.num_vertices * num_in_contact_frames
+    for i = 1:num_vertices * num_in_contact_frames
         obj.Aeq(i, i * 3) = contact_point(i) > 0;
     end
-    obj.ulb = 1e10 + zeros(obj.num_vertices*num_in_contact_frames*3, 1);
-    for i = 1 : obj.num_vertices * num_in_contact_frames
+    obj.ulb = 1e10 + zeros(num_vertices*num_in_contact_frames*3, 1);
+    for i = 1 : num_vertices * num_in_contact_frames
         if (contact_point(i) > 0) % vertex NOT in contact with the ground
             obj.ulb(3*i-2:3*i) = 0;
         end

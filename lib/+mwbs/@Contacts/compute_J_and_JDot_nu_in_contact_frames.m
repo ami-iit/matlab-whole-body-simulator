@@ -1,4 +1,4 @@
-function [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj, robot, num_in_contact_frames)
+function [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj, robot, num_in_contact_frames, num_vertices)
 
     %     COMPUTE_J_AND_JDOT_NU_IN_CONTACT_FRAMES : computes the Jacobian and J_dot_nu relative to the vertices (Not the sole frames!)
     % 
@@ -13,6 +13,7 @@ function [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj,
     %     **INPUT:**
     %                 - robot:                 [ROBOT OBJECT] 
     %                 - num_in_contact_frames  [SCALAR]       The number of the links interacting with the ground
+    %                 - num_vertices           [SCALAR]       The number of the contact vertices for each foot
     % 
     %     **OUTPUT:**
     %                 - J_print:        [(3*m*k) x (N+6)] The group of the linear part of the Jacobian matrix of the vertices 
@@ -28,8 +29,8 @@ function [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj,
 % -------------------- INITIALIZATION ----------------------------
 NDOF = robot.NDOF + 6;
 
-J_print = zeros(3 * obj.num_vertices * num_in_contact_frames, NDOF);
-JDot_nu_print = zeros(3 * obj.num_vertices * num_in_contact_frames, 1);
+J_print = zeros(3 * num_vertices * num_in_contact_frames, NDOF);
+JDot_nu_print = zeros(3 * num_vertices * num_in_contact_frames, 1);
 
 H_in_ground_contact = robot.get_inContactWithGround_H();
 J_in_ground_contact = robot.get_inContactWithGround_jacobians();
@@ -50,10 +51,10 @@ for counter = 1 : num_in_contact_frames
     
     R_frame = H_frame(1:3, 1:3);
     
-    J_frame_print = zeros(3 * obj.num_vertices,NDOF);
-    JDot_nu_frame_print = zeros(3 * obj.num_vertices,1);
+    J_frame_print = zeros(3 * num_vertices,NDOF);
+    JDot_nu_frame_print = zeros(3 * num_vertices,1);
     
-    for ii = 1 : obj.num_vertices
+    for ii = 1 : num_vertices
         j = (ii - 1) * 3 + 1;
         foot_print_frame = obj.foot_print{counter};
         v_coords = foot_print_frame(:, ii);
@@ -61,7 +62,7 @@ for counter = 1 : num_in_contact_frames
         JDot_nu_frame_print(j:j + 2, :) = JDot_nu_lin - mwbs.Utils.skew(R_frame * v_coords) * JDot_nu_ang;
     end
     
-    j = 1 + (counter-1) * 3 * obj.num_vertices : counter * 3 * obj.num_vertices;
+    j = 1 + (counter-1) * 3 * num_vertices : counter * 3 * num_vertices;
     J_print(j, :) = J_frame_print;
     JDot_nu_print(j, :) = JDot_nu_frame_print;
     

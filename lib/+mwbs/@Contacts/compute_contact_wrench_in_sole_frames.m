@@ -1,4 +1,4 @@
-function wrench_in_contact_frames = compute_contact_wrench_in_sole_frames(obj, contact_forces, robot, num_in_contact_frames)
+function wrench_in_contact_frames = compute_contact_wrench_in_sole_frames(obj, contact_forces, robot, num_in_contact_frames, num_vertices)
 
     %     COMPUTE_CONTACT_WRENCHE_IN_SOLE_FRAMES : trasforms the pure forces on foot vertices in wrench in sole frames
     % 
@@ -18,6 +18,7 @@ function wrench_in_contact_frames = compute_contact_wrench_in_sole_frames(obj, c
     %             - contact_forces:        [(3mk) x 1]     The pure forces applied to the vertices
     %             - robot:                 [ROBOT OBJECT]  The robot object
     %             - num_in_contact_frames: [SCALAR]        The number of the links/frames interacting with the ground
+    %             - num_vertices:          [SCALAR]        The number of the contact vertices for each foot
     % 
     %     **OUTPUT:**
     %             - wrench_in_contact_frames:  [(6m) x 1]  The resultant wrench applied to the sole of the links interacting with the ground represented in the corresponding link frame
@@ -45,7 +46,7 @@ for counter = 1 : num_in_contact_frames
     % computed contact forces on every vertex
     contact_forces_frame = contact_forces(1+12*(counter-1):12*counter);
     
-    for i = 1 : obj.num_vertices
+    for i = 1 : num_vertices
         j = (i - 1) * 3 + 1;
         wrench_frame(1:3) = wrench_frame(1:3) + R_frame' * contact_forces_frame(j:j + 2);
         wrench_frame(4:6) = wrench_frame(4:6) - mwbs.Utils.skew(foot_print_frame(:, i)) * (R_frame' * contact_forces_frame(j:j + 2));
