@@ -1,4 +1,4 @@
-function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_pose_dot, s_dot, num_closed_chains, num_in_contact_frames, contact_point)
+function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_pose_dot, s_dot, num_closed_chains, num_in_contact_frames, contact_point, num_vertices)
 
     %     COMPUTE_VELOCITY: computes the robot velocity vector after a (possible) impact
     % 
@@ -105,6 +105,7 @@ function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_
     %                 - num_closed_chains:     [SCALAR]                      The number of the closed chains
     %                 - num_in_contact_frames: [SCALAR]                      The number of the links interacting with the ground   
     %                 - contact_point:         [(m x k) x 1]                 The vertical position of the vertices
+    %                 - num_vertices:          [SCALAR]                      The number of the contact vertices for each foot
     % 
     %     **OUTPUT:**
     %                 - base_pose_dot:         [6 x 1]   The velocity vector of the base link
@@ -121,7 +122,7 @@ function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_
 % ---------------- INITIALIZAITON -------------------------------------
 NDOF = size(s_dot,1);
 
-num_total_vertices = num_in_contact_frames * obj.num_vertices;
+num_total_vertices = num_in_contact_frames * num_vertices;
 num_contact_forces = 3 * num_total_vertices;
 
 if (num_closed_chains == 0)
@@ -159,7 +160,7 @@ if new_contact && ~obj.useFrictionalImpact % A frictionless impact
     
 elseif new_contact && obj.useFrictionalImpact % A frictional impact
     impact_flag = true;
-    impulsive_forces = compute_unilateral_linear_impact(obj, M, [base_pose_dot; s_dot], J_feet, J_split_points, contact_point, num_closed_chains, num_in_contact_frames);
+    impulsive_forces = compute_unilateral_linear_impact(obj, M, [base_pose_dot; s_dot], J_feet, J_split_points, contact_point, num_closed_chains, num_in_contact_frames, num_vertices);
     nu_after_impact = [base_pose_dot; s_dot] + M \ (G' * impulsive_forces);
     base_pose_dot = nu_after_impact(1:6);
     s_dot = nu_after_impact(7:end);

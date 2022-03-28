@@ -1,4 +1,4 @@
-function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_contact, J_diff_split_points, contact_point, num_closed_chains, num_in_contact_frames)
+function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_contact, J_diff_split_points, contact_point, num_closed_chains, num_in_contact_frames, num_vertices)
 
     %     COMPUTE_UNILATERAL_LINEAR_IMPACT : computes the impulsive pure forces acting on the feet vertices and the impulsive internal wrenches applied to the split points in the (possible) closed chain
     % 
@@ -81,6 +81,7 @@ function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_co
     %             - contact_point:          [m x 1]          The vertical coordinate of the contact vertices
     %             - num_closed_chains:      [SCALAR]         The number of the closed chains
     %             - num_in_contact_frames:  [SCALAR]         The number of the links/frames interacting with the ground
+    %             - num_vertices:           [SCALAR]         The number of the contact vertices for each foot
     % 
     %     **OUTPUT:**
     %             - impulsive_forces:  [(3m+6p) x 1]  The impulsive contact forces and the impulsive internal wrenches in the spilit points
@@ -112,7 +113,7 @@ if ~issymmetric(H)
 end
 
 if obj.useOSQP
-    for i = 1:obj.num_vertices * num_in_contact_frames
+    for i = 1:num_vertices * num_in_contact_frames
         obj.Aeq(i, i * 3) = contact_point(i) > 0;
     end
     if obj.firstSolverIter
@@ -131,8 +132,8 @@ if obj.useOSQP
     
 elseif obj.useQPOASES
     
-    obj.ulb = 1e10 + zeros(3*obj.num_vertices*num_in_contact_frames, 1);
-    for i = 1 : obj.num_vertices * num_in_contact_frames
+    obj.ulb = 1e10 + zeros(3*num_vertices*num_in_contact_frames, 1);
+    for i = 1 : num_vertices * num_in_contact_frames
         if (contact_point(i) > 0) % vertex NOT in contact with the ground
             obj.ulb(3*i-2:3*i) = 0;
         end
@@ -167,11 +168,11 @@ elseif obj.useQPOASES
     [contactForces, ~] = simFunc_qpOASES_impact_phase_II(H, g, A_phase_II, A_Lb_phase_II, A_Ub_phase_II, -obj.ulb, obj.ulb);
     
 else
-    for i = 1:obj.num_vertices * num_in_contact_frames
+    for i = 1:num_vertices * num_in_contact_frames
         obj.Aeq(i, i * 3) = contact_point(i) > 0;
     end
-    obj.ulb = 1e10 + zeros(obj.num_vertices*num_in_contact_frames*3, 1);
-    for i = 1 : obj.num_vertices * num_in_contact_frames
+    obj.ulb = 1e10 + zeros(num_vertices*num_in_contact_frames*3, 1);
+    for i = 1 : num_vertices * num_in_contact_frames
         if (contact_point(i) > 0) % vertex NOT in contact with the ground
             obj.ulb(3*i-2:3*i) = 0;
         end

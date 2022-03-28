@@ -276,3 +276,21 @@ end
 
 contact_config.num_in_contact_frames = numRobotInContactFrames;
 contact_config.num_closed_chains = numRobotSplitPoints;
+contact_config.num_vertices = compute_number_of_vertices(contact_config.foot_print, contact_config.num_in_contact_frames);
+
+%% Local functions
+function num_vertices = compute_number_of_vertices(foot_print, num_in_contact_frames)
+    if iscell(foot_print) && (length(foot_print) == num_in_contact_frames)
+
+        num_vertices = size(foot_print{1},2);
+
+    elseif iscell(foot_print)
+
+        num_vertices = size(foot_print{1},2);
+
+    else
+
+        num_vertices = size(foot_print,2);
+
+    end
+end

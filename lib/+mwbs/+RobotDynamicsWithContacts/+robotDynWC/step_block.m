@@ -16,6 +16,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
 
     properties (Constant)
         num_in_contact_frames = 2;  % The number of the links interacting with the ground
+        num_vertices = 4;           % The number of the contact vertices for each link
     end
     
     properties (Access = private)
@@ -27,7 +28,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
         function setupImpl(obj)
             
             obj.robot = mwbs.Robot(obj.robot_config, obj.physics_config.GRAVITY_ACC);            
-            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, obj.num_in_contact_frames, obj.physics_config.TIME_STEP, obj.ifFieldExists('contact_config','max_consecutive_failures'), obj.ifFieldExists('contact_config','useFrictionalImpact'), obj.ifFieldExists('contact_config','useDiscreteContact'));
+            obj.contacts = mwbs.Contacts(obj.contact_config.foot_print, obj.robot.NDOF, obj.contact_config.friction_coefficient, obj.num_in_contact_frames, obj.num_vertices, obj.physics_config.TIME_STEP, obj.ifFieldExists('contact_config','max_consecutive_failures'), obj.ifFieldExists('contact_config','useFrictionalImpact'), obj.ifFieldExists('contact_config','useDiscreteContact'));
             obj.state = mwbs.State(obj.physics_config.TIME_STEP);
             obj.state.set(obj.robot_config.initialConditions.w_H_b, obj.robot_config.initialConditions.s, ...
                 obj.robot_config.initialConditions.base_pose_dot, obj.robot_config.initialConditions.s_dot);
@@ -54,7 +55,7 @@ classdef step_block < matlab.System & matlab.system.mixin.Propagates
             obj.robot.set_robot_state(w_H_b, s, base_pose_dot, s_dot);
             
             % Get feet contact state
-            links_in_contact = obj.contacts.getFeetContactState(obj.num_in_contact_frames);
+            links_in_contact = obj.contacts.get_feet_contact_state(obj.num_in_contact_frames, obj.num_vertices);
             
             % Get the wrench of the left and right feet
             wrench_LFoot = wrench_in_contact_frames(1:6);

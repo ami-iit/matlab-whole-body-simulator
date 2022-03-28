@@ -1,4 +1,4 @@
-function prepare_optimization_matrix(obj,num_inContact_frames)
+function prepare_optimization_matrix(obj, num_in_contact_frames, num_vertices )
 
 % PREPARE_OPTIMIZATION_MATRIX Fills the matrix relating to the unilateral
 %                             and friction cone constraints used by the
@@ -28,7 +28,7 @@ function prepare_optimization_matrix(obj,num_inContact_frames)
 %             - APOASES : l <= Ax <= u (should include -Inf <= -x <= 0).
 %            So in all the cases we define: Ax_Lb <= Ax <= Ax_Ub where Ax_Lb = -Inf.
 
-total_num_vertices = obj.num_vertices * num_inContact_frames; % number of vertices per foot * number of feet
+total_num_vertices = num_vertices * num_in_contact_frames; % number of vertices per foot * number of feet
 num_variables = 3 * total_num_vertices; % number of unknowns (3 force components per vertex)
 num_constr = 5 * total_num_vertices;    % number of constraint: simplified friction cone + non negativity of vertical force
 
