@@ -145,7 +145,7 @@ The **RobotDynWithContacts_closedChain** block combines all the contact wrenches
 |                                   |           useFrictionalImpact  | boolean      | (optional) Consider the friction effects in the impact model if it is true. By default, it is false.     |
 |                                   |           useDiscreteContact   | boolean      | (optional) Use the discrete contact model that considers the contact constraints in the velocity level if it is true. By default, it is false.     |
 |                                   |           useQPOASES           | boolean      | (optional) Use QPOASES solver if it is true. By default, it is true. If it false, QUADPROG solver in MATLAB is used. |
-|                                   |          max_consecuitive_fail | boolean      | (optional) Maximum acceptable fails in computing the reaction forces. By default, it is equal to 10. |
+|                                   |          max_consecutive_failures | boolean      | (optional) Maximum acceptable fails in computing the reaction forces. By default, it is equal to 10. |
 |<td rowspan="3">physics_config</td>|                    GRAVITY_ACC | [1x3] double | Gravity vector (gz = -9.81) |
 |                                   |                      TIME_STEP | [1x1] double | Simulator sampling time (recommended 1e-03) |
 

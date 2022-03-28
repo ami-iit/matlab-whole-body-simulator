@@ -34,7 +34,7 @@ classdef Contacts < handle
         S;                           % The selector matrix for the robot torque
         mu;                          % The friction coefficient
         dt;                          % The time step for the discrete contact model
-        max_consecuitive_fail = 10;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
+        max_consecutive_failures = 10;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
         useFrictionalImpact = false;    % Use the frictional impact model instead of the frictionless one
         useDiscreteContact = false;     % Use the discrete contact model instead of the continuous one
         useQPOASES = true;              % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
@@ -52,7 +52,7 @@ classdef Contacts < handle
     
     methods
         
-        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, dt, max_consecuitive_fail, useFrictionalImpact, useDiscreteContact, useQPOASES)
+        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, dt, max_consecutive_failures, useFrictionalImpact, useDiscreteContact, useQPOASES)
             % CONTACTS: This function initializes the Contact class
             % INPUTE:
             %         - foot_print:            [(3m) x k] The coordinates of every vertex in xyz
@@ -60,7 +60,7 @@ classdef Contacts < handle
             %         - friction_coefficient:  [SCALAR]   The friction coefficient of the ground
             %         - num_in_contact_frames: [SCALAR]   The number of the frames that can interact with the ground
             %         - dt:                    [SCALAR]   The time step for the discrete contact model
-            %         - max_consecuitive_fail: [SCALAR]   The maximum allowable fail in the computation of the reaction forces
+            %         - max_consecutive_failures: [SCALAR]   The maximum allowable fail in the computation of the reaction forces
             %         - useFrictionalImpact:   [BOOLEAN]  Determine if the frictional impact model is used instead of the frictionless unpact model
             %         - useDiscreteContact:    [BOOLEAN]  Determine if the discrete contact model is used instead of the continuous model
             %         - useQPOASES;            [BOOLEAN]  Determine if QPOQSES solver is used for the contact and impact models         
@@ -70,8 +70,8 @@ classdef Contacts < handle
             obj.mu = friction_coefficient;
             obj.dt = dt;
             
-            if ~isempty(max_consecuitive_fail)
-               obj.max_consecuitive_fail = max_consecuitive_fail;
+            if ~isempty(max_consecutive_failures)
+               obj.max_consecutive_failures = max_consecutive_failures;
             end
             if ~isempty(useFrictionalImpact)
                 obj.useFrictionalImpact = useFrictionalImpact;

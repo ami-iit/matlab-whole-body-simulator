@@ -254,8 +254,8 @@ end
 
 % generate an error if the optimization solver fails to solve
 % the optimization problem and obtain the contact forces.
-if (obj.fail_counter >= obj.max_consecuitive_fail)
-    error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',sprintf('%d',int8(obj.max_consecuitive_fail)),'times'}));
+if (obj.fail_counter >= obj.max_consecutive_failures)
+    error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',sprintf('%d',int8(obj.max_consecutive_failures)),'times'}));
 end
 
 % compute the internal wrenches of the spilit points in the (possible)
