@@ -102,7 +102,7 @@ floatingBaseBalancingTorqueControlWithSimulator.torqueControlBalancingWithSimu
 ## :runner: How to use the simulator
 
 Two simulator blocks are available, namely **RobotDynWithContacts** and **RobotDynWithContacts_closedChain**.
-The **RobotDynWithContacts** block simulates an open-chain kinematic robot with two feets as the links interacting with the ground.
+The **RobotDynWithContacts** block simulates an open-chain kinematic robot with two feet as the links interacting with the ground.
 Instead, the **RobotDynWithContacts_closedChain** block is capable of simulating a robot with open/closed chain kinematic where multiple number of links can be defined as the links interacting with the ground.
 
 For using the simulators:
