@@ -37,6 +37,7 @@ classdef Contacts < handle
         max_consecutive_failures = 10;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
         useFrictionalImpact = false;    % Use the frictional impact model instead of the frictionless one
         useDiscreteContact = false;     % Use the discrete contact model instead of the continuous one
+        useCircularFeet = false;        % Determines of the feet are circular
     end
     
     properties (Access = private)
@@ -50,8 +51,8 @@ classdef Contacts < handle
     end
     
     methods
-        
-        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, num_vertices, dt, max_consecutive_failures, useFrictionalImpact, useDiscreteContact)
+
+        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, num_vertices, dt, max_consecutive_failures, useFrictionalImpact, useDiscreteContact, useCircularFeet)
             % CONTACTS: This function initializes the Contact class
             % INPUTE:
             %         - foot_print:            [(3m) x k] The coordinates of every vertex in xyz
@@ -77,6 +78,9 @@ classdef Contacts < handle
             end
             if ~isempty(useDiscreteContact)
                 obj.useDiscreteContact = useDiscreteContact;
+            end
+            if ~isempty(useCircularFeet)
+                obj.useCircularFeet = useCircularFeet;
             end
             
             obj.is_in_contact = ones(num_vertices * num_in_contact_frames,1);
@@ -111,7 +115,7 @@ classdef Contacts < handle
             [J_feet, JDot_nu_feet] = obj.compute_J_and_JDot_nu_in_contact_frames(robot, num_in_contact_frames, num_vertices);
             
             % compute the vertical distance of every vertex from the ground
-            contact_points = obj.compute_contact_points(robot, num_in_contact_frames, num_vertices);
+            contact_points = obj.compute_contact_points(robot, num_in_contact_frames, num_vertices, obj.useCircularFeet);
             
             % computes a 3 * num_total_vertices vector containing the pure forces acting on every vertes
             contact_forces = obj.compute_unilateral_linear_contact(M, h, J_feet, [], JDot_nu_feet, [], torque, contact_points, 0, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot);
@@ -206,7 +210,7 @@ classdef Contacts < handle
             end
             
             % compute the vertical distance of every vertex from the ground
-            contact_points = obj.compute_contact_points(robot, num_in_contact_frames, num_vertices);
+            contact_points = obj.compute_contact_points(robot, num_in_contact_frames, num_vertices, obj.useCircularFeet);
             
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
             [base_pose_dot, s_dot, impact_flag] = obj.compute_velocity(M, G_forces, base_pose_dot, s_dot, num_closed_chains, num_in_contact_frames, contact_points, num_vertices);
@@ -253,7 +257,7 @@ classdef Contacts < handle
         [J_diff_splitPoint, JDot_diff_nu_splitPoint] = compute_J_and_JDot_nu_split_points(obj, robot);
 
         % computes the vertical position of every vertex and determine if each vertex is in contact with the ground or not
-        contact_points = compute_contact_points(obj, robot, num_inContact_frames, num_vertices);
+        contact_points = compute_contact_points(obj, robot, num_inContact_frames, num_vertices, useCircularFeet);
 
         % computes the robot velocity vector after a (possible) impact
         [base_pose_dot, s_dot] = compute_velocity(obj, M, G, base_pose_dot, s_dot, closed_chains, num_inContact_frames, contact_point, num_vertices)

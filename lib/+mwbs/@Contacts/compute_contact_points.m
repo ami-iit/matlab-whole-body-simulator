@@ -1,4 +1,4 @@
-function contact_points = compute_contact_points(obj, robot, num_in_contact_frames, num_vertices)
+function contact_points = compute_contact_points(obj, robot, num_in_contact_frames, num_vertices, flag_circular_feet)
 
     %     COMPUTE_CONTACT_POINTS: computes the vertical position of every vertex
     %                             and determine if each vertex is in contact with
@@ -12,6 +12,16 @@ function contact_points = compute_contact_points(obj, robot, num_in_contact_fram
     %                frame i to the world frame and p_i_sole is the position of the
     %                vertex i in the frame i.
     % 
+    %                If the foot is circular, any points in the boundary of the foot
+    %                can be in contact with the ground. However, the contact point is
+    %                always the lower point of the circle. Assuming that the origin of 
+    %                the frame of the sole foot is in the center of the circle, the
+    %                position of the lower point of the circle is as
+    % 
+    %                 P_i = H_sole_i * [p_i_sole_x ; p_i_sole_y ; 0 ; 1] - R
+    % 
+    %                 where R is the radius of the circle.
+    %
     %                The vertical position of the vertex i is equal to P_i(3).
     %                The vertex i is in contact with the ground if
     % 
@@ -23,6 +33,7 @@ function contact_points = compute_contact_points(obj, robot, num_in_contact_fram
     %     **INPUT:**
     %                 - robot                  [ROBOT OBJECT]
     %                 - num_in_contact_frames: [SCALAR]       The number of the frames interacting with the ground
+    %                 - flag_circular_feet:    [BOOLEAN]      Determines if the feet are circular 
     % 
     %     **OUTPUT:**
     %                 - contact_points:  [(m x k) x 1] The vertical coordinate of the vertices
@@ -44,8 +55,14 @@ for counter = 1 : num_in_contact_frames
     foot_print_frame = obj.foot_print{counter};
     z_frame_print = zeros(num_vertices, 1);
     for ii = 1 : num_vertices
-        % transforms the coordinates of the vertex (in sole frame) in the world frame
-        z = H_frame * [foot_print_frame(:, ii); 1];
+        if flag_circular_feet % the foot is circular
+            % transforms the coordinates of the center of the circle (in
+            % sole frame) in the world frame - radius of the circle
+            z = H_frame * [foot_print_frame(1:2, ii); 0; 1] - foot_print_frame(3, ii);
+        else % the foot is rectangular
+            % transforms the coordinates of the vertex (in sole frame) in the world frame
+            z = H_frame * [foot_print_frame(:, ii); 1];
+        end
         z_frame_print(ii) = z(3);
         
         % the vertex is in contact if its z <= 0
