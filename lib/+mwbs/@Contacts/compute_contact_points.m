@@ -58,7 +58,7 @@ for counter = 1 : num_in_contact_frames
         if flag_circular_feet % the foot is circular
             % transforms the coordinates of the center of the circle (in
             % sole frame) in the world frame - radius of the circle
-            z = H_frame * [foot_print_frame(1:2, ii); 0; 1] - foot_print_frame(3, ii);
+            z = H_frame * [foot_print_frame(1:2, ii); 0; 1] + foot_print_frame(3, ii);
         else % the foot is rectangular
             % transforms the coordinates of the vertex (in sole frame) in the world frame
             z = H_frame * [foot_print_frame(:, ii); 1];
