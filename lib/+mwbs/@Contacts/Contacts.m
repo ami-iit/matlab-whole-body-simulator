@@ -28,6 +28,7 @@ classdef Contacts < handle
     properties (Constant)
         num_vertices = 4;            % The number of vertices in each foot
         useOSQP = false;                % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
+        useQPOASES = true;              % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
     end
     
     properties (SetAccess = immutable)
@@ -37,7 +38,6 @@ classdef Contacts < handle
         max_consecutive_failures = 10;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
         useFrictionalImpact = false;    % Use the frictional impact model instead of the frictionless one
         useDiscreteContact = false;     % Use the discrete contact model instead of the continuous one
-        useQPOASES = true;              % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
     end
     
     properties (Access = private)
@@ -52,7 +52,7 @@ classdef Contacts < handle
     
     methods
         
-        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, dt, max_consecutive_failures, useFrictionalImpact, useDiscreteContact, useQPOASES)
+        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, dt, max_consecutive_failures, useFrictionalImpact, useDiscreteContact)
             % CONTACTS: This function initializes the Contact class
             % INPUTE:
             %         - foot_print:            [(3m) x k] The coordinates of every vertex in xyz
@@ -78,9 +78,6 @@ classdef Contacts < handle
             end
             if ~isempty(useDiscreteContact)
                 obj.useDiscreteContact = useDiscreteContact;
-            end
-            if ~isempty(useQPOASES)
-                obj.useQPOASES = useQPOASES;
             end
 
             obj.is_in_contact = ones(4*num_in_contact_frames,1);
