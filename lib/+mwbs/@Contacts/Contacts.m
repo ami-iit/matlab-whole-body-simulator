@@ -257,7 +257,7 @@ classdef Contacts < handle
         [J_diff_splitPoint, JDot_diff_nu_splitPoint] = compute_J_and_JDot_nu_split_points(obj, robot);
 
         % computes the vertical position of every vertex and determine if each vertex is in contact with the ground or not
-        contact_points = compute_contact_points(obj, robot, num_inContact_frames, num_vertices, useCircularFeet);
+        contact_points = compute_contact_points(obj, robot, num_inContact_frames, num_vertices);
 
         % computes the robot velocity vector after a (possible) impact
         [base_pose_dot, s_dot] = compute_velocity(obj, M, G, base_pose_dot, s_dot, closed_chains, num_inContact_frames, contact_point, num_vertices)

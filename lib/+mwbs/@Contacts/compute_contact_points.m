@@ -1,4 +1,4 @@
-function contact_points = compute_contact_points(obj, robot, num_in_contact_frames, num_vertices, flag_circular_feet)
+function contact_points = compute_contact_points(obj, robot, num_in_contact_frames, num_vertices)
 
     %     COMPUTE_CONTACT_POINTS: computes the vertical position of every vertex
     %                             and determine if each vertex is in contact with
@@ -55,7 +55,7 @@ for counter = 1 : num_in_contact_frames
     foot_print_frame = obj.foot_print{counter};
     z_frame_print = zeros(num_vertices, 1);
     for ii = 1 : num_vertices
-        if flag_circular_feet % the foot is circular
+        if obj.useCircularFeet % the foot is circular
             % transforms the coordinates of the center of the circle (in
             % sole frame) in the world frame - radius of the circle
             z = H_frame * [foot_print_frame(1:2, ii); 0; 1] + foot_print_frame(3, ii);

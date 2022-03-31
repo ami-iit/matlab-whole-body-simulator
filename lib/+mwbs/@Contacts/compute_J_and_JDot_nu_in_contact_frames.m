@@ -5,8 +5,11 @@ function [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj,
     %     PROCEDURE: The vertices are affected by pure forces. Thus, we need only the
     %                linear Jacobians. For a vertex i:
     % 
-    %                     Ji = J_linear_sole - S(R*pi) * J_angular_sole
-    %                     JDot_nui = JDot_nu_linear_sole - S(R*pi) * JDot_nu_angular_sole
+    %                     Ji = J_linear_sole - S(Pi) * J_angular_sole
+    %                     JDot_nui = JDot_nu_linear_sole - S(Pi) * JDot_nu_angular_sole
+    %                 
+    %                 where Pi is the absolute position of the contact
+    %                 vertex i
     % 
     %     **FORMAT**: [J_print, JDot_nu_print] = Contact_obj.compute_J_and_JDot_nu_in_contact_frames(robot, num_inContact_frames)
     % 
@@ -58,8 +61,15 @@ for counter = 1 : num_in_contact_frames
         j = (ii - 1) * 3 + 1;
         foot_print_frame = obj.foot_print{counter};
         v_coords = foot_print_frame(:, ii);
-        J_frame_print(j:j + 2, :) = J_lin - mwbs.Utils.skew(R_frame * v_coords) * J_ang;
-        JDot_nu_frame_print(j:j + 2, :) = JDot_nu_lin - mwbs.Utils.skew(R_frame * v_coords) * JDot_nu_ang;
+        if obj.useCircularFeet % the foot is circular
+            v_coords_local = [v_coords(1:2);0];
+            v_coords_global = [0;0;v_coords(3)];
+            J_frame_print(j:j + 2, :) = J_lin - mwbs.Utils.skew(R_frame * v_coords_local + v_coords_global) * J_ang;
+            JDot_nu_frame_print(j:j + 2, :) = JDot_nu_lin - mwbs.Utils.skew(R_frame * v_coords_local + v_coords_global) * JDot_nu_ang;
+        else % the foot is flat
+            J_frame_print(j:j + 2, :) = J_lin - mwbs.Utils.skew(R_frame * v_coords) * J_ang;
+            JDot_nu_frame_print(j:j + 2, :) = JDot_nu_lin - mwbs.Utils.skew(R_frame * v_coords) * JDot_nu_ang;
+        end
     end
     
     j = 1 + (counter-1) * 3 * num_vertices : counter * 3 * num_vertices;
