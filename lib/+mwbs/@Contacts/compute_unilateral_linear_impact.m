@@ -163,7 +163,7 @@ elseif obj.useQPOASES
     
     A_phase_II = [obj.A; -diag(obj.is_in_contact)*H_n; expandedNormalForces];
     A_Ub_phase_II = [obj.Ax_Ub; diag(obj.is_in_contact)*g_n; maximumNormalForceMagnitude];
-    A_Lb_phase_II = -1e10 + zeros(1+(5+1)* obj.num_vertices * num_in_contact_frames,1);
+    A_Lb_phase_II = -1e10 + zeros(1+(5+1)* num_vertices * num_in_contact_frames,1);
     
     [contactForces, ~] = simFunc_qpOASES_impact_phase_II(H, g, A_phase_II, A_Lb_phase_II, A_Ub_phase_II, -obj.ulb, obj.ulb);
     
