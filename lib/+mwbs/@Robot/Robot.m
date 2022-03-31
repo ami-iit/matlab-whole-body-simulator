@@ -59,6 +59,11 @@ classdef Robot < handle
            obj.KinDynModel.kinDynComp = obj.KinDynModel.kinDynComp.setRobotVelocity(base_pose_dot, s_dot);
         end
 
+        function [base_pose_dot,s_dot] = get_robot_velocity(obj)
+            [~,~,base_pose_dot,s_dot,~] = obj.KinDynModel.kinDynComp.getRobotState();
+            
+        end
+        
         function M = get_mass_matrix(obj,motorInertias,obj_step_block)
             % get_mass_matrix Returns the mass matrix
             % OUTPUT: - M: mass matrix
