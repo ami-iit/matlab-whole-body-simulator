@@ -6,7 +6,8 @@ function [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj,
     %                linear Jacobians. For a vertex i:
     % 
     %                     Ji = J_linear_sole - S(Pi) * J_angular_sole
-    %                     JDot_nui = JDot_nu_linear_sole - S(Pi) * JDot_nu_angular_sole
+    %                     JDot_nui = JDot_nu_linear_sole - S(Pi) *
+    %                     JDot_nu_angular_sole + (w_f * w_f' - |w_f|^2) Pi
     %                 
     %                 where Pi is the absolute position of the contact
     %                 vertex i
@@ -38,6 +39,8 @@ JDot_nu_print = zeros(3 * num_vertices * num_in_contact_frames, 1);
 H_in_ground_contact = robot.get_inContactWithGround_H();
 J_in_ground_contact = robot.get_inContactWithGround_jacobians();
 JDot_nu_in_ground_contact = robot.get_inContactWithGround_JDot_nu();
+[base_pose_dot,s_dot] = robot.get_robot_velocity();
+nu = [base_pose_dot;s_dot];
 
 % ------------------- MAIN ----------------------------------------
 for counter = 1 : num_in_contact_frames
@@ -61,14 +64,15 @@ for counter = 1 : num_in_contact_frames
         j = (ii - 1) * 3 + 1;
         foot_print_frame = obj.foot_print{counter};
         v_coords = foot_print_frame(:, ii);
+        w_f = J_ang * nu;
         if obj.useCircularFeet % the foot is circular
             v_coords_local = [v_coords(1:2);0];
             v_coords_global = [0;0;v_coords(3)];
             J_frame_print(j:j + 2, :) = J_lin - mwbs.Utils.skew(R_frame * v_coords_local + v_coords_global) * J_ang;
-            JDot_nu_frame_print(j:j + 2, :) = JDot_nu_lin - mwbs.Utils.skew(R_frame * v_coords_local + v_coords_global) * JDot_nu_ang;
+            JDot_nu_frame_print(j:j + 2, :) = JDot_nu_lin - mwbs.Utils.skew(R_frame * v_coords_local + v_coords_global) * JDot_nu_ang + (w_f * w_f' - w_f' * w_f * eye(3)) * (R_frame * v_coords_local + v_coords_global);
         else % the foot is flat
             J_frame_print(j:j + 2, :) = J_lin - mwbs.Utils.skew(R_frame * v_coords) * J_ang;
-            JDot_nu_frame_print(j:j + 2, :) = JDot_nu_lin - mwbs.Utils.skew(R_frame * v_coords) * JDot_nu_ang;
+            JDot_nu_frame_print(j:j + 2, :) = JDot_nu_lin - mwbs.Utils.skew(R_frame * v_coords) * JDot_nu_ang + (w_f * w_f' - w_f' * w_f * eye(3)) * (R_frame * v_coords);
         end
     end
     
