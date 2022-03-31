@@ -44,7 +44,7 @@ for counter = 1 : num_in_contact_frames
     
     wrench_frame = zeros(6, 1);
     % computed contact forces on every vertex
-    contact_forces_frame = contact_forces(1+12*(counter-1):12*counter);
+    contact_forces_frame = contact_forces(1+3*num_vertices*(counter-1):3*num_vertices*counter);
     
     for i = 1 : num_vertices
         j = (i - 1) * 3 + 1;
