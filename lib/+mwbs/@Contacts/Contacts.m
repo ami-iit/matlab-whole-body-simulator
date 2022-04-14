@@ -253,7 +253,7 @@ classdef Contacts < handle
         % computes the Jacobian and J_dot_nu relative to the vertices (Not the sole frames!)
         [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj, robot, num_inContact_frames, num_vertices);
         
-        % computes the JTilde and JDOTTildeThis function writes the local coordinates of the foot vertices in a cell array format * nu fot the spilit points in the (possible) closed chains
+        % computes the JTilde and JDOTTilde * nu for the spilit points in the (possible) closed chains
         [J_diff_splitPoint, JDot_diff_nu_splitPoint] = compute_J_and_JDot_nu_split_points(obj, robot);
 
         % computes the vertical position of every vertex and determine if each vertex is in contact with the ground or not
