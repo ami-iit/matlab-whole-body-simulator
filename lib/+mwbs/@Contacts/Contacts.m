@@ -89,7 +89,7 @@ classdef Contacts < handle
             % initialize the setup/update step of the osqp solver
             obj.firstSolverIter = true;
             
-            obj.prepare_foot_print (num_in_contact_frames, foot_print);
+            obj.prepare_foot_print (num_in_contact_frames, num_vertices, foot_print);
             obj.prepare_optimization_matrix(num_in_contact_frames, num_vertices);
             
         end
@@ -130,7 +130,7 @@ classdef Contacts < handle
             wrench_in_contact_frames = obj.compute_contact_wrench_in_sole_frames(contact_forces, robot, num_in_contact_frames, num_vertices);
             
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
-            [base_pose_dot, s_dot, ~] = obj.compute_velocity(M, J_feet, base_pose_dot, s_dot, 0, num_in_contact_frames, contact_points);
+            [base_pose_dot, s_dot, ~] = obj.compute_velocity(M, J_feet, base_pose_dot, s_dot, 0, num_in_contact_frames, contact_points, num_vertices);
             
             % update the contact log
             obj.was_in_contact = obj.is_in_contact;
@@ -253,7 +253,7 @@ classdef Contacts < handle
         % computes the Jacobian and J_dot_nu relative to the vertices (Not the sole frames!)
         [J_print, JDot_nu_print] = compute_J_and_JDot_nu_in_contact_frames(obj, robot, num_inContact_frames, num_vertices);
         
-        % computes the JTilde and JDOTTilde * nu fot the spilit points in the (possible) closed chains
+        % computes the JTilde and JDOTTildeThis function writes the local coordinates of the foot vertices in a cell array format * nu fot the spilit points in the (possible) closed chains
         [J_diff_splitPoint, JDot_diff_nu_splitPoint] = compute_J_and_JDot_nu_split_points(obj, robot);
 
         % computes the vertical position of every vertex and determine if each vertex is in contact with the ground or not
@@ -284,6 +284,8 @@ classdef Contacts < handle
         % Fills the matrix relating to the unilateral and friction cone constraints used by the optimization problem solver.
         prepare_optimization_matrix(obj, num_in_contact_frames, num_vertices);
         
+        % This function writes the local coordinates of the foot vertices in a cell array format
+        prepare_foot_print (obj, num_in_contact_frames, num_vertices, foot_print);
     end
 
 end
