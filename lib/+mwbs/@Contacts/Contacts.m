@@ -37,7 +37,8 @@ classdef Contacts < handle
         max_consecutive_failures = 10;  % The maximum allowable consecuitive fail in computing the reaction forces in the feet
         useFrictionalImpact = false;    % Use the frictional impact model instead of the frictionless one
         useDiscreteContact = false;     % Use the discrete contact model instead of the continuous one
-        useCircularFeet = false;        % Determines of the feet are circular
+        useCircularFeet = false;        % Determines if the feet are circular
+        w_R_c = eye(3);                 % The rotation matrix from the contact frame to the world frame
     end
     
     properties (Access = private)
@@ -52,8 +53,9 @@ classdef Contacts < handle
     
     methods
 
-        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, num_vertices, dt, max_consecutive_failures, useFrictionalImpact, useDiscreteContact, useCircularFeet)
+        function obj = Contacts(foot_print, NDOF, friction_coefficient, num_in_contact_frames, num_vertices, dt, max_consecutive_failures, useFrictionalImpact, useDiscreteContact, useCircularFeet, normalContactAxis)
             % CONTACTS: This function initializes the Contact class
+            %
             % INPUTE:
             %         - foot_print:            [(3m) x k] The coordinates of every vertex in xyz
             %         - NDOF:                  [SCALAR]   The number of the joints of the robot
@@ -63,7 +65,8 @@ classdef Contacts < handle
             %         - max_consecutive_failures: [SCALAR]   The maximum allowable fail in the computation of the reaction forces
             %         - useFrictionalImpact:   [BOOLEAN]  Determine if the frictional impact model is used instead of the frictionless unpact model
             %         - useDiscreteContact:    [BOOLEAN]  Determine if the discrete contact model is used instead of the continuous model
-            %         - useQPOASES:            [BOOLEAN]  Determine if QPOQSES solver is used for the contact and impact models   
+            %         - useQPOASES:            [BOOLEAN]  Determine if QPOQSES solver is used for the contact and impact models 
+            %         - normalContactAxis:     [3 x 1]    The normal axis to the contact surface
                 
             obj.S = [zeros(6, NDOF); ...
                 eye(NDOF)];
@@ -81,6 +84,9 @@ classdef Contacts < handle
             end
             if ~isempty(useCircularFeet)
                 obj.useCircularFeet = useCircularFeet;
+            end
+            if ~isempty(normalContactAxis)
+                obj.w_R_c = compute_rotation_matrix_of_contact_surface(normalContactAxis);
             end
             
             obj.is_in_contact = ones(num_vertices * num_in_contact_frames,1);
@@ -286,6 +292,9 @@ classdef Contacts < handle
         
         % This function writes the local coordinates of the foot vertices in a cell array format
         prepare_foot_print (obj, num_in_contact_frames, num_vertices, foot_print);
+        
+        % This function computes the rotation matrix of the contact frame to the world frame. The Contact frame is defined as a frame that its z axis is aligned to the normal axis of the contact surface.
+        compute_rotation_matrix_of_contact_surface(obj,n);
     end
 
 end
