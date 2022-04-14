@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.0.0] - 2022-04-14
 
 ### Added
-- Add support for simulating robots with cylindrical or spherical robots (https://github.com/ami-iit/matlab-whole-body-simulator/pull/71)
-- Add a new simulator block called `RobotDynWithContacts_closedChain` that is capable of simulating a robot with multiple closed kinematic chains and defining multiple links of the robot as the links interacting with the ground (https://github.com/ami-iit/matlab-whole-body-simulator/pull/64).
+- Added the possibility of simulating robots with cylindrical or spherical feet (https://github.com/ami-iit/matlab-whole-body-simulator/pull/71)
+- Add a new simulator block called `RobotDynWithContacts_closedChain` that is capable of simulating a robot with multiple closed kinematic chains and of defining multiple links of the robot as the links interacting with the ground (https://github.com/ami-iit/matlab-whole-body-simulator/pull/64).
 
 ### Changed
 - Added the option to load model with the absolute path, without using the YARP resource management at all (https://github.com/ami-iit/matlab-whole-body-simulator/pull/61).
