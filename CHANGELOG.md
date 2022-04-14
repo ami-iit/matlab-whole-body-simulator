@@ -6,8 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.0.0] - 2022-04-14
+
+### Added
+- Added the possibility of simulating robots with cylindrical or spherical feet (https://github.com/ami-iit/matlab-whole-body-simulator/pull/71)
+- Added a new simulator block called `RobotDynWithContacts_closedChain` that is capable of simulating a robot with multiple closed kinematic chains and of defining multiple links of the robot as the links interacting with the ground (https://github.com/ami-iit/matlab-whole-body-simulator/pull/64).
+- Added the possibility of simulating the sliding contact model.
+
 ### Changed
 - Added the option to load model with the absolute path, without using the YARP resource management at all (https://github.com/ami-iit/matlab-whole-body-simulator/pull/61).
+- Added the possibility of interacting with the robot visualizer while the simulation is paused (https://github.com/ami-iit/matlab-whole-body-simulator/pull/63)
 
 ## [2.0.0] - 2021-05-12
 ### Added
