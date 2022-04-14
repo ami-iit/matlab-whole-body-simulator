@@ -4,14 +4,17 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     % 
     %     PROCEDURE: The equation of motion for a N DOF robotic system can be written as
     % 
-    %             M vDot + h = B u + Fe + Jc^T Fc + Ji^T Fi
+    %             M vDot + h = B u + Fe + Jc^T R Fc + Ji^T Fi
     % 
-    %             where u is the joint torque, Fe is the external wrenches, Fc is the contact forces, and Fi if the internal wrenches in the spilit points in the (possible) closed chains.
+    %             where u is the joint torque, Fe is the external wrenches, 
+    %             Fc is the contact forces represented in the contact frame, 
+    %             and Fi if the internal wrenches in the spilit points in 
+    %             the (possible) closed chains.
     % 
     %             The above dynamics is constrained by the topological constraint of the closed chains and the contact points as
     % 
     %             Ji v = 0
-    %             Jc v = 0
+    %             R' Jc v = 0
     % 
     %             In the present function, there are two methods for computing Fc and Fi where the both methods are based on the maximum kinetic energy dissipation principle.
     % 
@@ -19,35 +22,35 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     %             Assuming that Ji v(0) = 0 and Jc v(0) = 0, we can rewrite the above constraint in the acceleration level as
     % 
     %             JiDot v + Ji vDot = 0
-    %             JcDot v + Jc vDot = 0
+    %             R' JcDot v + R' Jc vDot = 0
     % 
     %             Using the maximum kinetic energy dissipation principle, vDot, fc, fi can be computed as
     % 
     %             Minimize 0.5 |vDot - vDot_free|_M
     %             subject to:
     %             JiDot v + Ji vDot = 0
-    %             JcDot v + Jc vDot = 0
+    %             R' JcDot v + R' Jc vDot = 0
     % 
     %             where vDot_free is the free acceleration of the system.
     %             The KKT conditions of the above problem are as
     % 
-    %             M vDot - M vDot_free - Jc^T lc - Ji^T li = 0
+    %             M vDot - M vDot_free - Jc^T R lc - Ji^T li = 0
     %             JiDot v + Ji vDot = 0
-    %             JcDot v + Jc vDot = 0
+    %             R' JcDot v + R' Jc vDot = 0
     % 
     %             It can be shown that lc = Fc and li = Fi.
     %             Substituting VDot from the first equation to the second and third one gives us
     % 
-    %             JiDot v + Ji vDot_free + Ji M^-1 Jc^T Fc + Ji M^-1 Ji^T Fi = 0
-    %             JcDot v + Jc vDot_free + Jc M^-1 Jc^T Fc + Jc M^-1 Ji^T Fi = 0
+    %             JiDot v + Ji vDot_free + Ji M^-1 Jc^T R Fc + Ji M^-1 Ji^T Fi = 0
+    %             R' JcDot v + R' Jc vDot_free + R' Jc M^-1 Jc^T R Fc + R' Jc M^-1 Ji^T Fi = 0
     % 
     %             From the first equation, we have
     % 
-    %             Fi = - (Ji M^-1 Ji^T)^-1 (JiDot v + Ji vDot_free + Ji M^-1 Jc^T Fc)
+    %             Fi = - (Ji M^-1 Ji^T)^-1 (JiDot v + Ji vDot_free + Ji M^-1 Jc^T R Fc)
     % 
     %             Substituting Fi in the second equation, we obtain
     % 
-    %             JcDot v + Jc vDot_free + (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) Fc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 (JiDot v + Ji vDot_free) = 0
+    %             R' JcDot v + R' Jc vDot_free + (R' Jc M^-1 Jc^T R - R' Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T R) Fc - R' Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 (JiDot v + Ji vDot_free) = 0
     % 
     %             The above equation can be written as
     % 
@@ -55,8 +58,8 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     % 
     %             where
     % 
-    %             H = Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T
-    %             g = JcDot v + Jc vDot_free - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 (JiDot v + Ji vDot_free);
+    %             H = R' (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) R
+    %             g = R' (JcDot v + Jc vDot_free - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 (JiDot v + Ji vDot_free));
     % 
     %             The above equation can be write as an optimisation problem like
     % 
@@ -73,35 +76,35 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     %             Using the Euler integration, the topological constraints can be written as
     % 
     %             Vi(k) = Vi(k-1) + Dt * ViDot(k) = Ji v + Dt * (JiDot v + Ji vDot) = Ji v + Dt JiDot v + Dt Ji vDot
-    %             Vc(k) = Vc(k-1) + Dt * VcDot(k) = Jc v + Dt * (JcDot v + Jc vDot) = Jc v + Dt JcDot v + Dt Jc vDot
+    %             Vc(k) = Vc(k-1) + Dt * VcDot(k) = R' Jc v + Dt * (R' JcDot v + R' Jc vDot) = R' Jc v + Dt R' JcDot v + Dt R' Jc vDot
     % 
     %             Using the maximum kinetic energy dissipation principle, vDot, fc, fi can be computed as
     % 
     %             Minimize 0.5 |vDot - vDot_free|_M
     %             subject to:
     %             Ji/Dt v + JiDot v + Ji vDot = 0
-    %             Jc/Dt v + JcDot v + Jc vDot = 0
+    %             R' Jc/Dt v + R' JcDot v + R' Jc vDot = 0
     % 
     %             where vDot_free is the free acceleration of the system.
     %             The KKT conditions of the above problem are as
     % 
-    %             M vDot - M vDot_free - Jc^T lc - Ji^T li = 0
+    %             M vDot - M vDot_free - Jc^T R lc - Ji^T li = 0
     %             Ji/Dt v + JiDot v + Ji vDot = 0
-    %             Jc/Dt v + JcDot v + Jc vDot = 0
+    %             R' Jc/Dt v + R' JcDot v + R' Jc vDot = 0
     % 
     %             It can be shown that lc = Fc and li = Fi.
     %             Substituting VDot from the first equation to the second and third one gives us
     % 
-    %             Ji/Dt v + JiDot v + Ji vDot_free + Ji M^-1 (Jc^T Fc + Ji^T Fi) = 0
-    %             Jc/Dt v + JcDot v + Jc vDot_free + Jc M^-1 (Jc^T Fc + Ji^T Fi) = 0
+    %             Ji/Dt v + JiDot v + Ji vDot_free + Ji M^-1 (Jc^T R Fc + Ji^T Fi) = 0
+    %             R' Jc/Dt v + R' JcDot v + R' Jc vDot_free + R' Jc M^-1 (Jc^T R Fc + Ji^T Fi) = 0
     % 
     %             From the first equation, we have
     % 
-    %             Fi = - (Ji M^-1 Ji^T)^-1 (Ji/Dt v + JiDot v + Ji vDot_free + Ji M^-1 Jc^T Fc)
+    %             Fi = - (Ji M^-1 Ji^T)^-1 (Ji/Dt v + JiDot v + Ji vDot_free + Ji M^-1 Jc^T R Fc)
     % 
     %             Substituting Fi in the second equation, we obtain
     % 
-    %             Jc/Dt v + JcDot v + Jc vDot_free + Jc M^-1 Jc^T Fc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 (Ji/Dt v + JiDot v + Ji vDot_free + Ji M^-1 Jc^T Fc) = 0
+    %             R' Jc/Dt v + R' JcDot v + R' Jc vDot_free + R' Jc M^-1 Jc^T R Fc - R' Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 (Ji/Dt v + JiDot v + Ji vDot_free + Ji M^-1 Jc^T R Fc) = 0
     % 
     %             The above equation can be written as
     % 
@@ -109,8 +112,8 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     % 
     %             where
     % 
-    %             H = Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T
-    %             g = Jc/Dt v + JcDot v + Jc vDot_free - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 (Ji/Dt v + JiDot v + Ji vDot_free)
+    %             H = R' ( Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) R
+    %             g = R' (Jc/Dt v + JcDot v + Jc vDot_free - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 (Ji/Dt v + JiDot v + Ji vDot_free))
     % 
     %             The above equation can be write as an optimisation problem like
     % 
@@ -151,6 +154,8 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     %     PLACE AND DATE: <Genoa, March 2022>
 
 % ----------------------- INITIALIZATION ----------------------------------
+R = repmat(obj.w_R_c,num_vertices,1);
+
 
 % --------------------------- MAIN ----------------------------------------
 free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
@@ -184,6 +189,10 @@ else % there is no closed chain
     
 end
 
+% consider the rotation of the contact surface
+H = R' * H * R;
+g = R' * g;
+
 if ~issymmetric(H)
     H = (H + H') / 2; % if non sym
 end
@@ -212,6 +221,7 @@ if obj.useOSQP
         obj.fail_counter = obj.fail_counter + 1;
     end
     contactForces = res.x;
+    contactForces_world = R * contactForces;
     
 elseif obj.useQPOASES
     
@@ -223,6 +233,7 @@ elseif obj.useQPOASES
     end
     
     [contactForces,status] = simFunc_qpOASES(H, g, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
+    contactForces_world = R * contactForces;
     
     % Count the consecuitive failure of the solver
     if (status == 0)
@@ -244,6 +255,8 @@ else % USE QUADPROG
     end
     options = optimoptions('quadprog', 'Algorithm', 'active-set', 'Display', 'off');
     [contactForces,~,exitFlag,~] = quadprog(H, g, obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb, 100 * ones(size(H,1), 1), options);
+    contactForces_world = R * contactForces;
+    
     % Counter the consecuitive failure of the solver
     if (exitFlag == 1)
         obj.fail_counter = 0;
@@ -267,15 +280,15 @@ if num_closed_chains == 0 % there is no closed chain
 elseif useDiscreteContact % there are some closed chains
     
     JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001 );
-    internalWrenches = -JMJ_dmpd_pseudo_inv * ((J_diff_split_points * (M \ J_in_contact')) * contactForces + free_contact_diff_acceleration_internal + J_diff_split_points * [base_pose_dot ; s_dot] / obj.dt);
+    internalWrenches = -JMJ_dmpd_pseudo_inv * ((J_diff_split_points * (M \ J_in_contact')) * contactForces_world + free_contact_diff_acceleration_internal + J_diff_split_points * [base_pose_dot ; s_dot] / obj.dt);
     
 else % there are some closed chains
     
     JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001 );
-    internalWrenches = -JMJ_dmpd_pseudo_inv * ((J_diff_split_points * (M \ J_in_contact')) * contactForces + free_contact_diff_acceleration_internal);
+    internalWrenches = -JMJ_dmpd_pseudo_inv * ((J_diff_split_points * (M \ J_in_contact')) * contactForces_world + free_contact_diff_acceleration_internal);
     
 end
 
-forces = [contactForces;internalWrenches];
+forces = [contactForces_world;internalWrenches];
 
 end

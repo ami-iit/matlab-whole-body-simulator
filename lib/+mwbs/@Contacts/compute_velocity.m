@@ -4,7 +4,7 @@ function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_
     % 
     %     PROCEDURE: The dynamic equation of the motion of the robot is
     %
-    %         M vDot + h = B u + Fe + Jc^T Fc + Ji^T Fi
+    %         M vDot + h = B u + Fe + Jc^T R Fc + Ji^T Fi
     % 
     %         where
     % 
@@ -23,7 +23,7 @@ function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_
     % 
     %         The integration of the equation of the motion during the impact is
     % 
-    %         M (v^+ - v^-) = Jc^T fc + Ji^T fi
+    %         M (v^+ - v^-) = Jc^T R fc + Ji^T fi
     % 
     %         where v^- and v^+ are the robot velocity vector before and after 
     %         the impact, respectively. fc and fi are the impulsive reaction
@@ -32,14 +32,14 @@ function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_
     %         Assuming that the velocity of the contact vertices and the
     %         spilit points are zero after the impact,
     % 
-    %         Jc v^+ = 0
+    %         R' Jc v^+ = 0
     %         Ji v^+ = 0
     % 
     %         Putting the above three equations together, we have
     % 
-    %           M  -Jc^T -Ji^T      v^+      M v^-
-    %         [ Jc  0     0    ]  [ fc ] = [ 0    ]
-    %           Ji  0     0         fi       0
+    %           M     -Jc^T R  -Ji^T      v^+      M v^-
+    %         [ R' Jc  0        0    ]  [ fc ] = [ 0    ]
+    %           Ji     0        0         fi       0
     % 
     %         Using the schur complement, the velocity vector after the impact is
     % 
@@ -55,23 +55,23 @@ function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_
     % 
     %         Using the integration of the equation of the motion during the impact, we can rewrite the above equation as
     % 
-    %         Ji v^- + Ji M^-1 Jc^T fc + Ji M^-1 Ji^T fi = 0
+    %         Ji v^- + Ji M^-1 Jc^T R fc + Ji M^-1 Ji^T fi = 0
     % 
     %         Thus, fi is as
     % 
-    %         fi = - (Ji M^-1 Ji^T)^-1 (Ji v^- + Ji M^-1 Jc^T fc)
+    %         fi = - (Ji M^-1 Ji^T)^-1 (Ji v^- + Ji M^-1 Jc^T R fc)
     % 
     %         Substituting fi in the integration of the equation of the motion during the impact, we have
     % 
-    %         M v^+ = ( M - Ji^T (Ji M^-1 Ji^T)^-1 Ji ) v^- + (Jc^T - Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) fc
+    %         M v^+ = ( M - Ji^T (Ji M^-1 Ji^T)^-1 Ji ) v^- + (Jc^T - Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) R fc
     % 
     %         On the other hand, the velocity of the contact points after the impact is
     % 
-    %         Vc^+ = Jc v^+
+    %         Vc^+ = R' Jc v^+
     % 
     %         Substituting v^+ in the above equation, we have
     % 
-    %         Vc^+ = (Jc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji) v^- + (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) fc
+    %         Vc^+ = R' (Jc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji) v^- + (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) R fc
     % 
     %         The above equation is written usually in the A/b representation as
     % 
@@ -79,8 +79,8 @@ function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_
     % 
     %         where
     % 
-    %         b = (Jc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji) v^-,
-    %         A = (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T),
+    %         b = R' (Jc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji) v^-,
+    %         A = R' (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) R,
     % 
     %         Using the maximum dissipation principle, the impulsive forces fc is as
     % 

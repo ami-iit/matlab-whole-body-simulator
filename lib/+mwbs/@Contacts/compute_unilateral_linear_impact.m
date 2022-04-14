@@ -4,7 +4,7 @@ function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_co
     % 
     %     PROCEDURE: The dynamic equation of the motion of the robot is
     % 
-    %             M vDot + h = B u + Fe + Jc^T Fc + Ji^T Fi
+    %             M vDot + h = B u + Fe + Jc^T R Fc + Ji^T Fi
     % 
     %             where
     % 
@@ -19,7 +19,7 @@ function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_co
     % 
     %             The integration of the equation of the motion during the impact is
     % 
-    %             M (v^+ - v^-) = Jc^T fc + Ji^T fi
+    %             M (v^+ - v^-) = Jc^T R fc + Ji^T fi
     % 
     %             where v^- and v^+ are the robot velocity vector before and after 
     %             the impact, respectively. fc and fi are the impulsive reaction
@@ -31,23 +31,23 @@ function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_co
     % 
     %             Using the integration of the equation of the motion during the impact, we can rewrite the above equation as
     % 
-    %             Ji v^- + Ji M^-1 Jc^T fc + Ji M^-1 Ji^T fi = 0
+    %             Ji v^- + Ji M^-1 Jc^T R fc + Ji M^-1 Ji^T fi = 0
     % 
     %             Thus, fi is as
     % 
-    %             fi = -(Ji M^-1 Ji^T)^-1 (Ji v^- + Ji M^-1 Jc^T fc)
+    %             fi = -(Ji M^-1 Ji^T)^-1 (Ji v^- + Ji M^-1 Jc^T R fc)
     % 
     %             Substituting fi in the integration of the equation of the motion during the impact, we have
     % 
-    %             M v^+ = ( M - Ji^T (Ji M^-1 Ji^T)^-1 Ji ) v^- + (Jc^T - Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) fc
+    %             M v^+ = ( M - Ji^T (Ji M^-1 Ji^T)^-1 Ji ) v^- + (Jc^T - Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) R fc
     % 
     %             On the other hand, the velocity of the contact points after the impact is
     % 
-    %             Vc^+ = Jc v^+
+    %             Vc^+ = R' Jc v^+
     % 
     %             Substituting v^+ in the above equation, we have
     % 
-    %             Vc^+ = (Jc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji) v^- + (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) fc
+    %             Vc^+ = R' (Jc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji) v^- + R' (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) R fc
     % 
     %             The above equation is written usually in the A/b representation as
     % 
@@ -55,8 +55,8 @@ function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_co
     % 
     %             where
     % 
-    %             b = (Jc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji) v^-,
-    %             A = (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T),
+    %             b = R' (Jc - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji) v^-,
+    %             A = R' (Jc M^-1 Jc^T - Jc M^-1 Ji^T (Ji M^-1 Ji^T)^-1 Ji M^-1 Jc^T) R,
     % 
     %             Using the maximum dissipation principle, the impulsive forces fc is as
     % 
@@ -92,7 +92,10 @@ function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_co
     %     email: name.surname@iit.it
     % 
     %     PLACE AND DATE: <Genoa, March 2022>
+    %
 
+% ------------------------- INITIALIZATION -------------------------------
+R = repmat(obj.w_R_c,num_vertices,1);
 
 % ---------------------------- MAIN --------------------------------------
 if num_closed_chains == 0 % there is no closed chain
@@ -107,6 +110,10 @@ else % there are some closed chains
     g = (J_in_contact - J_in_contact * ( M \ J_diff_split_points') * JMJ_dmpd_pseudo_inv * J_diff_split_points) * nu;
     
 end
+
+% consider the rotation of the contact surface
+H = R' * H * R;
+g = R' * g;
 
 if ~issymmetric(H)
     H = (H + H') / 2; % if non sym
@@ -129,6 +136,7 @@ if obj.useOSQP
     res = obj.osqpProb.solve();
 
     contactForces = res.x;
+    contactForces_world = R * contactForces;
     
 elseif obj.useQPOASES
     
@@ -166,6 +174,7 @@ elseif obj.useQPOASES
     A_Lb_phase_II = -1e10 + zeros(1+(5+1)* num_vertices * num_in_contact_frames,1);
     
     [contactForces, ~] = simFunc_qpOASES_impact_phase_II(H, g, A_phase_II, A_Lb_phase_II, A_Ub_phase_II, -obj.ulb, obj.ulb);
+    contactForces_world = R * contactForces;
     
 else
     for i = 1:num_vertices * num_in_contact_frames
@@ -179,6 +188,8 @@ else
     end
     options = optimoptions('quadprog', 'Algorithm', 'active-set', 'Display', 'off');
     [contactForces,~,~,~] = quadprog(H, g, obj.A, obj.Ax_Ub, [], [], -obj.ulb, obj.ulb, 100 * ones(size(H,1), 1), options);
+    contactForces_world = R * contactForces;
+    
 end
 
 % compute the internal wrenches of the spilit points if there
@@ -186,9 +197,9 @@ end
 if (num_closed_chains == 0)
     internalWrenches = [];
 else
-    internalWrenches = - JMJ_dmpd_pseudo_inv * ((J_diff_split_points * ( M \ J_in_contact')) * contactForces + J_diff_split_points * nu);
+    internalWrenches = - JMJ_dmpd_pseudo_inv * ((J_diff_split_points * ( M \ J_in_contact')) * contactForces_world + J_diff_split_points * nu);
 end
 
-impulsive_forces = [contactForces;internalWrenches];
+impulsive_forces = [contactForces_world;internalWrenches];
 
 end
