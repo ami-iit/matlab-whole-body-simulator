@@ -154,8 +154,8 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     %     PLACE AND DATE: <Genoa, March 2022>
 
 % ----------------------- INITIALIZATION ----------------------------------
-R = repmat(obj.w_R_c,num_vertices,1);
-
+R_cell = repmat({obj.w_R_c}, num_vertices * num_in_contact_frames,1);  % Repeat Matrix for every vertex as a cell array
+R = blkdiag(R_cell{:});
 
 % --------------------------- MAIN ----------------------------------------
 free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);

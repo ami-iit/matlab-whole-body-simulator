@@ -95,7 +95,8 @@ function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_co
     %
 
 % ------------------------- INITIALIZATION -------------------------------
-R = repmat(obj.w_R_c,num_vertices,1);
+R_cell = repmat({obj.w_R_c}, num_vertices * num_in_contact_frames,1);  % Repeat Matrix for every vertex as a cell array
+R = blkdiag(R_cell{:});
 
 % ---------------------------- MAIN --------------------------------------
 if num_closed_chains == 0 % there is no closed chain

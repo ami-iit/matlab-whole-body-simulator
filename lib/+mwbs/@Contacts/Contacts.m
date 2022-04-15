@@ -86,7 +86,7 @@ classdef Contacts < handle
                 obj.useCircularFeet = useCircularFeet;
             end
             if ~isempty(normalContactAxis)
-                obj.w_R_c = compute_rotation_matrix_of_contact_surface(normalContactAxis);
+                obj.w_R_c = obj.compute_rotation_matrix_of_contact_surface(normalContactAxis);
             end
             
             obj.is_in_contact = ones(num_vertices * num_in_contact_frames,1);
@@ -294,7 +294,7 @@ classdef Contacts < handle
         prepare_foot_print (obj, num_in_contact_frames, num_vertices, foot_print);
         
         % This function computes the rotation matrix of the contact frame to the world frame. The Contact frame is defined as a frame that its z axis is aligned to the normal axis of the contact surface.
-        compute_rotation_matrix_of_contact_surface(obj,n);
+        w_R_c = compute_rotation_matrix_of_contact_surface(obj,n);
     end
 
 end

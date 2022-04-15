@@ -1,4 +1,4 @@
-function compute_rotation_matrix_of_contact_surface(obj,n)
+function w_R_c = compute_rotation_matrix_of_contact_surface(obj,n)
 
     %     COMPUTE_ROTATION_MATRIX_OF_CONTACT_SURFACE : This function
     %           computes the rotation matrix of the contact frame to the world
@@ -29,6 +29,7 @@ function compute_rotation_matrix_of_contact_surface(obj,n)
     %             - n:  [3 x 1] The normal axis of the contact surface
     % 
     %     **OUTPUT:**
+    %             - w_R_c:  [3 x 3] The rotation matrix from the Contact frame to the World frame
     % 
     %     **AUTHORS:**  Venus Pasandi
     % 
@@ -45,18 +46,22 @@ n_normalized = n / norm(n);
 % -------------------------- MAIN ----------------------------------------
 u = mwbs.Utils.skew(k) * n_normalized;
 u_norm = norm(u);
+
+p = asin(u_norm);
+cp = cos(p);
+sp = sin(p);
+
+if (u_norm == 0) % The cases that n is aligned with k
+    u_norm = 1;
+end
 u_normalized = u / u_norm;
 
 ux = u_normalized(1);
 uy = u_normalized(2);
 uz = u_normalized(3);
 
-p = asin(u_norm);
-cp = cos(p);
-sp = sin(p);
-
-obj.w_R_c = [ cp + ux^2 * (1 - cp)      ;  ux*uy * (1-cp) - uz * sp  ;  ux*uz * (1-cp) + uy * sp;...
-              ux*uy * (1-cp) + uz * sp  ;  cp + uy^2 * (1 - cp)      ;  uy*uz * (1-cp) - ux * sp;...
-              ux*uz * (1-cp) - uy * sp  ;  uy*uz * (1-cp) + ux * sp  ;  cp + uz^2 * (1 - cp)];
+w_R_c = [ cp + ux^2 * (1 - cp)      ,  ux*uy * (1-cp) - uz * sp  ,  ux*uz * (1-cp) + uy * sp;...
+          ux*uy * (1-cp) + uz * sp  ,  cp + uy^2 * (1 - cp)      ,  uy*uz * (1-cp) - ux * sp;...
+          ux*uz * (1-cp) - uy * sp  ,  uy*uz * (1-cp) + ux * sp  ,  cp + uz^2 * (1 - cp)];
           
 end
