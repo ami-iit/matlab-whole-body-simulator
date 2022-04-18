@@ -65,12 +65,12 @@ for counter = 1 : num_in_contact_frames
             % transforms the coordinates of the center of the circle (in
             % sole frame) in the world frame - radius of the circle
             p_origin_w = H_frame * [foot_print_frame(1:2, ii); 0; 1];
-            p_origin_c = obj.w_R_c * p_origin_w(1:3);
+            p_origin_c = obj.w_R_c' * p_origin_w(1:3);
             p_c = p_origin_c + [0;0;foot_print_frame(3, ii)];
         else % the foot is rectangular
             % transforms the coordinates of the vertex (in sole frame) in the world frame
-            p_origin_w = H_frame * [foot_print_frame(:, ii); 1];
-            p_c = obj.w_R_c * p_origin_w(1:3);
+            p_c_w = H_frame * [foot_print_frame(:, ii); 1];
+            p_c = obj.w_R_c' * p_c_w(1:3);
         end
         z_frame_print(ii) = p_c(3);
         
