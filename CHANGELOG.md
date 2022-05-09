@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added the option to model the motion on an inclined surface (https://github.com/ami-iit/matlab-whole-body-simulator/pull/78).
+
+## [3.0.0] - 2022-04-14
+### Added
+- Added the possibility of simulating robots with cylindrical or spherical feet (https://github.com/ami-iit/matlab-whole-body-simulator/pull/71)
+- Added a new simulator block called `RobotDynWithContacts_closedChain` that is capable of simulating a robot with multiple closed kinematic chains and of defining multiple links of the robot as the links interacting with the ground (https://github.com/ami-iit/matlab-whole-body-simulator/pull/64).
+- Added the possibility of simulating the sliding contact model.
 
 ## [3.0.0] - 2022-04-14
 
