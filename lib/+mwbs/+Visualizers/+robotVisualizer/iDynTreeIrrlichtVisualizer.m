@@ -68,10 +68,7 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
 		
 		% Definition of Plane Characteristics
             
-            rot_matrix = eye(4);
-            rot_matrix(1,1)=obj.config.normalContactAxis(1);
-            rot_matrix(2,2)=obj.config.normalContactAxis(2);
-            rot_matrix(3,3)=obj.config.normalContactAxis(3);
+            rot_matrix = mwbs.Utils.compute_rotation_matrix_of_contact_surface(obj.config.normalContactAxis);
             
             PlaneJointsPosition = zeros(1);
             PlaneBaseVelocity = zeros(6,1);
