@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<robot name="iDynTreeURDFModelExportModelName">
+  <link name="plane_link">
+    <inertial>
+      <mass value="1"/>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <inertia ixx="1.e-1" ixy="1.e-1" ixz="1.e-1" iyy="1e-1" iyz="1e-1" izz="1e-1"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <box size="1.0 1.0 0.01"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <geometry>
+        <box size="1 1 0.5"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

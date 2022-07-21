@@ -98,34 +98,39 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
         
         function preparePlane(obj)
             
+            % Definition of Plane Characteristics
             PlaneNormal = obj.config.normalContactAxis;
-            
-            PlaneJointsPosition = [];
-            PlaneBaseVelocity = zeros(6,1);
-            PlaneJointsVelocity = [];
-            
-            rot_matrix = mwbs.Utils.compute_rotation_matrix_of_contact_surface(PlaneNormal);
-             			
- 			transf_matrix = eye(4);
- 			
- 			for i=1:3
-                 for j=1:3
-                     transf_matrix(i,j)=rot_matrix(i,j);
-                 end
- 			end
+            world_R_plane = mwbs.Utils.computeRotationMatrixFromNormal(PlaneNormal);
+            world_H_plane = eye(4);
+            world_H_plane(1:3,1:3) = world_R_plane;			
 		
-            JointOrder_Plane=cell({'Fixing_Joint'});
-            Plane_Path=strcat(getenv('ISAAC_PATH'),'/isaac-wp1/WP1-4_GeneratedURDFModels');
+            JointOrder_Plane=cell({});
+            Plane_Path=[fileparts(mfilename('fullpath')),'/Urdf/Plane/FlatPlane'];
             Plane_Name='/Plane.urdf';
-            Plane_Base_Link='plane_left_link';
+            Plane_Base_Link='plane_link';
             
             % Loading the plane
             Plane = iDynTreeWrappers.loadReducedModel(JointOrder_Plane, Plane_Base_Link, Plane_Path, Plane_Name, false);
             
-            iDynTreeWrappers.setRobotState(Plane, transf_matrix, PlaneJointsPosition, PlaneBaseVelocity, PlaneJointsVelocity, obj.g');
-            
             % add the plane to the visualizer
             obj.viz.addModel(Plane.kinDynComp.model(), 'plane');
+            
+            % set the plane orientation
+            baseRotation_iDyntree = iDynTree.Rotation();
+            baseOrigin_iDyntree   = iDynTree.Position();
+            T = iDynTree.Transform();
+            for k = 0 : 2
+                baseOrigin_iDyntree.setVal(k,world_H_plane(k+1,4));
+                for j = 0:2
+                    baseRotation_iDyntree.setVal(k,j,world_H_plane(k+1,j+1));
+                end
+            end
+            T.setRotation(baseRotation_iDyntree);
+            T.setPosition(baseOrigin_iDyntree);
+            
+            s = iDynTree.VectorDynSize(Plane.NDOF);
+            
+            obj.viz.modelViz('plane').setPositions(T,s);
         end
 
         function updateVisualization(obj)
