@@ -51,9 +51,9 @@ p = asin(u_norm);
 cp = cos(p);
 sp = sin(p);
 
-if (u_norm == 0) % The cases that n is aligned with k
-    u_norm = 1;
-end
+% if (u_norm == 0) % The cases that n is aligned with k
+%    u_norm = 1;
+% end
 u_normalized = u / u_norm;
 
 ux = u_normalized(1);

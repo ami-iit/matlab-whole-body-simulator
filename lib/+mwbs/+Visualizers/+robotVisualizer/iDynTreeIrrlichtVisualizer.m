@@ -3,6 +3,8 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
     % See https://github.com/dic-iit/matlab-whole-body-simulator/pull/50#issuecomment-849515071
     % go in app/robots/iCub*/initRobotVisualizer.m to change the setup config
 
+% Testing Installation Procedure
+
     properties (Nontunable)
         config;
         minSampleTime = 1/25;
@@ -65,15 +67,23 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
         end
 
         function prepareRobot(obj)
-		
-		% Definition of Plane Characteristics
             
-            rot_matrix = mwbs.Utils.compute_rotation_matrix_of_contact_surface(obj.config.normalContactAxis);
-            
-            PlaneJointsPosition = zeros(1);
+            PlaneJointsPosition = [];
             PlaneBaseVelocity = zeros(6,1);
-            PlaneJointsVelocity = zeros(1);
-                
+            PlaneJointsVelocity = [];
+            
+            PlaneNormal = obj.config.normalContactAxis;
+            
+            rot_matrix = mwbs.Utils.compute_rotation_matrix_of_contact_surface(PlaneNormal);
+             			
+ 			transf_matrix = eye(4);
+ 			
+ 			for i=1:3
+                 for j=1:3
+                     transf_matrix(i,j)=rot_matrix(i,j);
+                 end
+ 			end
+		
             JointOrder_Plane=cell({'Fixing_Joint'});
             Plane_Path=strcat(getenv('ISAAC_PATH'),'/isaac-wp1/WP1-4_GeneratedURDFModels');
             Plane_Name='/Plane.urdf';
@@ -81,9 +91,10 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
             
             % Loading the plane
             
-            Plane = iDynTreeWrappers.loadReducedModel(JointOrder_Plane, Plane_Base_Link, Plane_Path, Plane_Name, false); % 'plane_link', '/home/fabiodinatale/Private/ISAAC/isaac-wp1/WP1-4_GeneratedURDFModels', '/Plane2.urdf', false);
-            iDynTreeWrappers.setRobotState(Plane,rot_matrix,PlaneJointsPosition,PlaneBaseVelocity,PlaneJointsVelocity,obj.g);
-			
+            Plane = iDynTreeWrappers.loadReducedModel(JointOrder_Plane, Plane_Base_Link, Plane_Path, Plane_Name, false);
+            
+            iDynTreeWrappers.setRobotState(Plane, transf_matrix, PlaneJointsPosition, PlaneBaseVelocity, PlaneJointsVelocity, obj.g');
+            
             % Prepare the robot model and the iDyntree visualization
             obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, obj.config.robotFrames.BASE, ...
                 obj.config.modelPath, obj.config.fileName, false);
@@ -92,7 +103,7 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
             obj.viz.init();
             % add the 'model' robot the the visualizer
             obj.viz.addModel(obj.KinDynModel.kinDynComp.model(), 'model');
-			% add the plane to the visualizer
+            % add the plane to the visualizer
             obj.viz.addModel(Plane.kinDynComp.model(), 'plane');
 			
             env = obj.viz.enviroment();
