@@ -20,7 +20,7 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
         g = [0, 0, -9.81]; % gravity vector
         world_H_base = eye(4);
         jointsPosition;
-        t; 
+        t;
     end
 
     methods (Access = protected)
@@ -29,7 +29,11 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
 
             if obj.config.visualizeRobot
                 % Perform one-time calculations, such as computing constants
-                obj.prepareRobot()
+                obj.prepareRobot();
+                
+                if isfield(obj.config,'normalContactAxis')      
+                    obj.preparePlane();
+                end
             end
 
         end
@@ -67,12 +71,38 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
         end
 
         function prepareRobot(obj)
+                        
+            % Prepare the robot model and the iDyntree visualization
+            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, obj.config.robotFrames.BASE, ...
+                obj.config.modelPath, obj.config.fileName, false);
+            % instantiate iDynTree visualizer
+            obj.viz = iDynTree.Visualizer();
+            obj.viz.init();
+            % add the 'model' robot the the visualizer
+            obj.viz.addModel(obj.KinDynModel.kinDynComp.model(), 'model');
+			
+            env = obj.viz.enviroment();
+            env.setElementVisibility('floor_grid', true);
+            env.setElementVisibility('world_frame', true);
+            obj.viz.camera().animator().enableMouseControl(true);
+            % adding lights
+            obj.viz.enviroment().addLight('sun1');
+            obj.viz.enviroment().lightViz('sun1').setType(iDynTree.DIRECTIONAL_LIGHT);
+            obj.viz.enviroment().lightViz('sun1').setDirection(iDynTree.Direction(-1, 0, 0));
+            obj.viz.enviroment().addLight('sun2');
+            obj.viz.enviroment().lightViz('sun2').setType(iDynTree.DIRECTIONAL_LIGHT);
+            obj.viz.enviroment().lightViz('sun2').setDirection(iDynTree.Direction(1, 0, 0));
+            
+            obj.jointsPosition = zeros(obj.KinDynModel.NDOF,1);
+        end
+        
+        function preparePlane(obj)
+            
+            PlaneNormal = obj.config.normalContactAxis;
             
             PlaneJointsPosition = [];
             PlaneBaseVelocity = zeros(6,1);
             PlaneJointsVelocity = [];
-            
-            PlaneNormal = obj.config.normalContactAxis;
             
             rot_matrix = mwbs.Utils.compute_rotation_matrix_of_contact_surface(PlaneNormal);
              			
@@ -90,35 +120,12 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
             Plane_Base_Link='plane_left_link';
             
             % Loading the plane
-            
             Plane = iDynTreeWrappers.loadReducedModel(JointOrder_Plane, Plane_Base_Link, Plane_Path, Plane_Name, false);
             
             iDynTreeWrappers.setRobotState(Plane, transf_matrix, PlaneJointsPosition, PlaneBaseVelocity, PlaneJointsVelocity, obj.g');
             
-            % Prepare the robot model and the iDyntree visualization
-            obj.KinDynModel = iDynTreeWrappers.loadReducedModel(obj.config.jointOrder, obj.config.robotFrames.BASE, ...
-                obj.config.modelPath, obj.config.fileName, false);
-            % instantiate iDynTree visualizer
-            obj.viz = iDynTree.Visualizer();
-            obj.viz.init();
-            % add the 'model' robot the the visualizer
-            obj.viz.addModel(obj.KinDynModel.kinDynComp.model(), 'model');
             % add the plane to the visualizer
             obj.viz.addModel(Plane.kinDynComp.model(), 'plane');
-			
-            env = obj.viz.enviroment();
-            env.setElementVisibility('floor_grid', true);
-            env.setElementVisibility('world_frame', true);
-            obj.viz.camera().animator().enableMouseControl(true);
-            % adding lights
-            obj.viz.enviroment().addLight('sun1');
-            obj.viz.enviroment().lightViz('sun1').setType(iDynTree.DIRECTIONAL_LIGHT);
-            obj.viz.enviroment().lightViz('sun1').setDirection(iDynTree.Direction(-1, 0, 0));
-            obj.viz.enviroment().addLight('sun2');
-            obj.viz.enviroment().lightViz('sun2').setType(iDynTree.DIRECTIONAL_LIGHT);
-            obj.viz.enviroment().lightViz('sun2').setDirection(iDynTree.Direction(1, 0, 0));
-            
-            obj.jointsPosition = zeros(obj.KinDynModel.NDOF,1);
         end
 
         function updateVisualization(obj)
