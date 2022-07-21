@@ -19,6 +19,9 @@ classdef Utils
         % The Euler angles convention follows the one of iDyntree and is such that the rotation
         % matrix is:  R = Rz(yaw)*Ry(pitch)*Rx(roll).
         rollPitchYaw = rollPitchYawFromRotation(R);
-		computeRotMatrix = compute_rotation_matrix_of_contact_surface(n);
+        
+        % compute the rotation matrix from a plane to the world frame using the normal axis of
+        % the plane
+        RotPlane2World = computeRotationMatrixFromNormal(normal_axis);
     end
 end
