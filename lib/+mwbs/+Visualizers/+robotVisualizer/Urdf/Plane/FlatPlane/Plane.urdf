@@ -11,6 +11,9 @@
       <geometry>
         <box size="1.0 1.0 0.01"/>
       </geometry>
+      <material name="Sand">
+        <color rgba="50 255 255 0.5"/>
+      </material>
     </visual>
     <collision>
       <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
