@@ -86,12 +86,12 @@ classdef iDynTreeIrrlichtVisualizer < matlab.System
             env.setElementVisibility('world_frame', true);
             obj.viz.camera().animator().enableMouseControl(true);
             % adding lights
-            obj.viz.enviroment().addLight('sun1');
-            obj.viz.enviroment().lightViz('sun1').setType(iDynTree.DIRECTIONAL_LIGHT);
-            obj.viz.enviroment().lightViz('sun1').setDirection(iDynTree.Direction(-1, 0, 0));
-            obj.viz.enviroment().addLight('sun2');
-            obj.viz.enviroment().lightViz('sun2').setType(iDynTree.DIRECTIONAL_LIGHT);
-            obj.viz.enviroment().lightViz('sun2').setDirection(iDynTree.Direction(1, 0, 0));
+            % obj.viz.enviroment().addLight('sun1');
+            % obj.viz.enviroment().lightViz('sun1').setType(iDynTree.DIRECTIONAL_LIGHT);
+            % obj.viz.enviroment().lightViz('sun1').setDirection(iDynTree.Direction(-1, 0, 0));
+            % obj.viz.enviroment().addLight('sun2');
+            % obj.viz.enviroment().lightViz('sun2').setType(iDynTree.DIRECTIONAL_LIGHT);
+            % obj.viz.enviroment().lightViz('sun2').setDirection(iDynTree.Direction(1, 0, 0));
             
             obj.jointsPosition = zeros(obj.KinDynModel.NDOF,1);
         end
