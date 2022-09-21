@@ -31,13 +31,13 @@ modelPath = [icubModelsInstallPrefix '/share/iCub/robots/' robotName '/'];
 fileName = 'model.urdf';
 %% GENERAL SIMULATION INFO
 % Simulation time and delta_t [s]
-Config.simulationTime = inf;
+Config.simulationTime = 1;
 Config.GRAVITY_ACC = [0,0,-9.81];
 Config.tStep = 0.001;
 
 % Use OSQP instead of quadprog, typically in the case where the optimization toolbox is not
 % available.
-Config.USE_OSQP = true;
+Config.USE_OSQP = false;
 
 % Do you want to enable the Visualizer?
 confVisualizer.visualizeRobot = true;
