@@ -25,7 +25,7 @@ icubModelsInstallPrefix = getenv('ROBOTOLOGY_SUPERBUILD_INSTALL_PREFIX');
 
 %% GENERAL SIMULATION INFO
 % Simulation time and delta_t [s]
-Config.simulationTime = inf;
+Config.simulationTime = 1;
 Config.GRAVITY_ACC = [0,0,-9.81];
 Config.tStep = 0.001;
 
