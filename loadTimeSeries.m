@@ -5,11 +5,11 @@ clear all
 matlabProfilerFunctionNames = {
     'funcKey'      'robotClassMethod'                     'funcIndex' 'bindings'
     'MATLABsystem' ''                                     1           {}
-    'MassMatrix'   'Robot.Robot>Robot.get_mass_matrix'    6           {'KinDynComputations.m>KinDynComputations.getFreeFloatingMassMatrix',}
-    'BiasForces'   'Robot.Robot>Robot.get_bias_forces'    5           {'KinDynComputations.m>KinDynComputations.generalizedBiasForces'}
-    'Jacobian'     'Robot.Robot>Robot.get_feet_jacobians' 9           {'KinDynComputations.m>KinDynComputations.getFrameFreeFloatingJacobian'}
-    'DotJNu'       'Robot.Robot>Robot.get_feet_JDot_nu'   4           {'KinDynComputations.m>KinDynComputations.getFrameBiasAcc'}
-    'FwrdKin'      'Robot.Robot>Robot.get_feet_H'         7           {'iDynTreeWrappers.getWorldTransform'}
+    'MassMatrix'   'Robot.Robot>Robot.get_mass_matrix'    6           {'KinDynComputations>KinDynComputations.getFreeFloatingMassMatrix','toMatlab'}
+    'BiasForces'   'Robot.Robot>Robot.get_bias_forces'    5           {'KinDynComputations>KinDynComputations.generalizedBiasForces','toMatlab'}
+    'Jacobian'     'Robot.Robot>Robot.get_feet_jacobians' 9           {'KinDynComputations>KinDynComputations.getFrameFreeFloatingJacobian','toMatlab'}
+    'DotJNu'       'Robot.Robot>Robot.get_feet_JDot_nu'   4           {'KinDynComputations>KinDynComputations.getFrameBiasAcc','toMatlab'}
+    'FwrdKin'      'Robot.Robot>Robot.get_feet_H'         7           {'KinDynComputations>KinDynComputations.getWorldTransform','Transform>Transform.asHomogeneousTransform','Matrix4x4>Matrix4x4.toMatlab'}
 %     'qpOASES'      ''                                     2           {}
 };
 
@@ -50,21 +50,38 @@ function modulesExecTimes = procTotalTimesAndPlot(filesList,funcs2propsMap)
 index = 1;
 for aFile = filesList(:)'
     load([aFile.folder filesep aFile.name],'profilerData','profilerData_interpreter');
-    functionArray(index,:) = profilerData.rootUINode.children(1).children;
+    functionArraySimulink(index,:) = profilerData.rootUINode.children(1).children;
+    functionNames = {profilerData_interpreter.FunctionTable.FunctionName};
+    funcIdxes = [];
+    for func = funcs2propsMap.keys
+        [~,funcIdx] = ismember(1,contains(functionNames,funcs2propsMap(cell2mat(func)).robotClassMethod));
+        funcIdxes = [funcIdxes,funcIdx];
+    end
+    functionArrayMatlab(index,:) = profilerData_interpreter.FunctionTable(funcIdxes);
     index=index+1;
 end
 
 modulesExecTimes = containers.Map();
 
-if size(functionArray,2) > 1
+% Simulink profile
+% 
+if size(functionArraySimulink,2) > 1
     for func = funcs2propsMap.keys
-        modulesExecTimes(cell2mat(func)) = mean([functionArray(:,funcs2propsMap(cell2mat(func)).funcIndex).totalTime]);
+        modulesExecTimes(cell2mat(func)) = mean([functionArraySimulink(:,funcs2propsMap(cell2mat(func)).funcIndex).totalTime]);
     end
 else
     for func = funcs2propsMap.keys
         modulesExecTimes(cell2mat(func)) = 0;
     end
-    modulesExecTimes('MATLABsystem') = mean([functionArray(:,1).totalTime]);
+    modulesExecTimes('MATLABsystem') = mean([functionArraySimulink(:,1).totalTime]);
+end
+
+% Matlab profile
+% 
+funcIndex = 1;
+for func = funcs2propsMap.keys
+    modulesExecTimes(cell2mat(func)) = modulesExecTimes(cell2mat(func)) + mean([functionArrayMatlab(:,funcIndex).TotalTime]);
+    funcIndex = funcIndex+1;
 end
 
 end
