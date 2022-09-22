@@ -5,39 +5,28 @@ clear all
 matlabProfilerFunctionNames = {
     'funcKey'      'robotClassMethod'                     'funcIndex' 'bindings'
     'MATLABsystem' ''                                     1           {}
-    'MassMatrix'   'Robot.Robot>Robot.get_mass_matrix'    6           {'KinDynComputations>KinDynComputations.getFreeFloatingMassMatrix',}
-    'BiasForces'   'Robot.Robot>Robot.get_bias_forces'    5           {'KinDynComputations.generalizedBiasForces'}
-    'Jacobian'     'Robot.Robot>Robot.get_feet_jacobians' 9           {}
-    'DotJNu'       'Robot.Robot>Robot.get_feet_JDot_nu'   4           {}
-    'FwrdKin'      'Robot.Robot>Robot.get_feet_H'         7           {}
+    'MassMatrix'   'Robot.Robot>Robot.get_mass_matrix'    6           {'KinDynComputations.m>KinDynComputations.getFreeFloatingMassMatrix',}
+    'BiasForces'   'Robot.Robot>Robot.get_bias_forces'    5           {'KinDynComputations.m>KinDynComputations.generalizedBiasForces'}
+    'Jacobian'     'Robot.Robot>Robot.get_feet_jacobians' 9           {'KinDynComputations.m>KinDynComputations.getFrameFreeFloatingJacobian'}
+    'DotJNu'       'Robot.Robot>Robot.get_feet_JDot_nu'   4           {'KinDynComputations.m>KinDynComputations.getFrameBiasAcc'}
+    'FwrdKin'      'Robot.Robot>Robot.get_feet_H'         7           {'iDynTreeWrappers.getWorldTransform'}
 %     'qpOASES'      ''                                     2           {}
 };
 
 [funcs2propsMap,orderedKeys] = mapFuncKeys2Properties(matlabProfilerFunctionNames);
 
-%     
-%     
-%     'Robot.Robot>Robot.get_bias_forces',
-%     'Robot.Robot>Robot.get_feet_jacobians',
-%     'Robot.Robot>Robot.get_feet_JDot_nu',
-%     'Robot.Robot>Robot.get_feet_H'
-% };
-% simulinkProfilerFunctionNames = {
-%     ,
-% };
 
 %% Load the profilerResults_6af23d0 files
 
-matlabProfFiles = dir('profilerResults_before_optim/matlabProf*.mat');
-simulinkProfFiles = dir('profilerResults_before_optim/simulinkProf*.mat');
+profileFiles = dir('profilerResults_before_optim/test_matlab_system_19*.mat');
 
-execTimesBefOptim = procTotalTimesAndPlot(simulinkProfFiles,funcs2propsMap);
+execTimesBefOptim = procTotalTimesAndPlot(profileFiles,funcs2propsMap);
 
 %% Load the profilerResults_c760c0d files
 
-listOfFiles = dir('profilerResults_c760c0d/test_matlab_system*.mat');
+profileFiles = dir('profilerResults_c760c0d/test_matlab_system*.mat');
 
-execTimesAftOptim = procTotalTimesAndPlot(listOfFiles,funcs2propsMap);
+execTimesAftOptim = procTotalTimesAndPlot(profileFiles,funcs2propsMap);
 
 %% Plot
 X = categorical(orderedKeys);
@@ -55,19 +44,13 @@ set(gca,'FontSize',18);
 %% Local functions
 function modulesExecTimes = procTotalTimesAndPlot(filesList,funcs2propsMap)
 
+% Load the profiles
+% 
+% profilerDataArray = struct([]);
 index = 1;
 for aFile = filesList(:)'
-    load([aFile.folder filesep aFile.name],'profilerData');
-    profilerDataArray(index) = profilerData.rootUINode;
-    index=index+1;
-end
-
-
-% Get the total times
-
-index = 1;
-for profilerData = profilerDataArray
-    functionArray(index,:) = profilerData.children(1).children;
+    load([aFile.folder filesep aFile.name],'profilerData','profilerData_interpreter');
+    functionArray(index,:) = profilerData.rootUINode.children(1).children;
     index=index+1;
 end
 
