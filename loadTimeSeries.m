@@ -15,18 +15,19 @@ matlabProfilerFunctionNames = {
 
 [funcs2propsMap,orderedKeys] = mapFuncKeys2Properties(matlabProfilerFunctionNames);
 
+matlabProfilerPenaltyComp = 1/1.48; % multiply each execution time by this factor for profiles before optimisation.
 
 %% Load the profiler results before optim (commit 6af23d0)
 
 profileFiles = dir('profilerResults_before_optim/test_matlab_system*.mat');
 
-execTimesBefOptim = procTotalTimesAndPlot(profileFiles,funcs2propsMap,'beforeOptim');
+execTimesBefOptim = procTotalTimesAndPlot(profileFiles,funcs2propsMap,'beforeOptim',matlabProfilerPenaltyComp);
 
 %% Load the profiler results after optim (266512a)
 
 profileFiles = dir('profilerResults_after_optim/test_matlab_system*.mat');
 
-execTimesAftOptim = procTotalTimesAndPlot(profileFiles,funcs2propsMap,'afterOptim');
+execTimesAftOptim = procTotalTimesAndPlot(profileFiles,funcs2propsMap,'afterOptim',1);
 
 %% Plot
 orderedKeys = ['RobotDynWithContacts';orderedKeys];
@@ -43,7 +44,7 @@ legend('after optim','before optim','Location','SouthEast');
 set(gca,'FontSize',18);
 
 %% Local functions
-function modulesExecTimes = procTotalTimesAndPlot(filesList,funcs2propsMap,beforeOrAfterOptim)
+function modulesExecTimes = procTotalTimesAndPlot(filesList,funcs2propsMap,beforeOrAfterOptim,execTimeMultiplier)
 
 % Load the profiles
 % 
@@ -99,6 +100,12 @@ switch (beforeOrAfterOptim)
 end
 
 modulesExecTimes('RobotDynWithContacts') = mean([functionRobotDynWithContacts.totalTime]);
+
+% Apply compensation to MATLAB profiler impact on execution time
+for key = modulesExecTimes.keys
+    modulesExecTimes(cell2mat(key)) = modulesExecTimes(cell2mat(key)) * execTimeMultiplier;
+end
+
 
 end
 
