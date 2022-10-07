@@ -26,8 +26,8 @@ classdef Contacts < handle
     %          PLACE AND DATE: <Genoa, March 2022>
 
     properties (Constant)
-        useOSQP = false;                % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
-        useQPOASES = true;              % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
+        useOSQP = true;                % Use the OSQP solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
+        useQPOASES = false;              % Use the QPOASES solver instead of quadprog for the optim. prob. computing the reaction forces at the feet
     end
     
     properties (SetAccess = immutable)
