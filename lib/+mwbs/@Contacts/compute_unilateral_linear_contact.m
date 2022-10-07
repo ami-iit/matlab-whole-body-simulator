@@ -199,29 +199,22 @@ end
 
 if obj.useOSQP
     
+    obj.ulb = 1e10 + zeros(num_vertices * num_in_contact_frames * 3, 1);
     for i = 1 : num_vertices * num_in_contact_frames
-        obj.Aeq(i, i * 3) = contact_point(i) > 0;
+        if (contact_point(i) > 0) % vertex NOT in contact with the ground
+            obj.ulb(3*i-2:3*i) = 0;
+        end
     end
-    if obj.firstSolverIter
-        % Setup workspace and change alpha parameter
-        obj.osqpProb = osqp;
-        obj.osqpProb.setup(sparse(H), g, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
-        obj.firstSolverIter = true;
-    else
-        % Update the problem
-        obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', g, 'Ax', sparse([obj.A;obj.Aeq]));
-    end
-    % Solve problem
-    res = obj.osqpProb.solve();
+    
+    [contactForces,status] = simFunc_OSQP(H, g, obj.A, obj.Ax_Lb, obj.Ax_Ub, -obj.ulb, obj.ulb);
+    contactForces_world = R * contactForces;
     
     % Count the consecuitive failure of the solver
-    if (res.info.status_val == 1)
+    if (status == 0)
         obj.fail_counter = 0;
     else
         obj.fail_counter = obj.fail_counter + 1;
     end
-    contactForces = res.x;
-    contactForces_world = R * contactForces;
     
 elseif obj.useQPOASES
     
