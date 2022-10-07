@@ -121,22 +121,41 @@ if ~issymmetric(H)
 end
 
 if obj.useOSQP
-    for i = 1:num_vertices * num_in_contact_frames
-        obj.Aeq(i, i * 3) = contact_point(i) > 0;
+    
+    obj.ulb = 1e10 + zeros(3*num_vertices*num_in_contact_frames, 1);
+    for i = 1 : num_vertices * num_in_contact_frames
+        if (contact_point(i) > 0) % vertex NOT in contact with the ground
+            obj.ulb(3*i-2:3*i) = 0;
+        end
     end
-    if obj.firstSolverIter
-        % Setup workspace and change alpha parameter
-        obj.osqpProb = osqp;
-        obj.osqpProb.setup(sparse(H), g, sparse([obj.A;obj.Aeq]), [obj.Ax_Lb;obj.beq], [obj.Ax_Ub;obj.beq], 'alpha', 1);
-        obj.firstSolverIter = true;
-    else
-        % Update the problem
-        obj.osqpProb.update('Px', nonzeros(triu(sparse(H))), 'q', g, 'Ax', sparse([obj.A;obj.Aeq]));
-    end
-    % Solve problem
-    res = obj.osqpProb.solve();
-
-    contactForces = res.x;
+    
+    allIndexes = 1:numel(obj.is_in_contact);
+    mapVertices = true(numel(obj.is_in_contact),1);
+    indexesVertices = (allIndexes(mapVertices) - 1) * 3 + 1; % each vertex has 3 components
+    indexesVerticesNormalDirection = indexesVertices + 2;
+    indexesVerticesNormalDirection = indexesVerticesNormalDirection(:);
+    
+    normalForces = [0,0,1];
+    expandedNormalForces = repmat(normalForces,[1,numel(obj.is_in_contact)]);
+    
+    H_nn = H(indexesVerticesNormalDirection,indexesVerticesNormalDirection);
+    H_n = H(indexesVerticesNormalDirection,:);
+    g_n = g(indexesVerticesNormalDirection);
+    
+    % The first phase of the impact model
+    lb_phase_I = zeros(numel(obj.is_in_contact),1);
+    ub_phase_I = obj.ulb(indexesVerticesNormalDirection);
+    
+    [contactForcesNormal,~] = simFunc_OSQP_impact_phase_I(H_nn, g_n, lb_phase_I, ub_phase_I);
+    
+    % The second phase of the impact model
+    maximumNormalForceMagnitude = sum(contactForcesNormal);
+    
+    A_phase_II = [obj.A; -diag(obj.is_in_contact)*H_n; expandedNormalForces];
+    A_Ub_phase_II = [obj.Ax_Ub; diag(obj.is_in_contact)*g_n; maximumNormalForceMagnitude];
+    A_Lb_phase_II = -1e10 + zeros(1+(5+1)* num_vertices * num_in_contact_frames,1);
+    
+    [contactForces, ~] = simFunc_OSQP_impact_phase_II(H, g, A_phase_II, A_Lb_phase_II, A_Ub_phase_II, -obj.ulb, obj.ulb);
     contactForces_world = R * contactForces;
     
 elseif obj.useQPOASES
