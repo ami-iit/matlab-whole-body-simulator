@@ -54,8 +54,4 @@ constr_matrix = [...
 Ac = repmat({constr_matrix}, 1, total_num_vertices); % Repeat Matrix for every vertex as a cell array
 obj.A(:,1:num_variables) = blkdiag(Ac{1:total_num_vertices});
 
-% Create an OSQP problem object
-if obj.useOSQP
-    obj.osqpProb = osqp;
-end
 end

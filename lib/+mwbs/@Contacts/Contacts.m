@@ -45,8 +45,6 @@ classdef Contacts < handle
         was_in_contact;                  % This vector says if the vertex was in contact (1) or not (0)
         is_in_contact;                   % This vector says if the vertex is in contact (1) or not (0)
         A; Ax_Lb; Ax_Ub; Aeq; beq; ulb;  % The matrices used in the optimization problem
-        osqpProb;                        % The OSQP solver object
-        firstSolverIter;                 % For handing osqp.setp and osqp.update
         fail_counter = 0;                % For counting the consecuitive fails of the solver
         foot_print;                      % The coordinates of the vertices
     end
@@ -91,9 +89,6 @@ classdef Contacts < handle
             
             obj.is_in_contact = ones(num_vertices * num_in_contact_frames,1);
             obj.was_in_contact = ones(num_vertices * num_in_contact_frames,1);
-            
-            % initialize the setup/update step of the osqp solver
-            obj.firstSolverIter = true;
             
             obj.prepare_foot_print (num_in_contact_frames, num_vertices, foot_print);
             obj.prepare_optimization_matrix(num_in_contact_frames, num_vertices);
