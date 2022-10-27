@@ -7,7 +7,7 @@ In the simulator the ground is assumed to be flat and the contact forces are com
 
 - [Matlab/Simulink 2019b](https://it.mathworks.com/products/matlab.html)
 - [yarp-matlab-bindings](https://github.com/robotology/yarp-matlab-bindings): Yarp Resource Finder.
-- [WBToolbox](https://github.com/robotology/wb-toolbox): WB-Toolbox library Simulink blocks.
+- [WBToolbox](https://github.com/robotology/wb-toolbox): WB-Toolbox library Simulink blocks (version v5.6.0).
 - [iDynTree](https://github.com/robotology/idyntree): Dynamic computations (through bindings) and WB-Toolbox library dependency.
 - [qpOASES](https://github.com/robotology-dependencies/qpOASES): QP solver for estimating the contact wrenches.
 - [icub-models](https://github.com/robotology/icub-models): access to the iCub models.
