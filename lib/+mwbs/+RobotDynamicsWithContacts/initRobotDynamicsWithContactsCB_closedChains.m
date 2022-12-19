@@ -1,6 +1,7 @@
 % Create in the workspace the bus required for having an output bus with the kynematic & dynamic
 % variables.
 kinDynOut_bus = initKinDynOut_bus(robot_config);
+assignin('base',"kinDynOut_bus",kinDynOut_bus);
 
 % Get the model path from the Urdf file name and the YARP resource finder
 if ~isfield(robot_config,'UrdfFile') && isfield(robot_config,'fileName')

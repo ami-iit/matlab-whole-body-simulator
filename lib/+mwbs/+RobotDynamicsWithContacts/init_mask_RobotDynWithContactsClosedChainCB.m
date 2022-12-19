@@ -19,6 +19,8 @@
 % NOTE: THIS SCRIPT IS RUN AUTOMATICALLY WHEN THE USER STARTS THE ASSOCIATED
 % SIMULINK MODEL. NO NEED TO RUN THIS SCRIPT EVERY TIME.
 
+mwbs.RobotDynamicsWithContacts.initRobotDynamicsWithContactsCB_closedChains;
+
 % Get the Workspace/Mask menu
 propMotorReflectedInertiaFormat = get_param(gcb,'motorReflectedInertiaFormat');
 
