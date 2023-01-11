@@ -209,12 +209,23 @@ classdef Contacts < handle
                 [J_diff_split_points, JDot_diff_nu_split_points] = obj.compute_J_and_JDot_nu_split_points(robot);
                 G_forces = [J_in_contact;J_diff_split_points];
             end
-            
+            if robot_config.is_fixed
+                [J_fixed_frame, JDot_nu_fixed_frame] = obj.compute_J_and_JDot_nu_fixed_frame(robot);
+                G_forces = [G_forces;J_fixed_frame];
+            else
+                J_fixed_frame = [];
+                JDot_nu_fixed_frame = [];
+            end
+
+            J_holonomic_cnstr = [J_diff_split_points;J_fixed_frame];
+            JDot_nu_holonomic_cnstr = [JDot_diff_nu_split_points;JDot_nu_fixed_frame ];
+            num_holonomic_cnstr = size(J_holonomic_cnstr,1);
+
             % compute the vertical distance of every vertex from the ground
             contact_points = obj.compute_contact_points(robot, num_in_contact_frames, num_vertices);
             
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
-            [base_pose_dot, s_dot, impact_flag] = obj.compute_velocity(M, G_forces, base_pose_dot, s_dot, num_closed_chains, num_in_contact_frames, contact_points, num_vertices);
+            [base_pose_dot, s_dot, impact_flag] = obj.compute_velocity(M, G_forces, base_pose_dot, s_dot, num_in_contact_frames, contact_points, num_vertices);
             
             % update the robot velocity in the case of impact
             if impact_flag
@@ -228,7 +239,7 @@ classdef Contacts < handle
             % computes a 3 * num_total_vertices + 6 * num_closed_chains vector
             % containing the pure contact forces acting on every vertex and the
             % internal wrenches in the spilit points
-            forces = obj.compute_unilateral_linear_contact(M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_points, num_closed_chains, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot);
+            forces = obj.compute_unilateral_linear_contact(M, h, J_in_contact, J_holonomic_cnstr, JDot_nu_in_contact, JDot_nu_holonomic_cnstr, torque, contact_points, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot);
             
             % transform the contact and the internal wrenches of the spilit points in the closed chains in a wrench acting on the robot
             generalized_contact_wrench = G_forces' * forces;
@@ -237,7 +248,7 @@ classdef Contacts < handle
             generalized_total_wrench = generalized_ext_wrench + generalized_contact_wrench;
             
             % compute the wrench in the sole frames, in order to simulate a sensor mounted onto the sole frame
-            ground_forces = forces(1:end-6*num_closed_chains);
+            ground_forces = forces(1:end-num_holonomic_cnstr);
             wrench_in_contact_frames = obj.compute_contact_wrench_in_sole_frames(ground_forces, robot, num_in_contact_frames, num_vertices);
             
             % update the contact log
@@ -274,7 +285,7 @@ classdef Contacts < handle
 
         % computes the pure forces acting on the feet vertices and the
         % internal wrenches applied to the split points in the (possible) closed chains
-        forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, num_closed_chains, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot);
+        forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot);
         
         % computes the impulsive pure forces acting on the feet vertices and the impulsive internal wrenches applied to the split points in the (possible) closed chain
         impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_contact, J_diff_split_points, contact_point, num_closed_chains, num_in_contact_frames, map_vertices_new_contact, num_vertices);

@@ -1,4 +1,4 @@
-function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_contact, J_diff_split_points, contact_point, num_closed_chains, num_in_contact_frames, num_vertices)
+function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_contact, J_holonomic_cnstr, contact_point, num_holonomic_cnstr, num_in_contact_frames, num_vertices)
 
     %     COMPUTE_UNILATERAL_LINEAR_IMPACT : computes the impulsive pure forces acting on the feet vertices and the impulsive internal wrenches applied to the split points in the (possible) closed chain
     % 
@@ -99,16 +99,16 @@ R_cell = repmat({obj.w_R_c}, num_vertices * num_in_contact_frames,1);  % Repeat 
 R = blkdiag(R_cell{:});
 
 % ---------------------------- MAIN --------------------------------------
-if num_closed_chains == 0 % there is no closed chain
+if num_holonomic_cnstr == 0 % there is no closed chain and no fixed frame
     
     H = J_in_contact * (M \ J_in_contact');
     g = J_in_contact * nu;
     
 else % there are some closed chains
-    JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001);
+    JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_holonomic_cnstr * (M \ J_holonomic_cnstr'),0.001);
     
-    H = J_in_contact * (M \ J_in_contact') - (J_in_contact * (M \ J_diff_split_points')) * (JMJ_dmpd_pseudo_inv * (J_diff_split_points * (M \ J_in_contact') ));
-    g = (J_in_contact - J_in_contact * ( M \ J_diff_split_points') * JMJ_dmpd_pseudo_inv * J_diff_split_points) * nu;
+    H = J_in_contact * (M \ J_in_contact') - (J_in_contact * (M \ J_holonomic_cnstr')) * (JMJ_dmpd_pseudo_inv * (J_holonomic_cnstr * (M \ J_in_contact') ));
+    g = (J_in_contact - J_in_contact * ( M \ J_holonomic_cnstr') * JMJ_dmpd_pseudo_inv * J_holonomic_cnstr) * nu;
     
 end
 
@@ -214,12 +214,12 @@ end
 
 % compute the internal wrenches of the spilit points if there
 % is closed chain
-if (num_closed_chains == 0)
-    internalWrenches = [];
+if (num_holonomic_cnstr == 0)
+    constraintWrenches = [];
 else
-    internalWrenches = - JMJ_dmpd_pseudo_inv * ((J_diff_split_points * ( M \ J_in_contact')) * contactForces_world + J_diff_split_points * nu);
+    constraintWrenches = - JMJ_dmpd_pseudo_inv * ((J_holonomic_cnstr * ( M \ J_in_contact')) * contactForces_world + J_holonomic_cnstr * nu);
 end
 
-impulsive_forces = [contactForces_world;internalWrenches];
+impulsive_forces = [contactForces_world;constraintWrenches];
 
 end

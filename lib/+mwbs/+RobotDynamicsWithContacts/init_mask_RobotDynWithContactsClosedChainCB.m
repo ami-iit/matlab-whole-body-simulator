@@ -277,6 +277,12 @@ end
 contact_config.num_in_contact_frames = numRobotInContactFrames;
 contact_config.num_closed_chains = numRobotSplitPoints;
 contact_config.num_vertices = compute_number_of_vertices(contact_config.foot_print, contact_config.num_in_contact_frames);
+if ~isfield(robot_config.robotFrames,'FIXED')
+    robot_config.robotFrames.FIXED = robot_config.robotFrames.BASE;
+    robot_config.is_fixed = false;
+else
+    robot_config.is_fixed = true;
+end
 
 %% Local functions
 function num_vertices = compute_number_of_vertices(foot_print, num_in_contact_frames)

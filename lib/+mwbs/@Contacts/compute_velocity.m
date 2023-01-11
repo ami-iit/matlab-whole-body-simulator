@@ -1,4 +1,4 @@
-function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_pose_dot, s_dot, num_closed_chains, num_in_contact_frames, contact_point, num_vertices)
+function [base_pose_dot, s_dot, impact_flag] = compute_velocity(obj, M, G, base_pose_dot, s_dot, num_in_contact_frames, contact_point, num_vertices)
 
     %     COMPUTE_VELOCITY: computes the robot velocity vector after a (possible) impact
     % 
@@ -125,12 +125,14 @@ NDOF = size(s_dot,1);
 num_total_vertices = num_in_contact_frames * num_vertices;
 num_contact_forces = 3 * num_total_vertices;
 
-if (num_closed_chains == 0)
-    J_feet = G;
-    J_split_points = [];
-else
+if (size(G,1) > num_contact_forces)
+    num_holonomic_cnstr = size(G,1) - num_contact_forces;
     J_feet = G(1 : num_contact_forces, :);
-    J_split_points = G(num_contact_forces + 1 : end, :);
+    J_holonomic_cnstr = G(num_contact_forces + 1 : end, :); % Group jacobian of the desired fixed frame + jacobian difference fir the spilit points
+else
+    num_holonomic_cnstr = 0;
+    J_feet = G;
+    J_holonomic_cnstr = [];
 end
 
 % ----------------- MAIN -----------------------------------------------
@@ -147,9 +149,9 @@ if new_contact && ~obj.useFrictionalImpact % A frictionless impact
     expandedIdxesVerticesAtZeroVel = [indexesVerticesAtZeroVel;indexesVerticesAtZeroVel+1;indexesVerticesAtZeroVel+2];
     expandedIdxesVerticesAtZeroVel = expandedIdxesVerticesAtZeroVel(:);
     J = J_feet(expandedIdxesVerticesAtZeroVel,1:end);
-    G = [J;J_split_points];
+    G = [J;J_holonomic_cnstr];
     
-    if (num_closed_chains == 0)
+    if (isempty(J_holonomic_cnstr))
         N = (eye(NDOF + 6) - M \ (G' * (G * (M \ G') \ G)));
     else
         N = (eye(NDOF + 6) - M \ (G' * (obj.compute_damped_psudo_inverse(G * (M \ G'),0.001) * G)));
@@ -160,7 +162,7 @@ if new_contact && ~obj.useFrictionalImpact % A frictionless impact
     
 elseif new_contact && obj.useFrictionalImpact % A frictional impact
     impact_flag = true;
-    impulsive_forces = compute_unilateral_linear_impact(obj, M, [base_pose_dot; s_dot], J_feet, J_split_points, contact_point, num_closed_chains, num_in_contact_frames, num_vertices);
+    impulsive_forces = compute_unilateral_linear_impact(obj, M, [base_pose_dot; s_dot], J_feet, J_holonomic_cnstr, contact_point, num_holonomic_cnstr, num_in_contact_frames, num_vertices);
     nu_after_impact = [base_pose_dot; s_dot] + M \ (G' * impulsive_forces);
     base_pose_dot = nu_after_impact(1:6);
     s_dot = nu_after_impact(7:end);

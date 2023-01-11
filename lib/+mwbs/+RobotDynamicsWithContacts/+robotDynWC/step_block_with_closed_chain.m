@@ -139,7 +139,7 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
             out2 = [double(obj.robot_config.N_DOF),1]; % joints position vector dim
             out3 = [6 1];                              % base velocity vector dim
             out4 = [double(obj.robot_config.N_DOF),1]; % joints velocity vector dim
-            out5 = [6*length(obj.robot_config.robotFrames.IN_CONTACT_WITH_GROUND) 1]; % wrench of the frames interacting with the ground vector dim
+            out5 = [6*(length(obj.robot_config.robotFrames.IN_CONTACT_WITH_GROUND) + length(obj.robot_config.robotFrames.FIXED)) 1]; % wrench of the frames interacting with the ground vector dim
             out6 = 1;
         end
 
@@ -187,7 +187,9 @@ classdef step_block_with_closed_chain < matlab.System & matlab.system.mixin.Prop
                 'simFunc_OSQP_impact_phase_I', ...
                 'simFunc_OSQP_impact_phase_II', ...
                 'simFunc_getFrameFreeFloatingJacobianSpilitPoints',...
-                'simFunc_getFrameBiasAccSpilitPoints'};
+                'simFunc_getFrameBiasAccSpilitPoints',...
+                'simFunc_getFrameFreeFloatingJacobian_fixedFrame',...
+                'simFunc_getFrameBiasAccFixedFrame'};
         end
     end
 

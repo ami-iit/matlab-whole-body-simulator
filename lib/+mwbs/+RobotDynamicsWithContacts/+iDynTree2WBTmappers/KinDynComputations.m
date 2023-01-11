@@ -31,6 +31,16 @@ classdef KinDynComputations
             [w_H_b,s,base_pose_dot,s_dot,NDOF] = deal(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot,obj.NDOF);
         end
         
+        function [ack,J_fixedFrame] = getFrameFreeFloatingJacobian_fixedFrame(obj)
+            ack = true;
+            J_fixedFrame = simFunc_getFrameFreeFloatingJacobian_fixedFrame(obj.w_H_b,obj.s);
+        end
+
+        function [ack,JDotNu_fixedFrame] = getFrameBiasACC_fixedFrame(obj)
+            ack = true;
+            JDotNu_fixedFrame = simFunc_getFrameBiasAccFixedFrame(obj.w_H_b,obj.s,obj.base_pose_dot,obj.s_dot);
+        end
+
         function [ack,J_inGroundContact] = getFrameFreeFloatingJacobian_inContactFrames(obj)
             ack = true;
             J_inGroundContact = simFunc_getFrameFreeFloatingJacobian_inContactFrames(obj.w_H_b,obj.s);
