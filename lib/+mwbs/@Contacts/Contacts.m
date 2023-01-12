@@ -209,7 +209,7 @@ classdef Contacts < handle
                 [J_diff_split_points, JDot_diff_nu_split_points] = obj.compute_J_and_JDot_nu_split_points(robot);
                 G_forces = [J_in_contact;J_diff_split_points];
             end
-            if robot_config.is_fixed
+            if obj_step_block.robot_config.is_fixed
                 [J_fixed_frame, JDot_nu_fixed_frame] = obj.compute_J_and_JDot_nu_fixed_frame(robot);
                 G_forces = [G_forces;J_fixed_frame];
             else

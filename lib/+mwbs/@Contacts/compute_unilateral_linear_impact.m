@@ -97,6 +97,7 @@ function impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_co
 % ------------------------- INITIALIZATION -------------------------------
 R_cell = repmat({obj.w_R_c}, num_vertices * num_in_contact_frames,1);  % Repeat Matrix for every vertex as a cell array
 R = blkdiag(R_cell{:});
+JMJ_dmpd_pseudo_inv = 1;
 
 % ---------------------------- MAIN --------------------------------------
 if num_holonomic_cnstr == 0 % there is no closed chain and no fixed frame

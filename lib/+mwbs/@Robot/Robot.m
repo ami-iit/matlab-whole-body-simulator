@@ -148,6 +148,16 @@ classdef Robot < handle
                 error('[Robot: get_inContactWithGround_JDot_nu] Unable to retrieve the bias accelerations of the links that are in contact with the ground');
             end
         end
+        
+        function H_IN_CONTACT_WITH_GROUND = get_inContactWithGround_H(obj)
+            % get_inContactWithGround_H Returns the Homogenous transform of the links that can be in contact with the ground in the world frame
+            % OUTPUT: - H_IN_CONTACT_WITH_GROUND=[w_H_b1;w_H_b2;...]: w_H_b1 of the first frame relative to the
+            % world frame
+            [ack,H_IN_CONTACT_WITH_GROUND] = obj.KinDynModel.kinDynComp.getWorldTransform_inContactFrames();
+            if (~ack)
+                error('[Robot: get_inContactWithGround_H] Unable to retrieve world transformation of the frames that are in contact with the ground');
+            end
+        end
 
         function [base_pose_ddot, s_ddot] = forward_dynamics(obj, torque, generalized_total_wrench,motorInertias,obj_step_block)
             % forward_dynamics Compute forward dynamics

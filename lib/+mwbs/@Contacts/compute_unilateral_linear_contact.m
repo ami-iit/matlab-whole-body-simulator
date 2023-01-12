@@ -157,6 +157,7 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_h
 R_cell = repmat({obj.w_R_c}, num_vertices * num_in_contact_frames,1);  % Repeat Matrix for every vertex as a cell array
 R = blkdiag(R_cell{:});
 num_holonomic_cnstr = size(J_holonomic_cnstr,1) / 6;
+free_contact_diff_acceleration_internal = 1;
 
 % --------------------------- MAIN ----------------------------------------
 free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
@@ -270,7 +271,7 @@ if num_holonomic_cnstr == 0 % there is no holonomic constraint
     
     holonomicWrenches = [];
     
-elseif useDiscreteContact % there are some holonomic constraint
+elseif obj.useDiscreteContact % there are some holonomic constraint
     
     JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_holonomic_cnstr * (M \ J_holonomic_cnstr'),0.001 );
     holonomicWrenches = -JMJ_dmpd_pseudo_inv * ((J_holonomic_cnstr * (M \ J_in_contact')) * contactForces_world + free_contact_diff_acceleration_internal + J_holonomic_cnstr * [base_pose_dot ; s_dot] / obj.dt);
