@@ -119,7 +119,7 @@ classdef Contacts < handle
             contact_points = obj.compute_contact_points(robot, num_in_contact_frames, num_vertices);
             
             % computes a 3 * num_total_vertices vector containing the pure forces acting on every vertes
-            contact_forces = obj.compute_unilateral_linear_contact(M, h, J_feet, [], JDot_nu_feet, [], torque, contact_points, 0, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot);
+            contact_forces = obj.compute_unilateral_linear_contact(M, h, J_feet, [], JDot_nu_feet, [], torque, contact_points, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot);
             
             % transform the contact in a wrench acting on the robot
             generalized_contact_wrench = J_feet' * contact_forces;
@@ -131,7 +131,7 @@ classdef Contacts < handle
             wrench_in_contact_frames = obj.compute_contact_wrench_in_sole_frames(contact_forces, robot, num_in_contact_frames, num_vertices);
             
             % compute the configuration velocity - same, if no impact - discontinuous in case of impact
-            [base_pose_dot, s_dot, ~] = obj.compute_velocity(M, J_feet, base_pose_dot, s_dot, 0, num_in_contact_frames, contact_points, num_vertices);
+            [base_pose_dot, s_dot, ~] = obj.compute_velocity(M, J_feet, base_pose_dot, s_dot, num_in_contact_frames, contact_points, num_vertices);
             
             % update the contact log
             obj.was_in_contact = obj.is_in_contact;
@@ -288,7 +288,7 @@ classdef Contacts < handle
         forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot);
         
         % computes the impulsive pure forces acting on the feet vertices and the impulsive internal wrenches applied to the split points in the (possible) closed chain
-        impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_contact, J_diff_split_points, contact_point, num_closed_chains, num_in_contact_frames, map_vertices_new_contact, num_vertices);
+        impulsive_forces = compute_unilateral_linear_impact(obj, M, nu, J_in_contact, J_diff_split_points, contact_point, num_in_contact_frames, map_vertices_new_contact, num_vertices);
         
         % trasforms the pure forces on foot vertices in wrench in sole frames
         wrench_in_contact_frames = compute_contact_wrench_in_sole_frames(obj, contact_forces, robot, num_in_contact_frames, num_vertices);
