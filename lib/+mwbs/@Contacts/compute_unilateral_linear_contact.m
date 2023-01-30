@@ -1,4 +1,4 @@
-function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_diff_split_points, JDot_nu_in_contact, JDot_diff_nu_split_points, torque, contact_point, num_closed_chains, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot)
+function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_holonomic_cnstr, JDot_nu_in_contact, JDot_nu_holonomic_cnstr, torque, contact_point, generalized_ext_wrench, num_in_contact_frames, num_vertices, base_pose_dot, s_dot)
 
     %     COMPUTE_UNILATERAL_LINEAR_CONTACT: computes the pure forces acting on the feet vertices and the internal wrenches applied to the split points in the (possible) closed chains
     % 
@@ -132,7 +132,7 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
     %             - M:                          [(N+6) x (N+6)]  The inertia matrix
     %             - h:                          [(N+6) x 1]      The Coriolis, Centrifugal, and gravity effect vector
     %             - J_in_contact:               [3m x 1]         The linear Jacobian of the contact vertices
-    %             - J_diff_split_points:        [6p x (N+6)]     The difference of the Jacobian of the two prints of the spilit points in the (possible) closed chains
+    %             - J_holonomic_cnstr:          [6p x (N+6)]     The difference of the Jacobian of the two prints of the spilit points in the (possible) closed chains
     %             - JDot_nu_in_contact:         [3m x 1]         The linear part of JacobianDot * nu of the contact vertices
     %             - JDot_diff_nu_split_points:  [6p x 1]         The difference of the JacobianDot * nu of the two prints of the spilit points in the (possible) closed chains 
     %             - torque:                     [N x 1]          The joint torques vector
@@ -156,33 +156,35 @@ function forces = compute_unilateral_linear_contact(obj, M, h, J_in_contact, J_d
 % ----------------------- INITIALIZATION ----------------------------------
 R_cell = repmat({obj.w_R_c}, num_vertices * num_in_contact_frames,1);  % Repeat Matrix for every vertex as a cell array
 R = blkdiag(R_cell{:});
+num_holonomic_cnstr = size(J_holonomic_cnstr,1) / 6;
+free_contact_diff_acceleration_internal = 1;
 
 % --------------------------- MAIN ----------------------------------------
 free_acceleration = obj.compute_free_acceleration(M, h, torque, generalized_ext_wrench);
 free_contact_acceleration_contact = obj.compute_free_contact_acceleration(J_in_contact, free_acceleration, JDot_nu_in_contact);
 
-if obj.useDiscreteContact && num_closed_chains ~= 0 % there are some closed chains
+if obj.useDiscreteContact && num_holonomic_cnstr ~= 0 % there are some holonomic constraints
     
-    free_contact_diff_acceleration_internal = obj.compute_free_contact_acceleration(J_diff_split_points, free_acceleration, JDot_diff_nu_split_points);
-    JMJ_dmp_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001);
+    free_contact_diff_acceleration_internal = obj.compute_free_contact_acceleration(J_holonomic_cnstr, free_acceleration, JDot_nu_holonomic_cnstr);
+    JMJ_dmp_pseudo_inv = obj.compute_damped_psudo_inverse(J_holonomic_cnstr * (M \ J_holonomic_cnstr'),0.001);
     
-    H = J_in_contact * (M \ J_in_contact') - (J_in_contact * (M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * (J_diff_split_points * (M \ J_in_contact') ));
-    g = J_in_contact * [base_pose_dot ; s_dot] / obj.dt + free_contact_acceleration_contact - (J_in_contact * (M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * (J_diff_split_points * [base_pose_dot ; s_dot] / obj.dt + free_contact_diff_acceleration_internal));
+    H = J_in_contact * (M \ J_in_contact') - (J_in_contact * (M \ J_holonomic_cnstr')) * (JMJ_dmp_pseudo_inv * (J_holonomic_cnstr * (M \ J_in_contact') ));
+    g = J_in_contact * [base_pose_dot ; s_dot] / obj.dt + free_contact_acceleration_contact - (J_in_contact * (M \ J_holonomic_cnstr')) * (JMJ_dmp_pseudo_inv * (J_holonomic_cnstr * [base_pose_dot ; s_dot] / obj.dt + free_contact_diff_acceleration_internal));
     
-elseif obj.useDiscreteContact % there is no closed chain
+elseif obj.useDiscreteContact % there is no holonomic constraint
     
     H = J_in_contact * (M \ J_in_contact');
     g = J_in_contact * [base_pose_dot ; s_dot] / obj.dt + free_contact_acceleration_contact;
         
-elseif ~obj.useDiscreteContact && num_closed_chains ~= 0 % there are some closed chains
+elseif ~obj.useDiscreteContact && num_holonomic_cnstr ~= 0 % there are some holonomic constraints
      
-    free_contact_diff_acceleration_internal = obj.compute_free_contact_acceleration(J_diff_split_points, free_acceleration, JDot_diff_nu_split_points);
-    JMJ_dmp_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001);
+    free_contact_diff_acceleration_internal = obj.compute_free_contact_acceleration(J_holonomic_cnstr, free_acceleration, JDot_nu_holonomic_cnstr);
+    JMJ_dmp_pseudo_inv = obj.compute_damped_psudo_inverse(J_holonomic_cnstr * (M \ J_holonomic_cnstr'),0.001);
     
-    H = J_in_contact * (M \ J_in_contact') - (J_in_contact*(M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * (J_diff_split_points * (M \ J_in_contact') ));
-    g = free_contact_acceleration_contact - (J_in_contact*(M \ J_diff_split_points')) * (JMJ_dmp_pseudo_inv * free_contact_diff_acceleration_internal);
+    H = J_in_contact * (M \ J_in_contact') - (J_in_contact*(M \ J_holonomic_cnstr')) * (JMJ_dmp_pseudo_inv * (J_holonomic_cnstr * (M \ J_in_contact') ));
+    g = free_contact_acceleration_contact - (J_in_contact*(M \ J_holonomic_cnstr')) * (JMJ_dmp_pseudo_inv * free_contact_diff_acceleration_internal);
     
-else % there is no closed chain
+else % there is no holonomic constraint
      
     H = J_in_contact * (M \ J_in_contact');
     g = free_contact_acceleration_contact;
@@ -264,24 +266,23 @@ if (obj.fail_counter >= obj.max_consecutive_failures)
     error(strjoin({'[RobotDynWithContacts] The solver fails to compute the contact forces for',sprintf('%d',int8(obj.max_consecutive_failures)),'times'}));
 end
 
-% compute the internal wrenches of the spilit points in the (possible)
-% closed chains
-if num_closed_chains == 0 % there is no closed chain
+% compute the wrenches due to the holonomic constraints
+if num_holonomic_cnstr == 0 % there is no holonomic constraint
     
-    internalWrenches = [];
+    holonomicWrenches = [];
     
-elseif useDiscreteContact % there are some closed chains
+elseif obj.useDiscreteContact % there are some holonomic constraint
     
-    JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001 );
-    internalWrenches = -JMJ_dmpd_pseudo_inv * ((J_diff_split_points * (M \ J_in_contact')) * contactForces_world + free_contact_diff_acceleration_internal + J_diff_split_points * [base_pose_dot ; s_dot] / obj.dt);
+    JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_holonomic_cnstr * (M \ J_holonomic_cnstr'),0.001 );
+    holonomicWrenches = -JMJ_dmpd_pseudo_inv * ((J_holonomic_cnstr * (M \ J_in_contact')) * contactForces_world + free_contact_diff_acceleration_internal + J_holonomic_cnstr * [base_pose_dot ; s_dot] / obj.dt);
     
-else % there are some closed chains
+else % there are some holonomic constraints
     
-    JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_diff_split_points * (M \ J_diff_split_points'),0.001 );
-    internalWrenches = -JMJ_dmpd_pseudo_inv * ((J_diff_split_points * (M \ J_in_contact')) * contactForces_world + free_contact_diff_acceleration_internal);
+    JMJ_dmpd_pseudo_inv = obj.compute_damped_psudo_inverse(J_holonomic_cnstr * (M \ J_holonomic_cnstr'),0.001 );
+    holonomicWrenches = -JMJ_dmpd_pseudo_inv * ((J_holonomic_cnstr * (M \ J_in_contact')) * contactForces_world + free_contact_diff_acceleration_internal);
     
 end
 
-forces = [contactForces_world;internalWrenches];
+forces = [contactForces_world;holonomicWrenches];
 
 end

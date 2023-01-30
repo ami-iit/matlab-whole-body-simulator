@@ -87,6 +87,25 @@ classdef Robot < handle
             end
         end
 
+        function J_fixedFrame = get_fixedFrame_jacobian(obj)
+            % get_fixedFrame_jacobian Returns the Jacobian of the frame
+            % OUTPUT: - J_fixedFrame: Jacobian of the frame
+            [ack,J_fixedFrame] = obj.KinDynModel.kinDynComp.getFrameFreeFloatingJacobian_fixedFrame();
+            if (~ack)
+                error('[Robot: get_fixedFrame_jacobian] Unable to retrieve the jacobians for fixed frame');
+            end
+        end
+
+        function JDotNu_fixedFrame = get_fixedFrame_JDot_nu(obj)
+            % get_fixedFrame_JDot_nu Returns the Jacobian derivative of the
+            % frame multiplied by the configuration velocity
+            % OUTPUT: - JDotNu_fixedFrame: \dot{J} nu of the frame
+            [ack,JDotNu_fixedFrame] = obj.KinDynModel.kinDynComp.getFrameBiasACC_fixedFrame();
+            if (~ack)
+                error('[Robot: get_fixedFrame_JDot_nu] Unable to retrieve the bias accelerations for the fixed frame');
+            end
+        end
+
         function JDiff_splitPoint = get_spilitPoints_diff_jacobian(obj)
             % get_frame_jacobian Returns the Jacobian of the frame
             % OUTPUT: - J_point: Jacobian of the frame
@@ -105,6 +124,8 @@ classdef Robot < handle
                 error('[Robot: get_SpilitPoints_diff_JDot_nu] Unable to retrieve the bias accelerations for spilit points');
             end
         end
+
+
         
         function J_IN_CONTACT_WITH_GROUND = get_inContactWithGround_jacobians(obj)
             % get_feet_jacobians Returns the Jacobians of the links that
@@ -127,7 +148,7 @@ classdef Robot < handle
                 error('[Robot: get_inContactWithGround_JDot_nu] Unable to retrieve the bias accelerations of the links that are in contact with the ground');
             end
         end
-
+        
         function H_IN_CONTACT_WITH_GROUND = get_inContactWithGround_H(obj)
             % get_inContactWithGround_H Returns the Homogenous transform of the links that can be in contact with the ground in the world frame
             % OUTPUT: - H_IN_CONTACT_WITH_GROUND=[w_H_b1;w_H_b2;...]: w_H_b1 of the first frame relative to the
