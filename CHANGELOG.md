@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [3.1.0] - 2023-07-04
+## [3.3.0] - 2023-07-04
 
 ### Added
 - Added the option to model the motion on an inclined surface (https://github.com/ami-iit/matlab-whole-body-simulator/pull/78).
