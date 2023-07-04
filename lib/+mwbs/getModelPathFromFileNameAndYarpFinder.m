@@ -11,8 +11,8 @@ if isempty(modelPath) % if the model path is not mentioned in the robot file nam
 	% Get the model file
 	modelPathFromYarpFinder = YarpRF.findFileByName(robotFileName);
 	% Just return the parent folder path
-	modelPath = strcat(fileparts(modelPathFromYarpFinder),'/');
+	modelPath = strcat(fileparts(modelPathFromYarpFinder),filesep);
 else
-	modelPath = strcat(modelPath,'/');
+	modelPath = strcat(modelPath,filesep);
 	robotFileName = erase(robotFileName,modelPath);
 end
