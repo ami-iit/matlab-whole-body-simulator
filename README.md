@@ -165,3 +165,36 @@ The motor inertia reflected on the mass matrix of the articulated system is give
 
 
 5. To run and example open and launch `test_matlab_system.mdl`. It also contains a callback to the `init` file that retrieves the needed information.
+
+## :open_book: Citing this work
+
+If you find the work useful, please cite our publications:
+
+```
+@INPROCEEDINGS{10023775,
+  author={Guedelha, Nuno and Pasandi, Venus and L’Erario, Giuseppe and Traversaro, Silvio and Pucci, Daniele},
+  booktitle={2022 Sixth IEEE International Conference on Robotic Computing (IRC)}, 
+  title={A Flexible MATLAB/Simulink Simulator for Robotic Floating-base Systems in Contact with the Ground}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={53-57},
+  keywords={Software packages;Object oriented modeling;Computational modeling;Heuristic algorithms;Robot sensing systems;Mathematical models;Robots;robotic simulator;open-source;MATLAB/Simulink;floating-base robots},
+  doi={10.1109/IRC55401.2022.00015}}
+```
+
+```
+@article{doi:10.1142/S1793351X24300036,
+author = {Guedelha, Nuno and Pasandi, Venus and L’Erario, Giuseppe and Traversaro, Silvio and Pucci, Daniele},
+title = {A Flexible MATLAB/Simulink Simulator for Robotic Floating-base Systems in Contact with the Ground: Theoretical Background and Implementation Details},
+journal = {International Journal of Semantic Computing},
+volume = {0},
+number = {0},
+pages = {1-17},
+year = {0},
+doi = {10.1142/S1793351X24300036},
+URL = {https://doi.org/10.1142/S1793351X24300036},
+eprint = {https://doi.org/10.1142/S1793351X24300036},
+abstract = { This paper presents an open-source MATLAB/Simulink physics simulator for rigid-body articulated systems, including manipulators and floating-base robots. Thanks to MATLAB/Simulink features like MATLAB system classes and Simulink Function blocks, the presented simulator combines a programmatic and block-based approach, resulting in a flexible design in the sense that different parts, including its physics engine, robot-ground interaction model, and state evolution algorithm are simply accessible and editable. Moreover, through the use of Simulink dynamic mask blocks, the proposed simulator supports robot models integrating open-chain and closed-chain kinematics with any desired number of links interacting with the ground. This simulator can also integrate second-order actuator dynamics. Furthermore, the simulator benefits from a one-line installation and an easy-to-use Simulink interface. }
+}
+```
